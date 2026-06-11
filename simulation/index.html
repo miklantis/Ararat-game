@@ -244,6 +244,14 @@
   padding: 6px 14px; font-size: 13px; font-weight: 600;
 }
 
+
+/* ---------- Editor (Teil 2) ---------- */
+.zeile input[type="range"] { flex: 1 1 80px; width: auto; }
+.ed-wertchen { font-variant-numeric: tabular-nums; font-size: 12.5px; color: var(--basalt-60); min-width: 40px; text-align: right; }
+#editorBrett { display: block; width: 100%; height: auto; max-height: 78vh; margin: 0 auto; touch-action: none; }
+#editorBrett .handle { cursor: grab; }
+#editorBrett .handle:active { cursor: grabbing; }
+#ansicht-editor .segment button { font-size: 12px; padding: 6px 9px; }
 </style>
 </head>
 <body>
@@ -398,9 +406,62 @@
   </div>
 </div>
 
-<!-- ============ Ansicht 2: Spieleditor (Schritt 2) ============ -->
+<!-- ============ Ansicht 2: Spieleditor ============ -->
 <div class="ansicht" id="ansicht-editor">
-  <div class="platzhalter" id="editorInhalt"></div>
+  <div class="layout">
+    <aside class="steuerung">
+
+      <section class="block">
+        <h2>Felder</h2>
+        <div class="zeile">
+          <label class="feldname" for="edFeldzahl">Felder gesamt</label>
+          <input type="number" id="edFeldzahl" min="2" max="200" step="1">
+        </div>
+        <p class="hinweis" id="edFeldInfo"></p>
+        <p class="hinweis">Mehr oder weniger Felder werden am Ende vor dem Gipfel ergänzt bzw. entfernt; die übrigen Felder mit ihren Zonen und Kartenfeldern bleiben unberührt.</p>
+      </section>
+
+      <section class="block">
+        <h2>Kacheln</h2>
+        <div class="zeile"><label class="feldname" for="edTileSize">Größe</label><input type="range" id="edTileSize" min="2" max="10" step="0.1"><span class="ed-wertchen" id="edTileSizeW"></span></div>
+        <div class="zeile"><label class="feldname" for="edCorner">Rundung</label><input type="range" id="edCorner" min="0" max="50" step="1"><span class="ed-wertchen" id="edCornerW"></span></div>
+        <div class="zeile"><label class="feldname" for="edGap">Abstand</label><input type="range" id="edGap" min="0" max="50" step="1"><span class="ed-wertchen" id="edGapW"></span></div>
+        <div class="zeile">
+          <label class="feldname">Ausrichtung</label>
+          <div class="segment" id="edOrient" role="group" aria-label="Ausrichtung der Kacheln">
+            <button data-v="tangent" aria-pressed="true">Kurve folgend</button>
+            <button data-v="fixed" aria-pressed="false">fest</button>
+          </div>
+        </div>
+        <div class="zeile">
+          <label class="feldname" for="edStroke">Weglinie</label>
+          <input type="checkbox" id="edStroke">
+        </div>
+      </section>
+
+      <section class="block">
+        <h2>Master-Pfad</h2>
+        <div class="zeile"><label class="feldname" for="edTension">Rundheit</label><input type="range" id="edTension" min="0" max="100" step="1"><span class="ed-wertchen" id="edTensionW"></span></div>
+        <p class="hinweis">Punkte auf der Karte ziehen, um den Weg zu formen. Antippen wählt einen Punkt aus.</p>
+        <div class="zeile">
+          <button class="btn" id="edPunktAdd">Punkt hinzufügen</button>
+          <button class="btn" id="edPunktDel" disabled>Punkt löschen</button>
+        </div>
+        <div class="zeile" id="edHoeheZeile" style="display:none">
+          <label class="feldname" for="edHoehe">Höhe h</label>
+          <input type="range" id="edHoehe" min="0" max="100" step="1"><span class="ed-wertchen" id="edHoeheW"></span>
+        </div>
+        <p class="hinweis" id="edPunktInfo">Kein Punkt ausgewählt – einen Punkt antippen.</p>
+      </section>
+
+    </aside>
+
+    <main class="buehne">
+      <div class="brett-wrap">
+        <svg id="editorBrett" viewBox="0 0 840 900" role="img" aria-label="Editor: Master-Pfad und Felder"></svg>
+      </div>
+    </main>
+  </div>
 </div>
 
 <!-- ============ Ansicht 3: Kartenliste (Schritt 3) ============ -->
@@ -2316,49 +2377,279 @@ window.AnsichtSpiel = AnsichtSpiel;
 /* =========================================================
    js/ansicht-editor.js  ·  Teil 2: Spieleditor
 
-   Platzhalter (Schritt 1). Hängt bereits am Store und zeigt die
-   aktuellen Brett-Parameter live an. In Schritt 2 kommen hinzu:
-   - Abstand der Felder (tileGap), Eckenrundung (cornerRadius),
-     Kachelgröße (tileSize)
-   - Anzahl der Felder
-   - Master-Pfad direkt durch Ziehen der Kurvenpunkte bearbeiten
-   Alle Änderungen schreiben über Store.touch() zurück und sind
-   damit sofort im JSON und in den anderen Ansichten sichtbar.
+   Bearbeitet das Brett direkt:
+   - Master-Pfad: Punkte auf der Leinwand ziehen, hinzufügen,
+     löschen; je Punkt eine Höhe h (für die spätere Berg-Bühne).
+   - Design: Kachelgröße, Eckenrundung, Abstand, Ausrichtung,
+     Weglinie an/aus; Pfad-Rundheit (tension).
+   - Feldanzahl: am Ende vor dem Gipfel ergänzen/entfernen.
+   Live-Vorschau auf der Editor-Leinwand; beim Loslassen bzw.
+   Bestätigen schreibt Store.touch() zurück -> JSON-Tab und
+   Spielen-Ansicht ziehen automatisch nach.
    ========================================================= */
 const AnsichtEditor = (function () {
   const $ = (id) => document.getElementById(id);
+  const SVGNS = "http://www.w3.org/2000/svg";
 
-  function init() {
-    Store.subscribe((ev) => render(ev.config));
+  let config = null;
+  let W = 840, HH = 900;
+  let ausgewaehlt = -1;     // ausgewählter Kurvenpunkt
+  let ziehtPunkt = -1;      // gerade gezogener Kurvenpunkt
+  let aktivControl = null;  // Control, das gerade bedient wird (gegen Rück-Sync)
+
+  /* ---------- kleine Helfer ---------- */
+  function svgEl(tag, attrs, parent) {
+    const e = document.createElementNS(SVGNS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+  function txt(id, s) { const e = $(id); if (e) e.textContent = s; }
+  function hex2rgb(hex) {
+    const m = /^#?([0-9a-f]{6})$/i.exec(hex || "");
+    if (!m) return { r: 140, g: 151, b: 158 };
+    const v = parseInt(m[1], 16);
+    return { r: (v >> 16) & 255, g: (v >> 8) & 255, b: v & 255 };
+  }
+  function tint(hex, anteil) {
+    const c = hex2rgb(hex);
+    const m = (k) => Math.round(k + (255 - k) * (1 - anteil));
+    return `rgb(${m(c.r)},${m(c.g)},${m(c.b)})`;
+  }
+  function zoneInfo(id) {
+    for (const z of (config.zones || [])) if (z.id === id) return z;
+    return { id, name: id, color: "#8C979E" };
+  }
+  function designFuerFeld(design, f) {
+    const base = { tileSize: design.tileSize, cornerRadius: design.cornerRadius, tileGap: design.tileGap };
+    const ov = design.overrides || {};
+    return Object.assign({}, base, ov[f.zone] || {}, ov[f.type] || {});
   }
 
-  function render(cfg) {
-    const ziel = $("editorInhalt");
-    if (!ziel || !cfg) return;
-    const b = cfg.board || {};
-    const path = b.path || {};
-    const design = b.design || {};
-    const felder = (b.fields || []).length;
-    const karten = (b.fields || []).filter((f) => f.type === "karte").length;
-    const punkte = (path.points || []).length;
+  /* ---------- Start ---------- */
+  function init() {
+    Store.subscribe((ev) => { config = ev.config; render(); });
+    verdrahten();
+  }
 
-    const zeile = (label, wert) =>
-      `<div class="ed-zeile"><span class="ed-label">${label}</span><span class="ed-wert">${wert}</span></div>`;
+  function verdrahten() {
+    $("edFeldzahl").addEventListener("change", (e) => feldzahlSetzen(parseInt(e.target.value, 10)));
 
-    ziel.innerHTML =
-      `<div class="block">
-         <h2>Aktuelle Brett-Parameter</h2>
-         ${zeile("Felder", felder + " (davon " + karten + " Kartenfelder)")}
-         ${zeile("Kurvenpunkte (Master-Pfad)", punkte)}
-         ${zeile("tension (Rundheit des Wegs)", path.tension ?? "–")}
-         ${zeile("tileSize (Kachelgröße)", design.tileSize ?? "–")}
-         ${zeile("cornerRadius (Eckenrundung)", design.cornerRadius ?? "–")}
-         ${zeile("tileGap (Abstand)", design.tileGap ?? "–")}
-         ${zeile("orientTiles (Ausrichtung)", design.orientTiles ?? "–")}
-       </div>
-       <p class="hinweis">Der Editor ist vorbereitet und liest live aus dem JSON. Die Bearbeitung
-       (Regler für Abstand/Rundung/Felderzahl und das Ziehen der Master-Punkte) kommt in Schritt 2;
-       Änderungen werden dann automatisch ins JSON übernommen.</p>`;
+    rangeControl("edTileSize", (v) => setDesign("tileSize", v / 100));   // 2..10  -> 0.02..0.10
+    rangeControl("edCorner",   (v) => setDesign("cornerRadius", v / 100)); // 0..50 -> 0..0.5
+    rangeControl("edGap",      (v) => setDesign("tileGap", v / 100));    // 0..50  -> 0..0.5
+    rangeControl("edTension",  (v) => setPath("tension", v / 100));      // 0..100 -> 0..1
+    rangeControl("edHoehe",    (v) => setHoehe(v / 100));                // 0..100 -> 0..1
+
+    $("edOrient").addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      for (const x of $("edOrient").querySelectorAll("button")) x.setAttribute("aria-pressed", x === b ? "true" : "false");
+      config.board.design = config.board.design || {};
+      config.board.design.orientTiles = b.dataset.v;
+      Store.touch("Editor");
+    });
+    $("edStroke").addEventListener("change", () => {
+      const d = config.board.design = config.board.design || {};
+      d.pathStroke = d.pathStroke || {};
+      d.pathStroke.show = $("edStroke").checked;
+      Store.touch("Editor");
+    });
+    $("edPunktAdd").addEventListener("click", punktHinzufuegen);
+    $("edPunktDel").addEventListener("click", punktLoeschen);
+  }
+
+  /* Slider: live zeichnen (ohne Store), beim Loslassen einmal Store.touch. */
+  function rangeControl(id, applyFn) {
+    const el = $(id);
+    el.addEventListener("input", () => { aktivControl = id; applyFn(Number(el.value)); zeichne(); werteSync(); });
+    el.addEventListener("change", () => { aktivControl = null; Store.touch("Editor"); });
+  }
+
+  function setDesign(key, val) { config.board.design = config.board.design || {}; config.board.design[key] = val; }
+  function setPath(key, val) { config.board.path[key] = val; }
+  function setHoehe(val) { if (ausgewaehlt >= 0) config.board.path.points[ausgewaehlt].h = val; }
+
+  /* ---------- Feldanzahl ---------- */
+  function feldzahlSetzen(n) {
+    if (!Number.isInteger(n)) return;
+    n = Math.max(2, Math.min(500, n));
+    const fields = config.board.fields;
+    if (n === fields.length) return;
+    if (n > fields.length) {
+      const vorlageZone = fields[fields.length - 2] ? fields[fields.length - 2].zone : fields[fields.length - 1].zone;
+      const neu = [];
+      for (let i = fields.length; i < n; i++) neu.push({ zone: vorlageZone, type: "normal" });
+      fields.splice(fields.length - 1, 0, ...neu); // vor dem Gipfel einfügen
+    } else {
+      const entfernen = Math.min(fields.length - n, fields.length - 2); // Start + Gipfel nie
+      fields.splice(fields.length - 1 - entfernen, entfernen);
+    }
+    fields.forEach((f, i) => { f.index = i; });
+    Store.touch("Editor");
+  }
+
+  /* ---------- Master-Pfad ---------- */
+  function selectPunkt(i) { ausgewaehlt = i; punktUiSync(); werteSync(); zeichne(); }
+
+  function punktHinzufuegen() {
+    const pts = config.board.path.points;
+    const i = (ausgewaehlt >= 0 ? ausgewaehlt : pts.length - 1);
+    const a = pts[i], b = pts[Math.min(pts.length - 1, i + 1)];
+    const versatz = (a === b) ? 0.04 : 0;
+    pts.splice(i + 1, 0, {
+      x: clamp01((a.x + b.x) / 2 + versatz),
+      y: clamp01((a.y + b.y) / 2 + versatz),
+      h: ((a.h ?? 0) + (b.h ?? 0)) / 2
+    });
+    ausgewaehlt = i + 1;
+    Store.touch("Editor");
+  }
+  function punktLoeschen() {
+    const pts = config.board.path.points;
+    if (ausgewaehlt < 0 || pts.length <= 2) return;
+    pts.splice(ausgewaehlt, 1);
+    ausgewaehlt = -1;
+    Store.touch("Editor");
+  }
+
+  function svgKoord(evt) {
+    const svg = $("editorBrett");
+    if (!svg.createSVGPoint || !svg.getScreenCTM) return null;
+    const ctm = svg.getScreenCTM(); if (!ctm) return null;
+    const pt = svg.createSVGPoint(); pt.x = evt.clientX; pt.y = evt.clientY;
+    const p = pt.matrixTransform(ctm.inverse());
+    return { nx: clamp01(p.x / W), ny: clamp01(p.y / HH) };
+  }
+  function punktPointerDown(evt, i) {
+    evt.preventDefault();
+    selectPunkt(i);
+    ziehtPunkt = i; aktivControl = "punkt";
+    window.addEventListener("pointermove", punktPointerMove);
+    window.addEventListener("pointerup", punktPointerUp);
+  }
+  function punktPointerMove(evt) {
+    if (ziehtPunkt < 0) return;
+    const k = svgKoord(evt); if (!k) return;
+    const pt = config.board.path.points[ziehtPunkt];
+    pt.x = k.nx; pt.y = k.ny;
+    punktUiSync(); zeichne();
+  }
+  function punktPointerUp() {
+    window.removeEventListener("pointermove", punktPointerMove);
+    window.removeEventListener("pointerup", punktPointerUp);
+    if (ziehtPunkt >= 0) { ziehtPunkt = -1; aktivControl = null; Store.touch("Editor"); }
+  }
+
+  /* ---------- UI-Synchronisation ---------- */
+  function render() {
+    if (!config || !$("editorBrett")) return;
+    const size = (config.board && config.board.size) || { width: 42, height: 45 };
+    HH = Math.round(W * ((size.height / size.width) || (45 / 42)));
+    $("editorBrett").setAttribute("viewBox", `0 0 ${W} ${HH}`);
+
+    if (ausgewaehlt >= (config.board.path.points || []).length) ausgewaehlt = -1;
+
+    const d = config.board.design || {}, p = config.board.path || {};
+    setRange("edTileSize", (d.tileSize ?? 0.05) * 100);
+    setRange("edCorner", Math.round((d.cornerRadius ?? 0.3) * 100));
+    setRange("edGap", Math.round((d.tileGap ?? 0.2) * 100));
+    setRange("edTension", Math.round((p.tension ?? 0.5) * 100));
+    orientSync(d.orientTiles || "tangent");
+    $("edStroke").checked = !(d.pathStroke && d.pathStroke.show === false);
+    if (aktivControl !== "edFeldzahl" && document.activeElement !== $("edFeldzahl"))
+      $("edFeldzahl").value = config.board.fields.length;
+
+    feldInfoSync();
+    punktUiSync();
+    werteSync();
+    zeichne();
+  }
+  function setRange(id, val) { if (aktivControl === id) return; const el = $(id); if (el) el.value = val; }
+  function orientSync(v) { for (const b of $("edOrient").querySelectorAll("button")) b.setAttribute("aria-pressed", b.dataset.v === v ? "true" : "false"); }
+  function feldInfoSync() {
+    const f = config.board.fields, k = f.filter((x) => x.type === "karte").length;
+    txt("edFeldInfo", `${f.length} Felder, davon ${k} Kartenfelder.`);
+  }
+  function werteSync() {
+    const d = config.board.design || {}, p = config.board.path || {};
+    txt("edTileSizeW", (d.tileSize ?? 0).toFixed(3));
+    txt("edCornerW", (d.cornerRadius ?? 0).toFixed(2));
+    txt("edGapW", (d.tileGap ?? 0).toFixed(2));
+    txt("edTensionW", (p.tension ?? 0).toFixed(2));
+    if (ausgewaehlt >= 0) txt("edHoeheW", (config.board.path.points[ausgewaehlt].h ?? 0).toFixed(2));
+  }
+  function punktUiSync() {
+    const pts = config.board.path.points;
+    const sel = ausgewaehlt >= 0 && ausgewaehlt < pts.length;
+    $("edPunktDel").disabled = !sel || pts.length <= 2;
+    $("edHoeheZeile").style.display = sel ? "flex" : "none";
+    if (sel) {
+      const pt = pts[ausgewaehlt];
+      if (aktivControl !== "edHoehe") $("edHoehe").value = Math.round((pt.h ?? 0) * 100);
+      txt("edPunktInfo", `Punkt ${ausgewaehlt} ausgewählt · x ${pt.x.toFixed(3)}, y ${pt.y.toFixed(3)}, h ${(pt.h ?? 0).toFixed(2)}`);
+    } else {
+      txt("edPunktInfo", "Kein Punkt ausgewählt – einen Punkt antippen.");
+    }
+  }
+
+  /* ---------- Leinwand zeichnen ---------- */
+  function zeichne() {
+    const svg = $("editorBrett");
+    if (!svg || !config) return;
+    svg.innerHTML = "";
+    const design = config.board.design || {};
+    const heightEmphasis = (typeof design.heightEmphasis === "number") ? design.heightEmphasis : 0;
+
+    svgEl("rect", { x: 6, y: 6, width: W - 12, height: HH - 12, rx: 18, fill: "var(--pergament)", stroke: "var(--pergament-rand)", "stroke-width": 2 }, svg);
+
+    const layout = Ararat.layoutFields(config, W, HH);
+    const pos = layout.positions;
+
+    const ps = design.pathStroke || {};
+    if (ps.show !== false) {
+      let dd = "";
+      for (const s of layout.table.segs) {
+        const A = { x: s.a.x * W, y: s.a.y * HH }, B = { x: s.b.x * W, y: s.b.y * HH },
+              C = { x: s.c.x * W, y: s.c.y * HH }, D = { x: s.d.x * W, y: s.d.y * HH };
+        if (!dd) dd = `M ${A.x.toFixed(1)} ${A.y.toFixed(1)}`;
+        dd += ` C ${B.x.toFixed(1)} ${B.y.toFixed(1)}, ${C.x.toFixed(1)} ${C.y.toFixed(1)}, ${D.x.toFixed(1)} ${D.y.toFixed(1)}`;
+      }
+      svgEl("path", { d: dd, fill: "none", stroke: ps.color || "#b8a98c", "stroke-width": Math.max(1, (ps.width || 0.012) * W), "stroke-linecap": "round", opacity: 0.85 }, svg);
+    }
+
+    const spacing = pos.length > 1 ? layout.table.total / (pos.length - (config.board.path.closed ? 0 : 1)) : 60;
+    for (let i = 0; i < pos.length; i++) {
+      const p = pos[i], f = p.field, z = zoneInfo(f.zone), dz = designFuerFeld(design, f);
+      const side = (dz.tileSize || 0.05) * W * (1 + p.h * heightEmphasis);
+      const along = Math.min(side, spacing * (1 - (dz.tileGap ?? 0.2)));
+      const rx = (dz.cornerRadius ?? 0.3) * Math.min(side, along);
+      const rot = (design.orientTiles === "fixed") ? 0 : (p.angle * 180 / Math.PI);
+      let fill, stroke, sw;
+      if (f.type === "karte") { fill = z.color; stroke = "#fff"; sw = 1.4; }
+      else if (f.type === "start") { fill = "#fff"; stroke = "#22313B"; sw = 2; }
+      else if (i === pos.length - 1) { fill = z.color; stroke = "#fff"; sw = 2; }
+      else { fill = tint(z.color, 0.26); stroke = z.color; sw = 1.1; }
+      const g = svgEl("g", { transform: `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})` }, svg);
+      svgEl("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill, stroke, "stroke-width": sw }, g);
+    }
+
+    /* Kontroll-Polygon (gestrichelt) */
+    const pts = config.board.path.points;
+    let poly = "";
+    pts.forEach((pt, i) => { poly += (i ? " L" : "M") + (pt.x * W).toFixed(1) + " " + (pt.y * HH).toFixed(1); });
+    svgEl("path", { d: poly, fill: "none", stroke: "#22313B", "stroke-width": 1, opacity: 0.18, "stroke-dasharray": "5 5" }, svg);
+
+    /* Griffe – Farbe nach Höhe h, Auswahl hervorgehoben */
+    const hg = svgEl("g", {}, svg);
+    pts.forEach((pt, i) => {
+      const cx = pt.x * W, cy = pt.y * HH, sel = (i === ausgewaehlt), h = pt.h ?? 0;
+      const grp = svgEl("g", { class: "handle", "data-i": i, transform: `translate(${cx.toFixed(1)} ${cy.toFixed(1)})` }, hg);
+      svgEl("circle", { r: sel ? 13 : 10, fill: tint("#C0563A", 0.25 + 0.75 * h), stroke: sel ? "#22313B" : "#fff", "stroke-width": sel ? 3 : 2 }, grp);
+      const t = svgEl("text", { x: 0, y: 4, "text-anchor": "middle", "font-size": 11, "font-weight": 700, fill: h > 0.55 ? "#fff" : "#22313B" }, grp);
+      t.textContent = i;
+      grp.addEventListener("pointerdown", (evt) => punktPointerDown(evt, i));
+    });
   }
 
   return { init };
