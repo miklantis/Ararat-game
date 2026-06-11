@@ -595,7 +595,7 @@
   "board": {
     "size": {
       "width": 42,
-      "height": 45,
+      "height": 42,
       "unit": "cm"
     },
     "path": {
@@ -1765,7 +1765,7 @@ window.Store = Store;
 const AnsichtSpiel = (function () {
   const $ = (id) => document.getElementById(id);
   const SVGNS = "http://www.w3.org/2000/svg";
-  const W = 840, H = 900; // 42 x 45 cm
+  const W = 840, H = 900; // Bezugsrahmen; tatsaechliches Format kommt aus board.size
 
   const SPIELER = [
     { name: "Spieler 1", farbe: "#2B3A45" },
