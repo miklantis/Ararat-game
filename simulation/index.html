@@ -246,6 +246,10 @@
 
 
 /* ---------- Editor (Teil 2) ---------- */
+.zone-color { width: 28px; height: 22px; padding: 0; border: 1px solid var(--linie); border-radius: 5px; background: none; cursor: pointer; flex: none; }
+.zone-color::-webkit-color-swatch-wrapper { padding: 2px; }
+.zone-color::-webkit-color-swatch { border: none; border-radius: 3px; }
+.zone-color::-moz-color-swatch { border: none; border-radius: 3px; }
 .zone-swatch { width: 13px; height: 13px; border-radius: 3px; display: inline-block; border: 1px solid rgba(0,0,0,.15); flex: none; }
 .zone-name { min-width: 70px; }
 #edZonen .zeile { margin-bottom: 6px; }
@@ -497,6 +501,12 @@
           <input type="range" id="edHoehe" min="0" max="100" step="1"><span class="ed-wertchen" id="edHoeheW"></span>
         </div>
         <p class="hinweis" id="edPunktInfo">Kein Punkt ausgewählt – einen Punkt antippen.</p>
+      </section>
+
+      <section class="block">
+        <h2>Export</h2>
+        <button class="btn primaer" id="edSvgExport">SVG-Spielfeld exportieren</button>
+        <p class="hinweis">Felder und – falls aktiv – die Weglinie als skalierbares SVG im Format des Spielfelds (cm), Hintergrund transparent, ohne Feldnummern. Kartenfeld-Icons kommen später.</p>
       </section>
 
     </aside>
@@ -2482,17 +2492,16 @@ window.AnsichtSpiel = AnsichtSpiel;
 /* =========================================================
    js/ansicht-editor.js  ·  Teil 2: Spieleditor
 
-   Bearbeitet das Brett direkt:
    - Master-Pfad: Punkte ziehen, hinzufügen, löschen; Höhe h je Punkt.
    - Design: Kachelgröße, Eckenrundung, Abstand, Ausrichtung,
      Weglinie an/aus; Pfad-Rundheit (tension).
    - Feldanzahl: am Ende vor dem Gipfel ergänzen/entfernen.
-   - Bereiche aufteilen: Anteil je Bereich in Prozent; die Felder
-     werden in Zonen-Reihenfolge auf die Gruppen verteilt.
-   - Einzelne Felder: auf der Karte antippen schaltet Kartenfeld
-     an/aus (Start und Gipfel ausgenommen).
-   Live-Vorschau; Commit per Store.touch() -> JSON-Tab und
-   Spielen-Ansicht ziehen automatisch nach.
+   - Bereiche aufteilen: Anteil je Bereich in Prozent + Farbe je Bereich.
+   - Einzelne Felder: antippen schaltet Kartenfeld an/aus.
+   - SVG-Export: Felder und (falls aktiv) Weglinie als skalierbares
+     SVG im Format des Spielfelds, Hintergrund transparent, ohne Nummern.
+   Live-Vorschau; Commit per Store.touch() -> JSON-Tab und Spielen-
+   Ansicht ziehen automatisch nach.
    ========================================================= */
 const AnsichtEditor = (function () {
   const $ = (id) => document.getElementById(id);
@@ -2528,6 +2537,7 @@ const AnsichtEditor = (function () {
     for (const z of (config.zones || [])) if (z.id === id) return z;
     return { id, name: id, color: "#8C979E" };
   }
+  function zoneById(id) { return (config.zones || []).find((z) => z.id === id); }
   function designFuerFeld(design, f) {
     const base = { tileSize: design.tileSize, cornerRadius: design.cornerRadius, tileGap: design.tileGap };
     const ov = design.overrides || {};
@@ -2564,6 +2574,7 @@ const AnsichtEditor = (function () {
     });
     $("edPunktAdd").addEventListener("click", punktHinzufuegen);
     $("edPunktDel").addEventListener("click", punktLoeschen);
+    $("edSvgExport").addEventListener("click", svgExportieren);
   }
 
   function rangeControl(id, applyFn) {
@@ -2595,7 +2606,7 @@ const AnsichtEditor = (function () {
     Store.touch("Editor");
   }
 
-  /* ---------- Bereiche prozentual aufteilen ---------- */
+  /* ---------- Bereiche: Aufteilung + Farbe ---------- */
   function zonenVerteilen(prozente) {
     const zones = (config.zones || []).map((z) => z.id);
     if (!zones.length) return;
@@ -2627,15 +2638,19 @@ const AnsichtEditor = (function () {
         const row = document.createElement("div");
         row.className = "zeile";
         row.innerHTML =
-          `<span class="zone-swatch" style="background:${z.color || "#8C979E"}"></span>` +
+          `<input type="color" class="zone-color" id="edZoneC_${z.id}" data-zone="${z.id}" value="${z.color || "#8C979E"}">` +
           `<label class="feldname zone-name" for="edZone_${z.id}">${(z.name || z.id).split(" ")[0]}</label>` +
           `<input type="number" id="edZone_${z.id}" min="0" max="100" step="1" data-zone="${z.id}">` +
           `<span class="ed-wertchen" id="edZoneN_${z.id}"></span>`;
         wrap.appendChild(row);
       });
-      wrap.querySelectorAll("input[data-zone]").forEach((inp) => {
+      wrap.querySelectorAll('input[type="number"][data-zone]').forEach((inp) => {
         inp.addEventListener("focus", () => { aktivControl = "edZonen"; });
         inp.addEventListener("change", () => { aktivControl = null; zonenAnwenden(); });
+      });
+      wrap.querySelectorAll('input[type="color"][data-zone]').forEach((inp) => {
+        inp.addEventListener("input", () => { const z = zoneById(inp.dataset.zone); if (z) { z.color = inp.value; zeichne(); } });
+        inp.addEventListener("change", () => { const z = zoneById(inp.dataset.zone); if (z) { z.color = inp.value; Store.touch("Editor"); } });
       });
     }
     zonenWerteSync();
@@ -2649,6 +2664,8 @@ const AnsichtEditor = (function () {
       const c = cnt[z.id] || 0;
       const inp = $("edZone_" + z.id);
       if (inp && document.activeElement !== inp) inp.value = Math.round(c / N * 100);
+      const col = $("edZoneC_" + z.id);
+      if (col && document.activeElement !== col && /^#[0-9a-f]{6}$/i.test(z.color || "")) col.value = z.color;
       txt("edZoneN_" + z.id, c + " Felder");
     });
   }
@@ -2772,6 +2789,14 @@ const AnsichtEditor = (function () {
     }
   }
 
+  /* ---------- Kachel-Stil (für Leinwand und Export gemeinsam) ---------- */
+  function kachelStil(f, z, i, letzter) {
+    if (f.type === "karte") return { fill: z.color, stroke: "#ffffff", sw: 1.4 };
+    if (f.type === "start") return { fill: "#ffffff", stroke: "#22313B", sw: 2 };
+    if (letzter) return { fill: z.color, stroke: "#ffffff", sw: 2 };
+    return { fill: tint(z.color, 0.26), stroke: z.color, sw: 1.1 };
+  }
+
   /* ---------- Leinwand zeichnen ---------- */
   function zeichne() {
     const svg = $("editorBrett");
@@ -2804,13 +2829,9 @@ const AnsichtEditor = (function () {
       const along = Math.min(side, spacing * (1 - (dz.tileGap ?? 0.2)));
       const rx = (dz.cornerRadius ?? 0.3) * Math.min(side, along);
       const rot = (design.orientTiles === "fixed") ? 0 : (p.angle * 180 / Math.PI);
-      let fill, stroke, sw;
-      if (f.type === "karte") { fill = z.color; stroke = "#fff"; sw = 1.4; }
-      else if (f.type === "start") { fill = "#fff"; stroke = "#22313B"; sw = 2; }
-      else if (i === pos.length - 1) { fill = z.color; stroke = "#fff"; sw = 2; }
-      else { fill = tint(z.color, 0.26); stroke = z.color; sw = 1.1; }
+      const st = kachelStil(f, z, i, i === pos.length - 1);
       const g = svgEl("g", { transform: `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})`, "data-feld": i }, svg);
-      svgEl("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill, stroke, "stroke-width": sw }, g);
+      svgEl("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill: st.fill, stroke: st.stroke, "stroke-width": st.sw }, g);
       if (f.type !== "start" && f.type !== "ziel") {
         g.style.cursor = "pointer";
         g.addEventListener("click", () => feldTypUmschalten(i));
@@ -2833,7 +2854,67 @@ const AnsichtEditor = (function () {
     });
   }
 
-  return { init };
+  /* ---------- SVG-Export (Spielfeld, transparent, im cm-Format) ---------- */
+  function svgMarkup() {
+    if (!config) return "";
+    const size = (config.board && config.board.size) || { width: 42, height: 45 };
+    const w = size.width, h = size.height;
+    const VW = 840, VH = Math.round(VW * (h / w));
+    const design = config.board.design || {};
+    const heightEmphasis = (typeof design.heightEmphasis === "number") ? design.heightEmphasis : 0;
+    const layout = Ararat.layoutFields(config, VW, VH);
+    const pos = layout.positions;
+
+    const out = [];
+    out.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}cm" height="${h}cm" viewBox="0 0 ${VW} ${VH}">`);
+    out.push(`<!-- Ararat-Spielfeld · Format ${w}x${h} cm · Hintergrund transparent · ohne Feldnummern -->`);
+
+    const ps = design.pathStroke || {};
+    if (ps.show !== false) {
+      let dd = "";
+      for (const s of layout.table.segs) {
+        const A = { x: s.a.x * VW, y: s.a.y * VH }, B = { x: s.b.x * VW, y: s.b.y * VH },
+              C = { x: s.c.x * VW, y: s.c.y * VH }, D = { x: s.d.x * VW, y: s.d.y * VH };
+        if (!dd) dd = `M ${A.x.toFixed(1)} ${A.y.toFixed(1)}`;
+        dd += ` C ${B.x.toFixed(1)} ${B.y.toFixed(1)}, ${C.x.toFixed(1)} ${C.y.toFixed(1)}, ${D.x.toFixed(1)} ${D.y.toFixed(1)}`;
+      }
+      out.push(`<g id="weglinie"><path d="${dd}" fill="none" stroke="${ps.color || "#b8a98c"}" stroke-width="${Math.max(1, (ps.width || 0.012) * VW).toFixed(1)}" stroke-linecap="round"/></g>`);
+    }
+
+    out.push(`<g id="felder">`);
+    const spacing = pos.length > 1 ? layout.table.total / (pos.length - (config.board.path.closed ? 0 : 1)) : 60;
+    for (let i = 0; i < pos.length; i++) {
+      const p = pos[i], f = p.field, z = zoneInfo(f.zone), dz = designFuerFeld(design, f);
+      const side = (dz.tileSize || 0.05) * VW * (1 + p.h * heightEmphasis);
+      const along = Math.min(side, spacing * (1 - (dz.tileGap ?? 0.2)));
+      const rx = ((dz.cornerRadius ?? 0.3) * Math.min(side, along)).toFixed(1);
+      const rot = (design.orientTiles === "fixed") ? 0 : (p.angle * 180 / Math.PI);
+      const st = kachelStil(f, z, i, i === pos.length - 1);
+      out.push(
+        `<g transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})" data-zone="${f.zone}" data-typ="${f.type}">` +
+        `<rect x="${(-along / 2).toFixed(1)}" y="${(-side / 2).toFixed(1)}" width="${along.toFixed(1)}" height="${side.toFixed(1)}" rx="${rx}" ` +
+        `fill="${st.fill}" stroke="${st.stroke}" stroke-width="${st.sw}"/></g>`
+      );
+    }
+    out.push(`</g>`);
+    out.push(`</svg>`);
+    return out.join("\n");
+  }
+
+  function svgExportieren() {
+    const svg = svgMarkup();
+    if (!svg) return;
+    const name = (((config.meta && config.meta.name) || "ararat").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")) + "-spielfeld.svg";
+    const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    if (window.App && App.setStatus) App.setStatus("SVG-Spielfeld exportiert: " + name, "ok");
+  }
+
+  return { init, svgMarkup };
 })();
 window.AnsichtEditor = AnsichtEditor;
 </script>
