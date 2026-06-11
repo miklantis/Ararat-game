@@ -246,6 +246,9 @@
 
 
 /* ---------- Editor (Teil 2) ---------- */
+.zone-swatch { width: 13px; height: 13px; border-radius: 3px; display: inline-block; border: 1px solid rgba(0,0,0,.15); flex: none; }
+.zone-name { min-width: 70px; }
+#edZonen .zeile { margin-bottom: 6px; }
 .zeile input[type="range"] { flex: 1 1 80px; width: auto; }
 .ed-wertchen { font-variant-numeric: tabular-nums; font-size: 12.5px; color: var(--basalt-60); min-width: 40px; text-align: right; }
 #editorBrett { display: block; width: 100%; height: auto; max-height: 78vh; margin: 0 auto; touch-action: none; }
@@ -418,7 +421,13 @@
           <input type="number" id="edFeldzahl" min="2" max="200" step="1">
         </div>
         <p class="hinweis" id="edFeldInfo"></p>
-        <p class="hinweis">Mehr oder weniger Felder werden am Ende vor dem Gipfel ergänzt bzw. entfernt; die übrigen Felder mit ihren Zonen und Kartenfeldern bleiben unberührt.</p>
+        <p class="hinweis">Mehr oder weniger Felder werden am Ende vor dem Gipfel ergänzt bzw. entfernt. Einzelnes Feld auf der Karte antippen: Kartenfeld an/aus (Start und Gipfel ausgenommen).</p>
+      </section>
+
+      <section class="block">
+        <h2>Bereiche aufteilen</h2>
+        <div id="edZonen"></div>
+        <p class="hinweis">Anteil je Bereich in Prozent. Die Felder werden in der Reihenfolge der Bereiche auf die Gruppen verteilt; die Summe wird automatisch normiert.</p>
       </section>
 
       <section class="block">
@@ -2378,13 +2387,15 @@ window.AnsichtSpiel = AnsichtSpiel;
    js/ansicht-editor.js  ·  Teil 2: Spieleditor
 
    Bearbeitet das Brett direkt:
-   - Master-Pfad: Punkte auf der Leinwand ziehen, hinzufügen,
-     löschen; je Punkt eine Höhe h (für die spätere Berg-Bühne).
+   - Master-Pfad: Punkte ziehen, hinzufügen, löschen; Höhe h je Punkt.
    - Design: Kachelgröße, Eckenrundung, Abstand, Ausrichtung,
      Weglinie an/aus; Pfad-Rundheit (tension).
    - Feldanzahl: am Ende vor dem Gipfel ergänzen/entfernen.
-   Live-Vorschau auf der Editor-Leinwand; beim Loslassen bzw.
-   Bestätigen schreibt Store.touch() zurück -> JSON-Tab und
+   - Bereiche aufteilen: Anteil je Bereich in Prozent; die Felder
+     werden in Zonen-Reihenfolge auf die Gruppen verteilt.
+   - Einzelne Felder: auf der Karte antippen schaltet Kartenfeld
+     an/aus (Start und Gipfel ausgenommen).
+   Live-Vorschau; Commit per Store.touch() -> JSON-Tab und
    Spielen-Ansicht ziehen automatisch nach.
    ========================================================= */
 const AnsichtEditor = (function () {
@@ -2393,11 +2404,11 @@ const AnsichtEditor = (function () {
 
   let config = null;
   let W = 840, HH = 900;
-  let ausgewaehlt = -1;     // ausgewählter Kurvenpunkt
-  let ziehtPunkt = -1;      // gerade gezogener Kurvenpunkt
-  let aktivControl = null;  // Control, das gerade bedient wird (gegen Rück-Sync)
+  let ausgewaehlt = -1;
+  let ziehtPunkt = -1;
+  let aktivControl = null;
 
-  /* ---------- kleine Helfer ---------- */
+  /* ---------- Helfer ---------- */
   function svgEl(tag, attrs, parent) {
     const e = document.createElementNS(SVGNS, tag);
     for (const k in attrs) e.setAttribute(k, attrs[k]);
@@ -2436,11 +2447,11 @@ const AnsichtEditor = (function () {
   function verdrahten() {
     $("edFeldzahl").addEventListener("change", (e) => feldzahlSetzen(parseInt(e.target.value, 10)));
 
-    rangeControl("edTileSize", (v) => setDesign("tileSize", v / 100));   // 2..10  -> 0.02..0.10
-    rangeControl("edCorner",   (v) => setDesign("cornerRadius", v / 100)); // 0..50 -> 0..0.5
-    rangeControl("edGap",      (v) => setDesign("tileGap", v / 100));    // 0..50  -> 0..0.5
-    rangeControl("edTension",  (v) => setPath("tension", v / 100));      // 0..100 -> 0..1
-    rangeControl("edHoehe",    (v) => setHoehe(v / 100));                // 0..100 -> 0..1
+    rangeControl("edTileSize", (v) => setDesign("tileSize", v / 100));
+    rangeControl("edCorner",   (v) => setDesign("cornerRadius", v / 100));
+    rangeControl("edGap",      (v) => setDesign("tileGap", v / 100));
+    rangeControl("edTension",  (v) => setPath("tension", v / 100));
+    rangeControl("edHoehe",    (v) => setHoehe(v / 100));
 
     $("edOrient").addEventListener("click", (e) => {
       const b = e.target.closest("button"); if (!b) return;
@@ -2459,7 +2470,6 @@ const AnsichtEditor = (function () {
     $("edPunktDel").addEventListener("click", punktLoeschen);
   }
 
-  /* Slider: live zeichnen (ohne Store), beim Loslassen einmal Store.touch. */
   function rangeControl(id, applyFn) {
     const el = $(id);
     el.addEventListener("input", () => { aktivControl = id; applyFn(Number(el.value)); zeichne(); werteSync(); });
@@ -2480,12 +2490,84 @@ const AnsichtEditor = (function () {
       const vorlageZone = fields[fields.length - 2] ? fields[fields.length - 2].zone : fields[fields.length - 1].zone;
       const neu = [];
       for (let i = fields.length; i < n; i++) neu.push({ zone: vorlageZone, type: "normal" });
-      fields.splice(fields.length - 1, 0, ...neu); // vor dem Gipfel einfügen
+      fields.splice(fields.length - 1, 0, ...neu);
     } else {
-      const entfernen = Math.min(fields.length - n, fields.length - 2); // Start + Gipfel nie
+      const entfernen = Math.min(fields.length - n, fields.length - 2);
       fields.splice(fields.length - 1 - entfernen, entfernen);
     }
     fields.forEach((f, i) => { f.index = i; });
+    Store.touch("Editor");
+  }
+
+  /* ---------- Bereiche prozentual aufteilen ---------- */
+  function zonenVerteilen(prozente) {
+    const zones = (config.zones || []).map((z) => z.id);
+    if (!zones.length) return;
+    const fields = config.board.fields;
+    const N = fields.length;
+    const summe = prozente.reduce((a, b) => a + Math.max(0, b), 0) || 1;
+    const roh = prozente.map((p) => Math.max(0, p) / summe * N);
+    const counts = roh.map((c) => Math.floor(c));
+    let rest = N - counts.reduce((a, b) => a + b, 0);
+    const reste = roh.map((c, i) => ({ i, f: c - Math.floor(c) })).sort((a, b) => b.f - a.f);
+    for (let k = 0; rest > 0 && reste.length; k++, rest--) counts[reste[k % reste.length].i]++;
+    let idx = 0;
+    for (let zi = 0; zi < zones.length; zi++) {
+      for (let c = 0; c < counts[zi] && idx < N; c++) { fields[idx].zone = zones[zi]; idx++; }
+    }
+    while (idx < N) { fields[idx].zone = zones[zones.length - 1]; idx++; }
+    fields.forEach((f, i) => { f.index = i; });
+  }
+
+  function zonenZeilenBauen() {
+    const wrap = $("edZonen");
+    if (!wrap) return;
+    const zones = config.zones || [];
+    const sig = zones.map((z) => z.id + ":" + z.name).join("|");
+    if (wrap.dataset.sig !== sig) {
+      wrap.dataset.sig = sig;
+      wrap.innerHTML = "";
+      zones.forEach((z) => {
+        const row = document.createElement("div");
+        row.className = "zeile";
+        row.innerHTML =
+          `<span class="zone-swatch" style="background:${z.color || "#8C979E"}"></span>` +
+          `<label class="feldname zone-name" for="edZone_${z.id}">${(z.name || z.id).split(" ")[0]}</label>` +
+          `<input type="number" id="edZone_${z.id}" min="0" max="100" step="1" data-zone="${z.id}">` +
+          `<span class="ed-wertchen" id="edZoneN_${z.id}"></span>`;
+        wrap.appendChild(row);
+      });
+      wrap.querySelectorAll("input[data-zone]").forEach((inp) => {
+        inp.addEventListener("focus", () => { aktivControl = "edZonen"; });
+        inp.addEventListener("change", () => { aktivControl = null; zonenAnwenden(); });
+      });
+    }
+    zonenWerteSync();
+  }
+  function zonenWerteSync() {
+    if (aktivControl === "edZonen") return;
+    const zones = config.zones || [], fields = config.board.fields, N = fields.length || 1;
+    const cnt = {};
+    for (const f of fields) cnt[f.zone] = (cnt[f.zone] || 0) + 1;
+    zones.forEach((z) => {
+      const c = cnt[z.id] || 0;
+      const inp = $("edZone_" + z.id);
+      if (inp && document.activeElement !== inp) inp.value = Math.round(c / N * 100);
+      txt("edZoneN_" + z.id, c + " Felder");
+    });
+  }
+  function zonenAnwenden() {
+    const zones = config.zones || [];
+    const prozente = zones.map((z) => { const inp = $("edZone_" + z.id); return inp ? Math.max(0, Number(inp.value) || 0) : 0; });
+    zonenVerteilen(prozente);
+    Store.touch("Editor");
+  }
+
+  /* ---------- Einzelne Felder: Kartenfeld an/aus ---------- */
+  function feldTypUmschalten(i) {
+    const f = config.board.fields[i];
+    if (!f || f.type === "start" || f.type === "ziel") return;
+    f.type = (f.type === "karte") ? "normal" : "karte";
     Store.touch("Editor");
   }
 
@@ -2522,7 +2604,7 @@ const AnsichtEditor = (function () {
     return { nx: clamp01(p.x / W), ny: clamp01(p.y / HH) };
   }
   function punktPointerDown(evt, i) {
-    evt.preventDefault();
+    evt.preventDefault(); evt.stopPropagation();
     selectPunkt(i);
     ziehtPunkt = i; aktivControl = "punkt";
     window.addEventListener("pointermove", punktPointerMove);
@@ -2560,6 +2642,7 @@ const AnsichtEditor = (function () {
     if (aktivControl !== "edFeldzahl" && document.activeElement !== $("edFeldzahl"))
       $("edFeldzahl").value = config.board.fields.length;
 
+    zonenZeilenBauen();
     feldInfoSync();
     punktUiSync();
     werteSync();
@@ -2630,17 +2713,19 @@ const AnsichtEditor = (function () {
       else if (f.type === "start") { fill = "#fff"; stroke = "#22313B"; sw = 2; }
       else if (i === pos.length - 1) { fill = z.color; stroke = "#fff"; sw = 2; }
       else { fill = tint(z.color, 0.26); stroke = z.color; sw = 1.1; }
-      const g = svgEl("g", { transform: `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})` }, svg);
+      const g = svgEl("g", { transform: `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})`, "data-feld": i }, svg);
       svgEl("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill, stroke, "stroke-width": sw }, g);
+      if (f.type !== "start" && f.type !== "ziel") {
+        g.style.cursor = "pointer";
+        g.addEventListener("click", () => feldTypUmschalten(i));
+      }
     }
 
-    /* Kontroll-Polygon (gestrichelt) */
     const pts = config.board.path.points;
     let poly = "";
     pts.forEach((pt, i) => { poly += (i ? " L" : "M") + (pt.x * W).toFixed(1) + " " + (pt.y * HH).toFixed(1); });
     svgEl("path", { d: poly, fill: "none", stroke: "#22313B", "stroke-width": 1, opacity: 0.18, "stroke-dasharray": "5 5" }, svg);
 
-    /* Griffe – Farbe nach Höhe h, Auswahl hervorgehoben */
     const hg = svgEl("g", {}, svg);
     pts.forEach((pt, i) => {
       const cx = pt.x * W, cy = pt.y * HH, sel = (i === ausgewaehlt), h = pt.h ?? 0;
