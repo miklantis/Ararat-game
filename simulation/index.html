@@ -1932,13 +1932,13 @@ const AnsichtSpiel = (function () {
       const symFill = istHell(fill) ? "#22313B" : "#FFFFFF";
       if (f.type === "karte" && z.symbol) {
         symbolNode(z.symbol, symFill, side * 0.052, inner);
-        if (showNr) el("text", { x: 0, y: -side * 0.30, "text-anchor": "middle", "font-size": Math.max(7, side * 0.19), fill: symFill, opacity: 0.85, "font-weight": 600 }, inner).textContent = i;
+        if (showNr) el("text", { x: 0, y: -side * 0.30, "text-anchor": "middle", "font-size": Math.max(7, side * 0.18), fill: symFill, opacity: 0.5, "font-weight": 600 }, inner).textContent = i;
       } else if (f.type === "start") {
         symbolNode("stern", "#22313B", side * 0.05, inner);
       } else if (i === pos.length - 1) {
         symbolNode(z.symbol || "berg", symFill, side * 0.055, inner);
       } else if (showNr) {
-        el("text", { x: 0, y: side * 0.13, "text-anchor": "middle", "font-size": Math.max(8, side * 0.30), fill: "#22313B", opacity: 0.55, "font-weight": 600, "font-variant-numeric": "tabular-nums" }, inner).textContent = i;
+        el("text", { x: 0, y: side * 0.12, "text-anchor": "middle", "font-size": Math.max(8, side * 0.26), fill: "#22313B", opacity: 0.3, "font-weight": 600, "font-variant-numeric": "tabular-nums" }, inner).textContent = i;
       }
 
       if (f.type === "start" || i === pos.length - 1) {
