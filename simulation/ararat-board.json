@@ -2,135 +2,145 @@
   "meta": {
     "name": "Ararat – Die Reise zum Gipfel",
     "version": "board-v1",
-    "beschreibung": "Standard-Brett für den Test-Prototyp (Konzept v4). Spirale mit 48 Feldern, 4 Bereiche, 15 Kartenfelder."
+    "beschreibung": "Standard-Brett (Konzept v4). Spirale mit 60 Feldern, 4 Bereiche, 15 Kartenfelder, je Bereich 20 Karten (inkl. spielerabhängiger Karten; je Bereich genau eine harte Strafkarte)."
   },
   "board": {
     "size": {
       "width": 42,
-      "height": 45,
+      "height": 42,
       "unit": "cm"
     },
     "path": {
       "curveType": "catmullRom",
       "closed": false,
-      "tension": 0.5,
+      "tension": 0.67,
       "points": [
         {
-          "x": 0.6675,
-          "y": 0.1807,
-          "h": 0.0
+          "x": 0.4807586669921875,
+          "y": 0.0807873044695173,
+          "h": 0
         },
         {
-          "x": 0.8423,
-          "y": 0.34,
+          "x": 0.6780024937220982,
+          "y": 0.12785927000499908,
+          "h": 0.0095
+        },
+        {
+          "x": 0.8261574881417411,
+          "y": 0.24584001813616072,
           "h": 0.019
         },
         {
-          "x": 0.8834,
-          "y": 0.5575,
+          "x": 0.9013236636207217,
+          "y": 0.39678548177083334,
+          "h": 0.033
+        },
+        {
+          "x": 0.9015069870721726,
+          "y": 0.6723642258417039,
           "h": 0.047
         },
         {
-          "x": 0.7852,
-          "y": 0.7497,
+          "x": 0.7766616821289063,
+          "y": 0.8409867059616816,
           "h": 0.08
         },
         {
-          "x": 0.5937,
-          "y": 0.8492,
-          "h": 0.116
-        },
-        {
-          "x": 0.3851,
-          "y": 0.8275,
+          "x": 0.5632936023530506,
+          "y": 0.9310737973167783,
           "h": 0.155
         },
         {
-          "x": 0.2357,
-          "y": 0.7029,
+          "x": 0.3301226298014323,
+          "y": 0.8904595511300223,
+          "h": 0.1755
+        },
+        {
+          "x": 0.17734930855887276,
+          "y": 0.7669722784133185,
           "h": 0.196
         },
         {
-          "x": 0.1937,
-          "y": 0.5295,
+          "x": 0.09108411698114305,
+          "y": 0.5439032781691778,
           "h": 0.24
         },
         {
-          "x": 0.2635,
-          "y": 0.374,
+          "x": 0.17061080932617187,
+          "y": 0.3195049104236421,
           "h": 0.285
         },
         {
-          "x": 0.4085,
-          "y": 0.2904,
+          "x": 0.3895828610374814,
+          "y": 0.20957483564104354,
           "h": 0.332
         },
         {
-          "x": 0.5684,
-          "y": 0.3004,
+          "x": 0.620794169108073,
+          "y": 0.2679750170026507,
           "h": 0.381
         },
         {
-          "x": 0.6841,
-          "y": 0.3893,
+          "x": 0.7126747494652158,
+          "y": 0.39985100882393976,
           "h": 0.431
         },
         {
-          "x": 0.7197,
-          "y": 0.515,
+          "x": 0.7265298752557664,
+          "y": 0.5259798322405134,
           "h": 0.483
         },
         {
-          "x": 0.6737,
-          "y": 0.6273,
+          "x": 0.6907059442429315,
+          "y": 0.647782461983817,
           "h": 0.536
         },
         {
-          "x": 0.5747,
-          "y": 0.6875,
+          "x": 0.5899839492071243,
+          "y": 0.7358984810965402,
           "h": 0.59
         },
         {
-          "x": 0.4675,
-          "y": 0.6824,
+          "x": 0.44669952392578127,
+          "y": 0.7475475492931548,
           "h": 0.646
         },
         {
-          "x": 0.3927,
-          "y": 0.6254,
+          "x": 0.3155684334891183,
+          "y": 0.6726335071382068,
           "h": 0.702
         },
         {
-          "x": 0.3716,
-          "y": 0.5478,
+          "x": 0.2656429109119234,
+          "y": 0.5431469145275297,
           "h": 0.76
         },
         {
-          "x": 0.4006,
-          "y": 0.4834,
+          "x": 0.353741709391276,
+          "y": 0.4178145635695685,
           "h": 0.818
         },
         {
-          "x": 0.4563,
-          "y": 0.4538,
+          "x": 0.45655513945079984,
+          "y": 0.4079933529808408,
           "h": 0.878
         },
         {
-          "x": 0.509,
-          "y": 0.4616,
+          "x": 0.5301741827101935,
+          "y": 0.4768565223330543,
           "h": 0.939
         },
         {
-          "x": 0.5369,
-          "y": 0.4919,
-          "h": 1.0
+          "x": 0.5108010428292411,
+          "y": 0.5737680344354539,
+          "h": 1
         }
       ]
     },
     "design": {
       "tileShape": "roundedRect",
-      "tileSize": 0.052,
-      "cornerRadius": 0.3,
+      "tileSize": 0.068,
+      "cornerRadius": 0.28,
       "tileGap": 0.22,
       "orientTiles": "tangent",
       "pathStroke": {
@@ -214,7 +224,7 @@
       {
         "index": 12,
         "zone": "dorf",
-        "type": "karte"
+        "type": "normal"
       },
       {
         "index": 13,
@@ -259,7 +269,7 @@
       {
         "index": 21,
         "zone": "felder",
-        "type": "karte"
+        "type": "normal"
       },
       {
         "index": 22,
@@ -269,12 +279,12 @@
       {
         "index": 23,
         "zone": "felder",
-        "type": "normal"
+        "type": "karte"
       },
       {
         "index": 24,
         "zone": "felder",
-        "type": "karte"
+        "type": "normal"
       },
       {
         "index": 25,
@@ -319,12 +329,12 @@
       {
         "index": 33,
         "zone": "stadt",
-        "type": "karte"
+        "type": "normal"
       },
       {
         "index": 34,
         "zone": "stadt",
-        "type": "normal"
+        "type": "karte"
       },
       {
         "index": 35,
@@ -334,12 +344,12 @@
       {
         "index": 36,
         "zone": "stadt",
-        "type": "karte"
+        "type": "normal"
       },
       {
         "index": 37,
         "zone": "ararat",
-        "type": "normal"
+        "type": "karte"
       },
       {
         "index": 38,
@@ -349,7 +359,7 @@
       {
         "index": 39,
         "zone": "ararat",
-        "type": "karte"
+        "type": "normal"
       },
       {
         "index": 40,
@@ -387,7 +397,67 @@
         "type": "normal"
       },
       {
-        "index": 47,
+        "zone": "ararat",
+        "type": "normal",
+        "index": 47
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 48
+      },
+      {
+        "zone": "ararat",
+        "type": "karte",
+        "index": 49
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 50
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 51
+      },
+      {
+        "zone": "ararat",
+        "type": "karte",
+        "index": 52
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 53
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 54
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 55
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 56
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 57
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 58
+      },
+      {
+        "index": 59,
         "zone": "ararat",
         "type": "ziel"
       }
@@ -415,7 +485,7 @@
     {
       "id": "ararat",
       "name": "Ararat",
-      "color": "#9FB4C2",
+      "color": "#546069",
       "symbol": "berg"
     }
   ],
@@ -432,6 +502,26 @@
     {
       "id": "dorf-01",
       "bereich": "dorf",
+      "typ": "rueckwaerts",
+      "wert": 5,
+      "text_kmr": "",
+      "text_de": "Ein altes Missverständnis flammt wieder auf – du musst zurück und es in Ruhe klären.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-02",
+      "bereich": "dorf",
+      "typ": "vorwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Frischer Çay am Morgen, leichter Schritt – 1 Feld vor.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-03",
+      "bereich": "dorf",
       "typ": "vorwaerts",
       "wert": 2,
       "text_kmr": "",
@@ -440,27 +530,107 @@
       "audio": ""
     },
     {
-      "id": "dorf-02",
+      "id": "dorf-04",
       "bereich": "dorf",
-      "typ": "rueckwaerts",
+      "typ": "vorwaerts",
       "wert": 2,
       "text_kmr": "",
-      "text_de": "Im Dorf wird gefeiert, alle brauchen dich – 2 Felder zurück.",
+      "text_de": "Beim Brotbacken bekommst du ein warmes Fladenbrot mit – 2 Felder vor.",
       "text_tr": "",
       "audio": ""
     },
     {
-      "id": "dorf-03",
+      "id": "dorf-05",
+      "bereich": "dorf",
+      "typ": "vorwaerts",
+      "wert": 3,
+      "text_kmr": "",
+      "text_de": "Eine Hochzeit zieht durchs Dorf, alle tanzen dich nach vorn – 3 Felder vor.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-06",
       "bereich": "dorf",
       "typ": "vorwaerts",
       "wert": 1,
       "text_kmr": "",
-      "text_de": "Frischer Çay gibt dir Kraft – 1 Feld vor.",
+      "text_de": "Die Großmutter steckt dir getrocknete Maulbeeren zu – 1 Feld vor.",
       "text_tr": "",
       "audio": ""
     },
     {
-      "id": "dorf-04",
+      "id": "dorf-07",
+      "bereich": "dorf",
+      "typ": "vorwaerts",
+      "wert": 4,
+      "text_kmr": "",
+      "text_de": "Der Postwagen fährt genau deine Richtung – steig auf, 4 Felder vor.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-08",
+      "bereich": "dorf",
+      "typ": "rueckwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Du hilfst, einen Esel einzufangen – 1 Feld zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-09",
+      "bereich": "dorf",
+      "typ": "rueckwaerts",
+      "wert": 2,
+      "text_kmr": "",
+      "text_de": "Langes Schwätzchen am Brunnen – 2 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-10",
+      "bereich": "dorf",
+      "typ": "rueckwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Du vergisst den Korb und gehst noch einmal um – 1 Feld zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-11",
+      "bereich": "dorf",
+      "typ": "rueckwaerts",
+      "wert": 3,
+      "text_kmr": "",
+      "text_de": "Ein Streit ums Weiderecht hält dich auf – 3 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-12",
+      "bereich": "dorf",
+      "typ": "rueckwaerts",
+      "wert": 2,
+      "text_kmr": "",
+      "text_de": "Der Hofhund will unbedingt spielen – 2 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-13",
+      "bereich": "dorf",
+      "typ": "rueckwaerts",
+      "wert": 3,
+      "text_kmr": "",
+      "text_de": "Du verzettelst dich beim Granatapfel-Pflücken – 3 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-14",
       "bereich": "dorf",
       "typ": "aussetzen",
       "wert": null,
@@ -470,42 +640,82 @@
       "audio": ""
     },
     {
-      "id": "dorf-05",
+      "id": "dorf-15",
       "bereich": "dorf",
-      "typ": "erneut",
+      "typ": "aussetzen",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Gute Nachrichten aus dem Dorf – würfle gleich noch einmal.",
+      "text_de": "Die Teekanne ist noch halb voll – du bleibst sitzen, einmal aussetzen.",
       "text_tr": "",
       "audio": ""
     },
     {
-      "id": "dorf-06",
+      "id": "dorf-16",
       "bereich": "dorf",
-      "typ": "rueckwaerts",
-      "wert": 1,
+      "typ": "erneut",
+      "wert": null,
       "text_kmr": "",
-      "text_de": "Du hilfst beim Brotbacken – 1 Feld zurück.",
+      "text_de": "Gute Nachricht aus dem Dorf – würfle gleich noch einmal.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-17",
+      "bereich": "dorf",
+      "typ": "erneut",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Rückenwind und gute Laune – würfle gleich noch einmal.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-18",
+      "bereich": "dorf",
+      "typ": "vor_zu_naechstem",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Du schließt dich dem Nachbarn an, der schon weiter ist – auf zum Nächsten vor dir.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-19",
+      "bereich": "dorf",
+      "typ": "tausch_hinterster",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Du kehrst um und holst den Langsamsten ab – ihr tauscht die Plätze.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "dorf-20",
+      "bereich": "dorf",
+      "typ": "tausch_fuehrender",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Eine Abkürzung über die Felder bringt dich nach ganz vorn – tausche mit dem Führenden.",
       "text_tr": "",
       "audio": ""
     },
     {
       "id": "felder-01",
       "bereich": "felder",
-      "typ": "vorwaerts",
-      "wert": 5,
+      "typ": "rueckwaerts",
+      "wert": 6,
       "text_kmr": "",
-      "text_de": "Jemand nimmt dich im Auto mit – 5 Felder vor.",
+      "text_de": "Ein Gewitter jagt die Herde auseinander – du läufst weit zurück, um sie zu sammeln.",
       "text_tr": "",
       "audio": ""
     },
     {
       "id": "felder-02",
       "bereich": "felder",
-      "typ": "rueckwaerts",
-      "wert": 2,
+      "typ": "vorwaerts",
+      "wert": 1,
       "text_kmr": "",
-      "text_de": "Ein Schaf ist ausgebüxt – 2 Felder zurück.",
+      "text_de": "Die Sonne wärmt den Pfad – 1 Feld vor.",
       "text_tr": "",
       "audio": ""
     },
@@ -513,59 +723,199 @@
       "id": "felder-03",
       "bereich": "felder",
       "typ": "vorwaerts",
-      "wert": 3,
+      "wert": 2,
       "text_kmr": "",
-      "text_de": "Rückenwind über die Weide – 3 Felder vor.",
+      "text_de": "Der Hütehund treibt dich flott voran – 2 Felder vor.",
       "text_tr": "",
       "audio": ""
     },
     {
       "id": "felder-04",
       "bereich": "felder",
-      "typ": "aussetzen",
-      "wert": null,
+      "typ": "vorwaerts",
+      "wert": 2,
       "text_kmr": "",
-      "text_de": "Mittagsrast unter dem Baum – einmal aussetzen.",
+      "text_de": "Frisches Quellwasser gibt neue Kraft – 2 Felder vor.",
       "text_tr": "",
       "audio": ""
     },
     {
       "id": "felder-05",
       "bereich": "felder",
-      "typ": "erneut",
-      "wert": null,
+      "typ": "vorwaerts",
+      "wert": 3,
       "text_kmr": "",
-      "text_de": "Der Hund treibt die Herde flott voran – würfle noch einmal.",
+      "text_de": "Trockener, fester Boden – du kommst gut voran, 3 Felder vor.",
       "text_tr": "",
       "audio": ""
     },
     {
       "id": "felder-06",
       "bereich": "felder",
+      "typ": "vorwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Ein Lamm tapst dir freudig hinterher – 1 Feld vor.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-07",
+      "bereich": "felder",
+      "typ": "vorwaerts",
+      "wert": 4,
+      "text_kmr": "",
+      "text_de": "Jemand nimmt dich auf dem Heuwagen mit – 4 Felder vor.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-08",
+      "bereich": "felder",
+      "typ": "rueckwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Ein Schaf hat sich verlaufen – 1 Feld zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-09",
+      "bereich": "felder",
+      "typ": "rueckwaerts",
+      "wert": 2,
+      "text_kmr": "",
+      "text_de": "Du flickst schnell den Weidezaun – 2 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-10",
+      "bereich": "felder",
+      "typ": "rueckwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Matschige Stelle, du suchst einen Umweg – 1 Feld zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-11",
+      "bereich": "felder",
       "typ": "rueckwaerts",
       "wert": 3,
       "text_kmr": "",
-      "text_de": "Plötzlicher Regen, du suchst Schutz – 3 Felder zurück.",
+      "text_de": "Plötzlicher Regen, du suchst Schutz unterm Baum – 3 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-12",
+      "bereich": "felder",
+      "typ": "rueckwaerts",
+      "wert": 2,
+      "text_kmr": "",
+      "text_de": "Die Herde will partout nicht weiter – 2 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-13",
+      "bereich": "felder",
+      "typ": "rueckwaerts",
+      "wert": 3,
+      "text_kmr": "",
+      "text_de": "Du sammelst Kräuter und vergisst die Zeit – 3 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-14",
+      "bereich": "felder",
+      "typ": "aussetzen",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Mittagsrast im Schatten – einmal aussetzen.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-15",
+      "bereich": "felder",
+      "typ": "aussetzen",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Du melkst noch die Ziegen – einmal aussetzen.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-16",
+      "bereich": "felder",
+      "typ": "erneut",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Der Weg ist frei und eben – würfle gleich noch einmal.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-17",
+      "bereich": "felder",
+      "typ": "erneut",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Ein guter Tag auf der Weide – würfle gleich noch einmal.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-18",
+      "bereich": "felder",
+      "typ": "vor_zu_naechstem",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Du folgst der Spur der Herde und holst zum Nächsten vor dir auf.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-19",
+      "bereich": "felder",
+      "typ": "tausch_hinterster",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Du gehst zurück und nimmst den Letzten an die Hand – ihr tauscht die Plätze.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "felder-20",
+      "bereich": "felder",
+      "typ": "tausch_fuehrender",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Ein Reiter setzt dich vorn ab – tausche mit dem Führenden.",
       "text_tr": "",
       "audio": ""
     },
     {
       "id": "stadt-01",
       "bereich": "stadt",
-      "typ": "vorwaerts",
-      "wert": 4,
+      "typ": "rueckwaerts",
+      "wert": 7,
       "text_kmr": "",
-      "text_de": "Der Dolmuş fährt sofort los – 4 Felder vor.",
+      "text_de": "Du verlierst deine Papiere und musst den ganzen Weg zum Amt zurück.",
       "text_tr": "",
       "audio": ""
     },
     {
       "id": "stadt-02",
       "bereich": "stadt",
-      "typ": "rueckwaerts",
-      "wert": 3,
+      "typ": "vorwaerts",
+      "wert": 1,
       "text_kmr": "",
-      "text_de": "Du verläufst dich in den Gassen – 3 Felder zurück.",
+      "text_de": "Grüne Ampel, freie Bahn – 1 Feld vor.",
       "text_tr": "",
       "audio": ""
     },
@@ -582,30 +932,170 @@
     {
       "id": "stadt-04",
       "bereich": "stadt",
-      "typ": "aussetzen",
-      "wert": null,
+      "typ": "vorwaerts",
+      "wert": 2,
       "text_kmr": "",
-      "text_de": "Lange Schlange beim Amt – einmal aussetzen.",
+      "text_de": "Der Dolmuş hält genau vor dir – 2 Felder vor.",
       "text_tr": "",
       "audio": ""
     },
     {
       "id": "stadt-05",
       "bereich": "stadt",
-      "typ": "erneut",
-      "wert": null,
+      "typ": "vorwaerts",
+      "wert": 3,
       "text_kmr": "",
-      "text_de": "Ein alter Freund begleitet dich – würfle noch einmal.",
+      "text_de": "Ein alter Freund nimmt dich im Auto mit – 3 Felder vor.",
       "text_tr": "",
       "audio": ""
     },
     {
       "id": "stadt-06",
       "bereich": "stadt",
-      "typ": "rueckwaerts",
+      "typ": "vorwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Frisch geröstete Maronen geben Schwung – 1 Feld vor.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-07",
+      "bereich": "stadt",
+      "typ": "vorwaerts",
       "wert": 4,
       "text_kmr": "",
-      "text_de": "Der Bus hat Verspätung – 4 Felder zurück.",
+      "text_de": "Du erwischst die letzte Straßenbahn – 4 Felder vor.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-08",
+      "bereich": "stadt",
+      "typ": "rueckwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Du verläufst dich kurz in den Gassen – 1 Feld zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-09",
+      "bereich": "stadt",
+      "typ": "rueckwaerts",
+      "wert": 2,
+      "text_kmr": "",
+      "text_de": "Lange Schlange beim Bäcker – 2 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-10",
+      "bereich": "stadt",
+      "typ": "rueckwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Du bleibst an einem Schaufenster hängen – 1 Feld zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-11",
+      "bereich": "stadt",
+      "typ": "rueckwaerts",
+      "wert": 3,
+      "text_kmr": "",
+      "text_de": "Stau in der Innenstadt – 3 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-12",
+      "bereich": "stadt",
+      "typ": "rueckwaerts",
+      "wert": 2,
+      "text_kmr": "",
+      "text_de": "Der Bus hat Verspätung – 2 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-13",
+      "bereich": "stadt",
+      "typ": "rueckwaerts",
+      "wert": 3,
+      "text_kmr": "",
+      "text_de": "Du handelst zu lange auf dem Basar – 3 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-14",
+      "bereich": "stadt",
+      "typ": "aussetzen",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Lange Wartenummer beim Amt – einmal aussetzen.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-15",
+      "bereich": "stadt",
+      "typ": "aussetzen",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Du trinkst noch einen Kaffee mit Bekannten – einmal aussetzen.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-16",
+      "bereich": "stadt",
+      "typ": "erneut",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Alles läuft glatt heute – würfle gleich noch einmal.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-17",
+      "bereich": "stadt",
+      "typ": "erneut",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Du findest sofort den richtigen Weg – würfle gleich noch einmal.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-18",
+      "bereich": "stadt",
+      "typ": "vor_zu_naechstem",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Du teilst dir ein Taxi mit dem, der vor dir ist – auf zum Nächsten.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-19",
+      "bereich": "stadt",
+      "typ": "tausch_hinterster",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Du wartest bewusst auf den Letzten – ihr tauscht die Plätze.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "stadt-20",
+      "bereich": "stadt",
+      "typ": "tausch_fuehrender",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Eine clevere Abkürzung durch die Passage – tausche mit dem Führenden.",
       "text_tr": "",
       "audio": ""
     },
@@ -613,9 +1103,9 @@
       "id": "ararat-01",
       "bereich": "ararat",
       "typ": "rueckwaerts",
-      "wert": 10,
+      "wert": 9,
       "text_kmr": "",
-      "text_de": "Ein Sturm zieht auf am Berg – 10 Felder zurück.",
+      "text_de": "Ein schwerer Sturm zwingt dich weit den Berg hinab in Sicherheit.",
       "text_tr": "",
       "audio": ""
     },
@@ -623,24 +1113,124 @@
       "id": "ararat-02",
       "bereich": "ararat",
       "typ": "vorwaerts",
-      "wert": 3,
+      "wert": 1,
       "text_kmr": "",
-      "text_de": "Klarer Himmel, fester Schritt – 3 Felder vor.",
+      "text_de": "Klare Luft, fester Tritt – 1 Feld vor.",
       "text_tr": "",
       "audio": ""
     },
     {
       "id": "ararat-03",
       "bereich": "ararat",
-      "typ": "rueckwaerts",
-      "wert": 5,
+      "typ": "vorwaerts",
+      "wert": 2,
       "text_kmr": "",
-      "text_de": "Steiniger Pfad, du rutschst ab – 5 Felder zurück.",
+      "text_de": "Ein Hirte zeigt dir den sicheren Pfad – 2 Felder vor.",
       "text_tr": "",
       "audio": ""
     },
     {
       "id": "ararat-04",
+      "bereich": "ararat",
+      "typ": "vorwaerts",
+      "wert": 2,
+      "text_kmr": "",
+      "text_de": "Die Morgensonne taut den Weg frei – 2 Felder vor.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-05",
+      "bereich": "ararat",
+      "typ": "vorwaerts",
+      "wert": 3,
+      "text_kmr": "",
+      "text_de": "Rückenwind treibt dich bergauf – 3 Felder vor.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-06",
+      "bereich": "ararat",
+      "typ": "vorwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Du findest einen festen Felsvorsprung – 1 Feld vor.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-07",
+      "bereich": "ararat",
+      "typ": "vorwaerts",
+      "wert": 4,
+      "text_kmr": "",
+      "text_de": "Ein guter Pfad führt dich rasch höher – 4 Felder vor.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-08",
+      "bereich": "ararat",
+      "typ": "rueckwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Loses Geröll rutscht weg – 1 Feld zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-09",
+      "bereich": "ararat",
+      "typ": "rueckwaerts",
+      "wert": 2,
+      "text_kmr": "",
+      "text_de": "Nebel zieht auf, du gehst vorsichtig – 2 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-10",
+      "bereich": "ararat",
+      "typ": "rueckwaerts",
+      "wert": 1,
+      "text_kmr": "",
+      "text_de": "Du schnürst die Schuhe neu – 1 Feld zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-11",
+      "bereich": "ararat",
+      "typ": "rueckwaerts",
+      "wert": 3,
+      "text_kmr": "",
+      "text_de": "Steiler Hang, du rutschst ab – 3 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-12",
+      "bereich": "ararat",
+      "typ": "rueckwaerts",
+      "wert": 2,
+      "text_kmr": "",
+      "text_de": "Ein eisiger Windstoß bremst dich – 2 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-13",
+      "bereich": "ararat",
+      "typ": "rueckwaerts",
+      "wert": 3,
+      "text_kmr": "",
+      "text_de": "Du verlierst kurz die Markierung – 3 Felder zurück.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-14",
       "bereich": "ararat",
       "typ": "aussetzen",
       "wert": null,
@@ -650,7 +1240,17 @@
       "audio": ""
     },
     {
-      "id": "ararat-05",
+      "id": "ararat-15",
+      "bereich": "ararat",
+      "typ": "aussetzen",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Rast an der Schutzhütte – einmal aussetzen.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-16",
       "bereich": "ararat",
       "typ": "erneut",
       "wert": null,
@@ -660,12 +1260,42 @@
       "audio": ""
     },
     {
-      "id": "ararat-06",
+      "id": "ararat-17",
       "bereich": "ararat",
-      "typ": "vorwaerts",
-      "wert": 2,
+      "typ": "erneut",
+      "wert": null,
       "text_kmr": "",
-      "text_de": "Ein Hirte zeigt dir den sicheren Weg – 2 Felder vor.",
+      "text_de": "Ein klarer Moment, du nutzt ihn – würfle gleich noch einmal.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-18",
+      "bereich": "ararat",
+      "typ": "vor_zu_naechstem",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Du folgst den Spuren im Schnee und holst zum Nächsten vor dir auf.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-19",
+      "bereich": "ararat",
+      "typ": "tausch_hinterster",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Du seilst dich zum Letzten ab – ihr tauscht die Plätze.",
+      "text_tr": "",
+      "audio": ""
+    },
+    {
+      "id": "ararat-20",
+      "bereich": "ararat",
+      "typ": "tausch_fuehrender",
+      "wert": null,
+      "text_kmr": "",
+      "text_de": "Eine Adlerschwinge zeigt dir die Linie – tausche mit dem Führenden.",
       "text_tr": "",
       "audio": ""
     }
