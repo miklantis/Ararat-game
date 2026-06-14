@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ararat – Die Reise zum Gipfel</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #1a1410;
+      font-family: Georgia, serif;
+      color: #e8dcc8;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: clamp(1.6rem, 5vw, 2.8rem);
+      letter-spacing: 0.04em;
+      text-align: center;
+      margin-bottom: 0.4rem;
+      color: #f0e6cc;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #a09070;
+      text-align: center;
+      margin-bottom: 3rem;
+      font-style: italic;
+    }
+
+    .cards {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 220px;
+      padding: 2rem 1.5rem;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #e8dcc8;
+      transition: transform 0.15s, box-shadow 0.15s;
+      gap: 0.8rem;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+    }
+
+    .card.simulation {
+      background: #2e4a2e;
+      border: 1px solid #4a7a4a;
+    }
+
+    .card.karten {
+      background: #3a2a1a;
+      border: 1px solid #7a5a2a;
+    }
+
+    .card .icon {
+      font-size: 2.8rem;
+    }
+
+    .card .label {
+      font-size: 1.1rem;
+      font-weight: bold;
+      letter-spacing: 0.03em;
+      text-align: center;
+    }
+
+    .card .desc {
+      font-size: 0.82rem;
+      color: #a09070;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.75rem;
+      color: #5a5040;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ararat</h1>
+  <p class="subtitle">Die Reise zum Gipfel</p>
+
+  <div class="cards">
+    <a class="card simulation" href="simulation/index.html">
+      <span class="icon">&#9650;</span>
+      <span class="label">Simulation</span>
+      <span class="desc">Spielprototyp, Bretteditor und Kartenliste</span>
+    </a>
+
+    <a class="card karten" href="karten-app/index.html">
+      <span class="icon">&#9834;</span>
+      <span class="label">Karten-App</span>
+      <span class="desc">Kurmancî-Audio und Kartenverwaltung</span>
+    </a>
+  </div>
+
+  <footer>miklantis/Ararat-game</footer>
+</body>
+</html>
