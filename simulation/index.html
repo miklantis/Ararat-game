@@ -512,7 +512,7 @@
       <section class="block">
         <h2>Export</h2>
         <button class="btn primaer" id="edSvgExport">SVG-Spielfeld exportieren</button>
-        <p class="hinweis">Felder und – falls aktiv – die Weglinie als skalierbares SVG im Format des Spielfelds (cm), Hintergrund transparent, ohne Feldnummern. Kartenfeld-Icons kommen später.</p>
+        <p class="hinweis">Felder und – falls aktiv – die Weglinie als skalierbares SVG im Format des Spielfelds (cm), Hintergrund transparent, ohne Feldnummern. Kartenfeld-Icons werden mit exportiert.</p>
       </section>
 
     </aside>
@@ -3674,7 +3674,7 @@ const AnsichtEditor = (function () {
 
     const out = [];
     out.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}cm" height="${h}cm" viewBox="0 0 ${VW} ${VH}">`);
-    out.push(`<!-- Ararat-Spielfeld · Format ${w}x${h} cm · Hintergrund transparent · ohne Feldnummern -->`);
+    out.push(`<!-- Ararat-Spielfeld · Format ${w}x${h} cm · Hintergrund transparent · ohne Feldnummern · mit Kartenfeld-Icons -->`);
 
     const ps = design.pathStroke || {};
     if (ps.show !== false) {
@@ -3710,10 +3710,18 @@ const AnsichtEditor = (function () {
           inner + `</g>`
         );
       } else {
+        let inner = `<rect x="${(-along / 2).toFixed(1)}" y="${(-side / 2).toFixed(1)}" width="${along.toFixed(1)}" height="${side.toFixed(1)}" rx="${rx}" fill="${st.fill}" stroke="${st.stroke}" stroke-width="${(st.sw * (design.strokeWidth ?? 1)).toFixed(2)}"/>`;
+        if (f.type === "karte" && z.symbol) {
+          const dSym = (window.ARARAT_SYMBOLE || {})[z.symbol];
+          if (dSym) {
+            const ikFill = istHell(st.fill) ? "#22313B" : "#FFFFFF";
+            const sc = side * 0.052 * (design.iconScale ?? 1);
+            inner += `<path d="${dSym}" fill="${ikFill}" transform="scale(${sc.toFixed(2)})"/>`;
+          }
+        }
         out.push(
           `<g transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})" data-zone="${f.zone}" data-typ="${f.type}">` +
-          `<rect x="${(-along / 2).toFixed(1)}" y="${(-side / 2).toFixed(1)}" width="${along.toFixed(1)}" height="${side.toFixed(1)}" rx="${rx}" ` +
-          `fill="${st.fill}" stroke="${st.stroke}" stroke-width="${(st.sw * (design.strokeWidth ?? 1)).toFixed(2)}"/></g>`
+          inner + `</g>`
         );
       }
     }
