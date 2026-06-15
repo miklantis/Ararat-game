@@ -324,6 +324,7 @@
         <div class="zeile">
           <button class="btn" id="btnLaden">JSON laden …</button>
           <button class="btn" id="btnExport">Exportieren</button>
+          <button class="btn" id="btnReset">Auf Standard-Brett zurücksetzen</button>
           <input type="file" id="dateiInput" accept=".json,application/json" hidden>
         </div>
         <div class="boardinfo" id="boardInfo"></div>
@@ -2347,6 +2348,10 @@ const Store = (function () {
   let letzteWarnungen = [];
   const abonnenten = [];
 
+  // Schlüssel für das automatische Speichern im Browser (localStorage).
+  // Versioniert, damit ein späteres Format einen sauberen Neustart erlaubt.
+  const SPEICHER_SCHLUESSEL = "ararat-board-v1";
+
   function get() { return config; }
 
   function subscribe(fn) {
@@ -2364,25 +2369,42 @@ const Store = (function () {
     }
   }
 
-  /* Ganze Definition prüfen und übernehmen. */
-  function apply(neu, quelle) {
+  /* Aktuellen Stand still im Browser sichern. Fehler (z. B. voller oder
+     gesperrter Speicher) werden geschluckt – Auto-Speichern darf das
+     Bearbeiten nie unterbrechen. */
+  function speichern() {
+    try {
+      if (config) localStorage.setItem(SPEICHER_SCHLUESSEL, exportText());
+    } catch (e) {
+      console.warn("Auto-Speichern nicht möglich:", e);
+    }
+  }
+
+  /* Ganze Definition prüfen und übernehmen.
+     persist=true (Standard) sichert den neuen Stand danach im Browser.
+     Internes Laden (Standard-Brett, gespeicherter Stand) ruft mit
+     persist=false auf, damit es den Speicher nicht überschreibt. */
+  function apply(neu, quelle, persist) {
     const { fehler, warnungen } = Ararat.validateConfig(neu);
     if (fehler.length) {
       return { ok: false, meldung: "Nicht übernommen: " + fehler.join(" "), fehler, warnungen };
     }
     config = neu;
     letzteWarnungen = warnungen;
+    if (persist !== false) speichern();
     benachrichtigen(quelle || "apply");
     const hinweis = warnungen.length ? " · Hinweise: " + warnungen.join(" ") : "";
     return { ok: true, meldung: "Übernommen." + hinweis, warnungen };
   }
 
   /* Nach einer direkten Änderung am bestehenden config-Objekt aufrufen
-     (z. B. Editor zieht einen Kurvenpunkt, Kartenliste ändert einen Text). */
+     (z. B. Editor zieht einen Kurvenpunkt, Kartenliste ändert einen Text).
+     Eine direkte Änderung ist immer eine echte Nutzeraktion -> sichern. */
   function touch(quelle) {
     if (!config) return { ok: false, meldung: "Kein Brett geladen." };
     const { warnungen } = Ararat.validateConfig(config);
     letzteWarnungen = warnungen;
+    speichern();
     benachrichtigen(quelle || "touch");
     return { ok: true, warnungen };
   }
@@ -2397,14 +2419,42 @@ const Store = (function () {
     return apply(json, quelle || "import");
   }
 
-  /* Eingebettetes Standard-Brett aus dem JSON-Block im HTML laden. */
+  /* Eingebettetes Standard-Brett aus dem JSON-Block im HTML laden.
+     persist=false: das Standard-Brett soll keinen lokalen Stand erzeugen. */
   function loadDefault() {
     const block = document.getElementById("default-board");
     if (!block) return { ok: false, meldung: "Kein Standard-Brett eingebettet." };
-    return apply(JSON.parse(block.textContent), "Standard-Brett");
+    return apply(JSON.parse(block.textContent), "Standard-Brett", false);
   }
 
-  return { get, subscribe, apply, touch, exportText, importText, loadDefault };
+  /* Beim Start versuchen, den zuletzt im Browser gesicherten Stand zu laden.
+     Gibt {ok:false} zurück, wenn nichts gespeichert oder der Stand
+     unbrauchbar ist – dann lädt der Aufrufer das Standard-Brett. */
+  function loadGespeichert() {
+    let text;
+    try {
+      text = localStorage.getItem(SPEICHER_SCHLUESSEL);
+    } catch (e) {
+      return { ok: false, meldung: "Browser-Speicher nicht lesbar." };
+    }
+    if (!text) return { ok: false, meldung: "Kein gespeicherter Stand." };
+    let json;
+    try {
+      json = JSON.parse(text);
+    } catch (e) {
+      return { ok: false, meldung: "Gespeicherter Stand beschädigt." };
+    }
+    return apply(json, "gespeicherter Stand", false);
+  }
+
+  /* Lokalen Stand verwerfen und wieder das eingebettete Standard-Brett laden. */
+  function resetAufStandard() {
+    try { localStorage.removeItem(SPEICHER_SCHLUESSEL); } catch (e) { /* egal */ }
+    return loadDefault();
+  }
+
+  return { get, subscribe, apply, touch, exportText, importText,
+           loadDefault, loadGespeichert, resetAufStandard };
 })();
 window.Store = Store;
 </script>
@@ -3822,10 +3872,30 @@ const App = (function () {
       $(btn).addEventListener("click", () => ansichtWaehlen(view));
     }
 
-    // … und erst danach das Standard-Brett laden, damit alle es erhalten.
-    Store.loadDefault();
+    // Lokalen Stand verwerfen und Standard-Brett wieder laden (destruktiv -> nachfragen).
+    const reset = $("btnReset");
+    if (reset) {
+      reset.addEventListener("click", () => {
+        const ok = window.confirm(
+          "Den lokal gespeicherten Stand verwerfen und das Standard-Brett laden?\n" +
+          "Nicht exportierte Änderungen gehen dabei verloren."
+        );
+        if (!ok) return;
+        Store.resetAufStandard();
+        setStatus("Auf Standard-Brett zurückgesetzt – lokaler Stand gelöscht.");
+      });
+    }
+
+    // … und erst danach laden, damit alle Ansichten es erhalten:
+    // zuerst den zuletzt im Browser gesicherten Stand, sonst das Standard-Brett.
+    const wieder = Store.loadGespeichert();
+    if (wieder.ok) {
+      setStatus("Letzter Stand wiederhergestellt (lokal im Browser gespeichert).");
+    } else {
+      Store.loadDefault();
+      setStatus("Standard-Brett geladen – eigenes JSON über „JSON laden …“");
+    }
     ansichtWaehlen("ansicht-spiel");
-    setStatus("Standard-Brett geladen – eigenes JSON über „JSON laden …“");
   }
 
   document.addEventListener("DOMContentLoaded", init);
