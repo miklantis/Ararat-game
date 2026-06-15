@@ -475,6 +475,7 @@
         <div class="zeile"><label class="feldname" for="edTileSize">Größe</label><input type="range" id="edTileSize" min="2" max="10" step="0.1"><span class="ed-wertchen" id="edTileSizeW"></span></div>
         <div class="zeile"><label class="feldname" for="edCorner">Rundung</label><input type="range" id="edCorner" min="0" max="50" step="1"><span class="ed-wertchen" id="edCornerW"></span></div>
         <div class="zeile"><label class="feldname" for="edGap">Abstand</label><input type="range" id="edGap" min="0" max="50" step="1"><span class="ed-wertchen" id="edGapW"></span></div>
+        <div class="zeile"><label class="feldname" for="edStrokeWidth">Randlinie</label><input type="range" id="edStrokeWidth" min="0" max="300" step="5"><span class="ed-wertchen" id="edStrokeWidthW"></span></div>
         <div class="zeile">
           <label class="feldname">Ausrichtung</label>
           <div class="segment" id="edOrient" role="group" aria-label="Ausrichtung der Kacheln">
@@ -2577,6 +2578,7 @@ const AnsichtSpiel = (function () {
       else if (f.type === "start") { fill = "#FFFFFF"; stroke = "#22313B"; strokeW = 2.4; }
       else if (i === pos.length - 1) { fill = z.color; stroke = "#FFFFFF"; strokeW = 2.2; }
       else { fill = tint(z.color, 0.26); stroke = z.color; strokeW = 1.3; }
+      strokeW = strokeW * (design.strokeWidth ?? 1);
       el("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill, stroke, "stroke-width": strokeW }, g);
 
       /* Symbol + Nummer */
@@ -3216,6 +3218,7 @@ const AnsichtEditor = (function () {
     rangeControl("edTileSize", (v) => setDesign("tileSize", v / 100));
     rangeControl("edCorner",   (v) => setDesign("cornerRadius", v / 100));
     rangeControl("edGap",      (v) => setDesign("tileGap", v / 100));
+    rangeControl("edStrokeWidth", (v) => setDesign("strokeWidth", v / 100));
     rangeControl("edTension",  (v) => setPath("tension", v / 100));
     rangeControl("edHoehe",    (v) => setHoehe(v / 100));
 
@@ -3409,6 +3412,7 @@ const AnsichtEditor = (function () {
     setRange("edTileSize", (d.tileSize ?? 0.05) * 100);
     setRange("edCorner", Math.round((d.cornerRadius ?? 0.3) * 100));
     setRange("edGap", Math.round((d.tileGap ?? 0.2) * 100));
+    setRange("edStrokeWidth", Math.round((d.strokeWidth ?? 1) * 100));
     setRange("edTension", Math.round((p.tension ?? 0.5) * 100));
     orientSync(d.orientTiles || "tangent");
     $("edStroke").checked = !(d.pathStroke && d.pathStroke.show === false);
@@ -3432,6 +3436,7 @@ const AnsichtEditor = (function () {
     txt("edTileSizeW", (d.tileSize ?? 0).toFixed(3));
     txt("edCornerW", (d.cornerRadius ?? 0).toFixed(2));
     txt("edGapW", (d.tileGap ?? 0).toFixed(2));
+    txt("edStrokeWidthW", (d.strokeWidth ?? 1).toFixed(2));
     txt("edTensionW", (p.tension ?? 0).toFixed(2));
     if (ausgewaehlt >= 0) txt("edHoeheW", (config.board.path.points[ausgewaehlt].h ?? 0).toFixed(2));
   }
@@ -3491,7 +3496,7 @@ const AnsichtEditor = (function () {
       const rot = (design.orientTiles === "fixed") ? 0 : (p.angle * 180 / Math.PI);
       const st = kachelStil(f, z, i, i === pos.length - 1);
       const g = svgEl("g", { transform: `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})`, "data-feld": i }, svg);
-      svgEl("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill: st.fill, stroke: st.stroke, "stroke-width": st.sw }, g);
+      svgEl("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill: st.fill, stroke: st.stroke, "stroke-width": st.sw * (design.strokeWidth ?? 1) }, g);
       if (f.type !== "start" && f.type !== "ziel") {
         g.style.cursor = "pointer";
         g.addEventListener("click", () => feldTypUmschalten(i));
@@ -3553,7 +3558,7 @@ const AnsichtEditor = (function () {
       out.push(
         `<g transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})" data-zone="${f.zone}" data-typ="${f.type}">` +
         `<rect x="${(-along / 2).toFixed(1)}" y="${(-side / 2).toFixed(1)}" width="${along.toFixed(1)}" height="${side.toFixed(1)}" rx="${rx}" ` +
-        `fill="${st.fill}" stroke="${st.stroke}" stroke-width="${st.sw}"/></g>`
+        `fill="${st.fill}" stroke="${st.stroke}" stroke-width="${(st.sw * (design.strokeWidth ?? 1)).toFixed(2)}"/></g>`
       );
     }
     out.push(`</g>`);
