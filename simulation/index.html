@@ -2631,8 +2631,9 @@ const AnsichtSpiel = (function () {
       strokeW = strokeW * (design.strokeWidth ?? 1);
       el("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill, stroke, "stroke-width": strokeW }, g);
 
-      /* Symbol + Nummer */
-      const inner = el("g", { transform: `rotate(${-rot.toFixed(1)})` }, g); // Inhalt waagerecht halten
+      /* Symbol + Nummer – mit der Kachel ausgerichtet (drehen mit, statt
+         waagerecht zu einer Spielerseite zu zeigen). */
+      const inner = el("g", {}, g);
       const symFill = istHell(fill) ? "#22313B" : "#FFFFFF";
       if (f.type === "karte" && z.symbol) {
         symbolNode(z.symbol, symFill, side * 0.052, inner);
