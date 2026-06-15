@@ -478,6 +478,7 @@
         <div class="zeile"><label class="feldname" for="edGap">Abstand</label><input type="range" id="edGap" min="0" max="50" step="1"><span class="ed-wertchen" id="edGapW"></span></div>
         <div class="zeile"><label class="feldname" for="edStrokeWidth">Randlinie</label><input type="range" id="edStrokeWidth" min="0" max="300" step="5"><span class="ed-wertchen" id="edStrokeWidthW"></span></div>
         <div class="zeile"><label class="feldname" for="edIconScale">Icon-Größe</label><input type="range" id="edIconScale" min="30" max="250" step="5"><span class="ed-wertchen" id="edIconScaleW"></span></div>
+        <div class="zeile"><label class="feldname" for="edZielColor">Zielfeld</label><input type="color" class="zone-color" id="edZielColor"><span class="ed-wertchen" id="edZielColorW"></span></div>
         <div class="zeile">
           <label class="feldname">Ausrichtung</label>
           <div class="segment" id="edOrient" role="group" aria-label="Ausrichtung der Kacheln">
@@ -722,6 +723,7 @@
       "tileGap": 0.22,
       "orientTiles": "tangent",
       "iconScale": 1,
+      "zielColor": "#F4C20D",
       "pathStroke": {
         "show": true,
         "width": 0.012,
@@ -2541,6 +2543,19 @@ const AnsichtSpiel = (function () {
   };
   // Symbolpfade auch der Editor-Vorschau zur Verfügung stellen (eine Datenquelle).
   if (typeof window !== "undefined") window.ARARAT_SYMBOLE = SYMBOLE;
+
+  /* 5-zackiger Stern, Spitze nach oben, zentriert um den Ursprung.
+     R = Außenradius, r = Innenradius. Liefert einen SVG-Pfad (d). */
+  function sternPfad(R, r) {
+    let d = "";
+    for (let k = 0; k < 10; k++) {
+      const rad = (k % 2 === 0) ? R : r;
+      const a = -Math.PI / 2 + k * Math.PI / 5;
+      d += (k === 0 ? "M" : "L") + (rad * Math.cos(a)).toFixed(2) + " " + (rad * Math.sin(a)).toFixed(2) + " ";
+    }
+    return d + "Z";
+  }
+  if (typeof window !== "undefined") window.ARARAT_sternPfad = sternPfad;
   function symbolNode(name, fill, scale, parent) {
     const d = SYMBOLE[name];
     if (!d) return null;
@@ -2630,10 +2645,15 @@ const AnsichtSpiel = (function () {
       let fill, stroke, strokeW;
       if (f.type === "karte") { fill = z.color; stroke = "#FFFFFF"; strokeW = 1.6; }
       else if (f.type === "start") { fill = "#FFFFFF"; stroke = "#22313B"; strokeW = 2.4; }
-      else if (i === pos.length - 1) { fill = z.color; stroke = "#FFFFFF"; strokeW = 2.2; }
+      else if (i === pos.length - 1) { fill = (design.zielColor || "#F4C20D"); stroke = "#22313B"; strokeW = 1.6; }
       else { fill = tint(z.color, 0.26); stroke = z.color; strokeW = 1.3; }
       strokeW = strokeW * (design.strokeWidth ?? 1);
-      el("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill, stroke, "stroke-width": strokeW }, g);
+      if (i === pos.length - 1) {
+        const R = side * 0.5, ri = R * 0.42;
+        el("path", { d: sternPfad(R, ri), fill, stroke, "stroke-width": strokeW, "stroke-linejoin": "round", transform: `rotate(${(-rot).toFixed(1)})` }, g);
+      } else {
+        el("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill, stroke, "stroke-width": strokeW }, g);
+      }
 
       /* Symbol + Nummer – mit der Kachel ausgerichtet (drehen mit, statt
          waagerecht zu einer Spielerseite zu zeigen). */
@@ -2645,7 +2665,7 @@ const AnsichtSpiel = (function () {
       } else if (f.type === "start") {
         symbolNode("stern", "#22313B", side * 0.05, inner);
       } else if (i === pos.length - 1) {
-        symbolNode(z.symbol || "berg", symFill, side * 0.055, inner);
+        /* Zielfeld: kein Icon und keine Nummer – die Sternform genügt. */
       } else if (showNr) {
         el("text", { x: 0, y: side * 0.12, "text-anchor": "middle", "font-size": Math.max(8, side * 0.26), fill: "#22313B", opacity: 0.3, "font-weight": 600, "font-variant-numeric": "tabular-nums" }, inner).textContent = i;
       }
@@ -3279,6 +3299,11 @@ const AnsichtEditor = (function () {
     rangeControl("edGap",      (v) => setDesign("tileGap", v / 100));
     rangeControl("edStrokeWidth", (v) => setDesign("strokeWidth", v / 100));
     rangeControl("edIconScale", (v) => setDesign("iconScale", v / 100));
+    const zielC = $("edZielColor");
+    if (zielC) {
+      zielC.addEventListener("input", () => { setDesign("zielColor", zielC.value); zeichne(); });
+      zielC.addEventListener("change", () => { setDesign("zielColor", zielC.value); Store.touch("Editor"); });
+    }
     rangeControl("edTension",  (v) => setPath("tension", v / 100));
     rangeControl("edHoehe",    (v) => setHoehe(v / 100));
 
@@ -3499,6 +3524,9 @@ const AnsichtEditor = (function () {
     txt("edGapW", (d.tileGap ?? 0).toFixed(2));
     txt("edStrokeWidthW", (d.strokeWidth ?? 1).toFixed(2));
     txt("edIconScaleW", (d.iconScale ?? 1).toFixed(2));
+    const zielC = $("edZielColor");
+    if (zielC && document.activeElement !== zielC && /^#[0-9a-f]{6}$/i.test(d.zielColor || "#F4C20D")) zielC.value = (d.zielColor || "#F4C20D");
+    txt("edZielColorW", (d.zielColor || "#F4C20D"));
     txt("edTensionW", (p.tension ?? 0).toFixed(2));
     if (ausgewaehlt >= 0) txt("edHoeheW", (config.board.path.points[ausgewaehlt].h ?? 0).toFixed(2));
   }
@@ -3558,7 +3586,15 @@ const AnsichtEditor = (function () {
       const rot = (design.orientTiles === "fixed") ? 0 : (p.angle * 180 / Math.PI);
       const st = kachelStil(f, z, i, i === pos.length - 1);
       const g = svgEl("g", { transform: `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})`, "data-feld": i }, svg);
-      svgEl("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill: st.fill, stroke: st.stroke, "stroke-width": st.sw * (design.strokeWidth ?? 1) }, g);
+      if (i === pos.length - 1) {
+        const zc = design.zielColor || "#F4C20D";
+        const R = side * 0.5, ri = R * 0.42;
+        const dStar = window.ARARAT_sternPfad ? window.ARARAT_sternPfad(R, ri) : null;
+        if (dStar) svgEl("path", { d: dStar, fill: zc, stroke: "#22313B", "stroke-width": 1.6 * (design.strokeWidth ?? 1), "stroke-linejoin": "round", transform: `rotate(${(-rot).toFixed(1)})` }, g);
+        else svgEl("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill: st.fill, stroke: st.stroke, "stroke-width": st.sw * (design.strokeWidth ?? 1) }, g);
+      } else {
+        svgEl("rect", { x: -along / 2, y: -side / 2, width: along, height: side, rx, fill: st.fill, stroke: st.stroke, "stroke-width": st.sw * (design.strokeWidth ?? 1) }, g);
+      }
       if (f.type === "karte" && z.symbol) {
         const dSym = (window.ARARAT_SYMBOLE || {})[z.symbol];
         if (dSym) {
@@ -3625,11 +3661,24 @@ const AnsichtEditor = (function () {
       const rx = ((dz.cornerRadius ?? 0.3) * Math.min(side, along)).toFixed(1);
       const rot = (design.orientTiles === "fixed") ? 0 : (p.angle * 180 / Math.PI);
       const st = kachelStil(f, z, i, i === pos.length - 1);
-      out.push(
-        `<g transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})" data-zone="${f.zone}" data-typ="${f.type}">` +
-        `<rect x="${(-along / 2).toFixed(1)}" y="${(-side / 2).toFixed(1)}" width="${along.toFixed(1)}" height="${side.toFixed(1)}" rx="${rx}" ` +
-        `fill="${st.fill}" stroke="${st.stroke}" stroke-width="${(st.sw * (design.strokeWidth ?? 1)).toFixed(2)}"/></g>`
-      );
+      if (i === pos.length - 1) {
+        const zc = design.zielColor || "#F4C20D";
+        const R = side * 0.5, ri = R * 0.42;
+        const dStar = window.ARARAT_sternPfad ? window.ARARAT_sternPfad(R, ri) : null;
+        const inner = dStar
+          ? `<path d="${dStar}" fill="${zc}" stroke="#22313B" stroke-width="${(1.6 * (design.strokeWidth ?? 1)).toFixed(2)}" stroke-linejoin="round" transform="rotate(${(-rot).toFixed(1)})"/>`
+          : `<rect x="${(-along / 2).toFixed(1)}" y="${(-side / 2).toFixed(1)}" width="${along.toFixed(1)}" height="${side.toFixed(1)}" rx="${rx}" fill="${st.fill}" stroke="${st.stroke}" stroke-width="${(st.sw * (design.strokeWidth ?? 1)).toFixed(2)}"/>`;
+        out.push(
+          `<g transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})" data-zone="${f.zone}" data-typ="${f.type}">` +
+          inner + `</g>`
+        );
+      } else {
+        out.push(
+          `<g transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot.toFixed(1)})" data-zone="${f.zone}" data-typ="${f.type}">` +
+          `<rect x="${(-along / 2).toFixed(1)}" y="${(-side / 2).toFixed(1)}" width="${along.toFixed(1)}" height="${side.toFixed(1)}" rx="${rx}" ` +
+          `fill="${st.fill}" stroke="${st.stroke}" stroke-width="${(st.sw * (design.strokeWidth ?? 1)).toFixed(2)}"/></g>`
+        );
+      }
     }
     out.push(`</g>`);
     out.push(`</svg>`);
