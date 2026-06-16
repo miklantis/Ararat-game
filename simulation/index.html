@@ -263,6 +263,9 @@
 /* ---------- Kartenliste (Teil 3) ---------- */
 .karten-bereich { max-width: 1480px; margin: 0 auto; padding: 18px 22px 28px; }
 .karten-kopf { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+.karten-export { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+.karten-export-titel { font-size: 13px; color: var(--basalt-60); }
+.karten-export-status { font-size: 13px; color: var(--akzent); font-weight: 600; }
 .karten-filter { display: flex; gap: 8px; flex-wrap: wrap; }
 .filter-chip { border: 1px solid var(--linie); background: #FAFCFC; border-radius: 999px; padding: 6px 14px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--basalt-60); display: inline-flex; align-items: center; gap: 7px; }
 .filter-chip:hover { background: #F0F4F5; }
@@ -539,6 +542,13 @@
       <div class="karten-filter" id="kartenFilter" role="group" aria-label="Filter nach Bereich"></div>
       <span style="flex:1"></span>
       <button class="btn primaer" id="btnKarteNeu">+ Karte</button>
+    </div>
+    <div class="karten-export" role="group" aria-label="Texte in Zwischenablage kopieren">
+      <span class="karten-export-titel">Texte kopieren (Dateiname + Text):</span>
+      <button class="btn" id="btnExportKr" data-lang="kr">Kurmancî</button>
+      <button class="btn" id="btnExportDe" data-lang="de">Deutsch</button>
+      <button class="btn" id="btnExportTr" data-lang="tr">Türkisch</button>
+      <span class="karten-export-status" id="exportStatus" aria-live="polite"></span>
     </div>
     <div class="karten-gitter" id="kartenGitter"></div>
   </div>
@@ -3775,6 +3785,62 @@ const AnsichtKarten = (function () {
   }
   function ohneWert(typ) { return typ !== "vorwaerts" && typ !== "rueckwaerts"; }
 
+  /* ---------- Texte exportieren (Zwischenablage) ---------- */
+  // lang: kr/de/tr -> Dateiendung und Textfeld
+  const TEXTFELD = { kr: "text_kmr", de: "text_de", tr: "text_tr" };
+  const SPRACHNAME = { kr: "Kurmancî", de: "Deutsch", tr: "Türkisch" };
+
+  function exportText(lang) {
+    const feld = TEXTFELD[lang];
+    const cards = config.cards || [];
+    const bloecke = [];
+    for (const c of cards) {
+      const name = (c.id || "") + "_" + lang + ".mp3";
+      const text = (c[feld] || "").trim();
+      bloecke.push(name + "\n" + text);
+    }
+    return bloecke.join("\n\n") + "\n";
+  }
+
+  function exportStatus(text) {
+    const el = $("exportStatus");
+    if (!el) return;
+    el.textContent = text;
+    clearTimeout(exportStatus._t);
+    exportStatus._t = setTimeout(() => { el.textContent = ""; }, 2500);
+  }
+
+  function inZwischenablage(text, fertig) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => fertig(true), () => fallback());
+    } else {
+      fallback();
+    }
+    function fallback() {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        fertig(ok);
+      } catch (e) { fertig(false); }
+    }
+  }
+
+  function exportSprache(lang) {
+    if (!config) return;
+    const anzahl = (config.cards || []).length;
+    inZwischenablage(exportText(lang), (ok) => {
+      exportStatus(ok
+        ? (SPRACHNAME[lang] + ": " + anzahl + " Karten kopiert")
+        : "Kopieren nicht möglich – bitte manuell markieren");
+    });
+  }
+
   /* ---------- Start ---------- */
   function init() {
     Store.subscribe((ev) => { config = ev.config; render(); });
@@ -3788,6 +3854,9 @@ const AnsichtKarten = (function () {
       render();
     });
     $("btnKarteNeu").addEventListener("click", karteNeu);
+    $("btnExportKr").addEventListener("click", () => exportSprache("kr"));
+    $("btnExportDe").addEventListener("click", () => exportSprache("de"));
+    $("btnExportTr").addEventListener("click", () => exportSprache("tr"));
     $("kdSchliessen").addEventListener("click", schliessen);
     $("kdLoeschen").addEventListener("click", karteLoeschen);
     $("karteModal").addEventListener("click", (e) => { if (e.target === $("karteModal")) schliessen(); });
