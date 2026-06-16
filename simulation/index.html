@@ -295,6 +295,14 @@
 .karte-dialog input:focus-visible, .karte-dialog select:focus-visible, .karte-dialog textarea:focus-visible { outline: 2px solid var(--akzent); outline-offset: 1px; }
 .karte-dialog-fuss { display: flex; gap: 8px; align-items: center; padding: 12px 18px; border-top: 1px solid var(--linie); }
 #kdLoeschen { color: var(--warn); }
+.kd-tts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.kd-tts .tts-btn { display: inline-flex; align-items: center; gap: 6px; font: inherit; cursor: pointer; border: 1px solid var(--linie); border-radius: 8px; padding: 6px 12px; background: #fff; color: var(--basalt); }
+.kd-tts .tts-btn .tts-ico { font-size: 13px; line-height: 1; }
+.kd-tts .tts-btn.aktiv { border-color: var(--akzent); color: var(--akzent); font-weight: 600; }
+.kd-tts .tts-btn.aktiv:hover { background: var(--akzent); color: #fff; }
+.kd-tts .tts-btn.spielt { background: var(--akzent); color: #fff; }
+.kd-tts .tts-btn.fehlt { opacity: .42; cursor: not-allowed; }
+.kd-tts .tts-status { font-size: 12px; color: var(--basalt); opacity: .7; }
 </style>
 </head>
 <body>
@@ -581,6 +589,15 @@
         <div class="kd-feld">
           <label for="kdAudio">Audio (Dateiverweis)</label>
           <input type="text" id="kdAudio" autocomplete="off" placeholder="z. B. dorf-01.mp3">
+        </div>
+        <div class="kd-feld">
+          <label>Audio abspielen (tts/&lt;id&gt;_&lt;sprache&gt;.mp3)</label>
+          <div class="kd-tts" id="kdTtsLeiste">
+            <button type="button" class="tts-btn fehlt" id="ttsKr" data-lang="kr"><span class="tts-ico">▶</span> KMR</button>
+            <button type="button" class="tts-btn fehlt" id="ttsDe" data-lang="de"><span class="tts-ico">▶</span> DE</button>
+            <button type="button" class="tts-btn fehlt" id="ttsTr" data-lang="tr"><span class="tts-ico">▶</span> TR</button>
+            <span class="tts-status" id="ttsStatus"></span>
+          </div>
         </div>
       </div>
       <div class="karte-dialog-fuss">
@@ -3768,6 +3785,63 @@ const AnsichtKarten = (function () {
   let filterZone = null;       // null = alle
   let bearbeiteKarte = null;   // aktuell im Dialog bearbeitete Karte (Referenz)
 
+  // TTS-Audio: pro Sprache wird tts/<id>_<lang>.mp3 erwartet (lang: kr/de/tr).
+  const TTS_LANGS = ["kr", "de", "tr"];
+  let ttsAudio = null;         // gerade laufendes Audio-Element
+  let ttsSpieltBtn = null;     // Button des laufenden Audios
+  let ttsToken = 0;            // verwirft Prüfungen alter Karten beim schnellen Wechsel
+
+  function ttsPfad(id, lang) { return "tts/" + id + "_" + lang + ".mp3"; }
+  function ttsBtnFuer(lang) {
+    if (lang === "kr") return $("ttsKr");
+    if (lang === "de") return $("ttsDe");
+    if (lang === "tr") return $("ttsTr");
+    return null;
+  }
+  function ttsStopp() {
+    if (ttsAudio) { try { ttsAudio.pause(); } catch (e) {} ttsAudio = null; }
+    if (ttsSpieltBtn) { ttsSpieltBtn.classList.remove("spielt"); ttsSpieltBtn = null; }
+  }
+  // Prüft per Audio-Element, ob die Datei existiert (funktioniert per file:// und auf GitHub Pages).
+  function ttsPruefe(id) {
+    const meinToken = ++ttsToken;
+    const status = $("ttsStatus");
+    if (status) status.textContent = "prüfe Audiodateien …";
+    let offen = TTS_LANGS.length, gefunden = 0;
+    for (const lang of TTS_LANGS) {
+      const btn = ttsBtnFuer(lang);
+      if (btn) { btn.classList.remove("aktiv"); btn.classList.add("fehlt"); btn.disabled = true; }
+      const probe = new Audio();
+      probe.preload = "metadata";
+      const fertig = (daSein) => {
+        if (meinToken !== ttsToken) return;     // Karte wurde inzwischen gewechselt
+        if (btn) {
+          if (daSein) { btn.classList.remove("fehlt"); btn.classList.add("aktiv"); btn.disabled = false; gefunden++; }
+        }
+        if (--offen === 0 && status) {
+          status.textContent = gefunden ? (gefunden + " von 3 vorhanden") : "keine Audiodateien gefunden";
+        }
+      };
+      probe.addEventListener("loadedmetadata", () => fertig(true), { once: true });
+      probe.addEventListener("error", () => fertig(false), { once: true });
+      probe.src = ttsPfad(id, lang);
+    }
+  }
+  function ttsAbspielen(lang) {
+    if (!bearbeiteKarte) return;
+    const btn = ttsBtnFuer(lang);
+    if (!btn || btn.disabled) return;
+    // Läuft genau dieser Track? -> Stopp (Toggle)
+    if (ttsSpieltBtn === btn) { ttsStopp(); return; }
+    ttsStopp();
+    ttsAudio = new Audio(ttsPfad(bearbeiteKarte.id, lang));
+    ttsSpieltBtn = btn;
+    btn.classList.add("spielt");
+    ttsAudio.addEventListener("ended", () => { if (ttsSpieltBtn === btn) ttsStopp(); }, { once: true });
+    ttsAudio.addEventListener("error", () => { if (ttsSpieltBtn === btn) ttsStopp(); }, { once: true });
+    ttsAudio.play().catch(() => ttsStopp());
+  }
+
   /* ---------- Helfer ---------- */
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -3812,7 +3886,7 @@ const AnsichtKarten = (function () {
     $("karteModal").addEventListener("click", (e) => { if (e.target === $("karteModal")) schliessen(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("karteModal").hidden) schliessen(); });
 
-    bind("kdId", "input", (c, v) => { c.id = v; }, true);
+    bind("kdId", "input", (c, v) => { c.id = v; ttsStopp(); ttsPruefe(v); }, true);
     bind("kdBereich", "change", (c, v) => { c.bereich = v; });
     bind("kdTyp", "change", (c, v) => {
       c.typ = v;
@@ -3824,6 +3898,10 @@ const AnsichtKarten = (function () {
     bind("kdDe", "input", (c, v) => { c.text_de = v; });
     bind("kdTr", "input", (c, v) => { c.text_tr = v; });
     bind("kdAudio", "input", (c, v) => { c.audio = v; });
+
+    $("ttsKr").addEventListener("click", () => ttsAbspielen("kr"));
+    $("ttsDe").addEventListener("click", () => ttsAbspielen("de"));
+    $("ttsTr").addEventListener("click", () => ttsAbspielen("tr"));
   }
 
   function bind(id, ev, apply, titel) {
@@ -3906,9 +3984,11 @@ const AnsichtKarten = (function () {
     $("kdAudio").value = c.audio || "";
     wertZustand();
     $("kdKopf").textContent = "Karte bearbeiten · " + (c.id || "");
+    ttsStopp();
+    ttsPruefe(c.id || "");
     $("karteModal").hidden = false;
   }
-  function schliessen() { $("karteModal").hidden = true; bearbeiteKarte = null; }
+  function schliessen() { ttsStopp(); $("karteModal").hidden = true; bearbeiteKarte = null; }
   function wertZustand() {
     const ohne = ohneWert($("kdTyp").value);
     $("kdWert").disabled = ohne;
