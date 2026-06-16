@@ -266,6 +266,7 @@
 .karten-export { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
 .karten-export-titel { font-size: 13px; color: var(--basalt-60); }
 .karten-export-status { font-size: 13px; color: var(--akzent); font-weight: 600; }
+#lnkKurdishTts { display: inline-flex; align-items: center; text-decoration: none; }
 .karten-filter { display: flex; gap: 8px; flex-wrap: wrap; }
 .filter-chip { border: 1px solid var(--linie); background: #FAFCFC; border-radius: 999px; padding: 6px 14px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--basalt-60); display: inline-flex; align-items: center; gap: 7px; }
 .filter-chip:hover { background: #F0F4F5; }
@@ -553,6 +554,8 @@
       <button class="btn" id="btnExportDe" data-lang="de">Deutsch</button>
       <button class="btn" id="btnExportTr" data-lang="tr">Türkisch</button>
       <span class="karten-export-status" id="exportStatus" aria-live="polite"></span>
+      <span style="flex:1"></span>
+      <a class="btn" id="lnkKurdishTts" href="https://www.kurdishtts.com/tts" target="_blank" rel="noopener noreferrer">Kurdish TTS öffnen ↗</a>
     </div>
     <div class="karten-gitter" id="kartenGitter"></div>
   </div>
