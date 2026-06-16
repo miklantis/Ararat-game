@@ -299,6 +299,10 @@
 .karte-dialog-fuss { display: flex; gap: 8px; align-items: center; padding: 12px 18px; border-top: 1px solid var(--linie); }
 #kdLoeschen { color: var(--warn); }
 .kd-lang-kopf { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.kd-lang-knoepfe { display: flex; align-items: center; gap: 6px; }
+.kd-kopier-btn { font: inherit; font-size: 12px; cursor: pointer; border: 1px solid var(--linie); border-radius: 8px; padding: 3px 10px; background: #fff; color: var(--basalt); }
+.kd-kopier-btn:hover { border-color: var(--akzent); color: var(--akzent); }
+.kd-kopier-btn.kopiert { background: var(--akzent); color: #fff; border-color: var(--akzent); }
 .tts-btn { display: inline-flex; align-items: center; gap: 5px; font: inherit; font-size: 12px; cursor: pointer; border: 1px solid var(--linie); border-radius: 8px; padding: 3px 10px; background: #fff; color: var(--basalt); }
 .tts-btn .tts-ico { font-size: 11px; line-height: 1; }
 .tts-btn.aktiv { border-color: var(--akzent); color: var(--akzent); font-weight: 600; }
@@ -586,21 +590,30 @@
         <div class="kd-feld">
           <div class="kd-lang-kopf">
             <label for="kdKmr">Kurmancî (gesprochen)</label>
-            <button type="button" class="tts-btn fehlt" id="ttsKr" data-lang="kr" title="Audio abspielen"><span class="tts-ico">▶</span> Audio</button>
+            <div class="kd-lang-knoepfe">
+              <button type="button" class="kd-kopier-btn" id="kopKr" data-lang="kr" title="Text kopieren">Kopieren</button>
+              <button type="button" class="tts-btn fehlt" id="ttsKr" data-lang="kr" title="Audio abspielen"><span class="tts-ico">▶</span> Audio</button>
+            </div>
           </div>
           <textarea id="kdKmr" spellcheck="false"></textarea>
         </div>
         <div class="kd-feld">
           <div class="kd-lang-kopf">
             <label for="kdDe">Deutsch (Spielleiter)</label>
-            <button type="button" class="tts-btn fehlt" id="ttsDe" data-lang="de" title="Audio abspielen"><span class="tts-ico">▶</span> Audio</button>
+            <div class="kd-lang-knoepfe">
+              <button type="button" class="kd-kopier-btn" id="kopDe" data-lang="de" title="Text kopieren">Kopieren</button>
+              <button type="button" class="tts-btn fehlt" id="ttsDe" data-lang="de" title="Audio abspielen"><span class="tts-ico">▶</span> Audio</button>
+            </div>
           </div>
           <textarea id="kdDe"></textarea>
         </div>
         <div class="kd-feld">
           <div class="kd-lang-kopf">
             <label for="kdTr">Türkisch (Brücke)</label>
-            <button type="button" class="tts-btn fehlt" id="ttsTr" data-lang="tr" title="Audio abspielen"><span class="tts-ico">▶</span> Audio</button>
+            <div class="kd-lang-knoepfe">
+              <button type="button" class="kd-kopier-btn" id="kopTr" data-lang="tr" title="Text kopieren">Kopieren</button>
+              <button type="button" class="tts-btn fehlt" id="ttsTr" data-lang="tr" title="Audio abspielen"><span class="tts-ico">▶</span> Audio</button>
+            </div>
           </div>
           <textarea id="kdTr"></textarea>
         </div>
@@ -3759,6 +3772,20 @@ const AnsichtKarten = (function () {
     ttsAudio.play().catch(() => ttsStopp());
   }
 
+  // Kopiert nur den Text der aktuellen Karte fuer eine Sprache.
+  function kopiereFeld(lang, btn) {
+    if (!bearbeiteKarte) return;
+    const text = (bearbeiteKarte[TEXTFELD[lang]] || "").trim();
+    inZwischenablage(text, (ok) => {
+      if (!btn) return;
+      const alt = btn.textContent;
+      btn.textContent = ok ? "Kopiert" : "Fehler";
+      btn.classList.toggle("kopiert", ok);
+      clearTimeout(btn._t);
+      btn._t = setTimeout(() => { btn.textContent = alt; btn.classList.remove("kopiert"); }, 1500);
+    });
+  }
+
   /* ---------- Helfer ---------- */
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -3877,6 +3904,10 @@ const AnsichtKarten = (function () {
     $("ttsKr").addEventListener("click", () => ttsAbspielen("kr"));
     $("ttsDe").addEventListener("click", () => ttsAbspielen("de"));
     $("ttsTr").addEventListener("click", () => ttsAbspielen("tr"));
+
+    $("kopKr").addEventListener("click", (e) => kopiereFeld("kr", e.currentTarget));
+    $("kopDe").addEventListener("click", (e) => kopiereFeld("de", e.currentTarget));
+    $("kopTr").addEventListener("click", (e) => kopiereFeld("tr", e.currentTarget));
   }
 
   function bind(id, ev, apply, titel) {
