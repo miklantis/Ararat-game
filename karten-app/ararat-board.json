@@ -577,7 +577,7 @@
       "typ": "aussetzen",
       "wert": null,
       "text_kmr": "Serdaneke dirêj li mala malbatê – carekê bisekine.",
-      "text_de": "Langer Besuch bei der Familie – einmal aussetzen.",
+      "text_de": "Langer Besuch bei der Familie – eine Runde aussetzen.",
       "text_tr": "Ailede uzun bir ziyaret – bir tur bekle.",
       "audio": ""
     },
@@ -587,7 +587,7 @@
       "typ": "aussetzen",
       "wert": null,
       "text_kmr": "Çaydank hîn nîvco ye, tu rûdinî – carekê bisekine.",
-      "text_de": "Die Teekanne ist noch halb voll, du bleibst sitzen – einmal aussetzen.",
+      "text_de": "Die Teekanne ist noch halb voll, du bleibst sitzen – eine Runde aussetzen.",
       "text_tr": "Çaydanlık daha yarı dolu, oturup kalırsın – bir tur bekle.",
       "audio": ""
     },
@@ -597,7 +597,7 @@
       "typ": "erneut",
       "wert": null,
       "text_kmr": "Mizgîniyek ji gund tê – dîsa zarî bavêje.",
-      "text_de": "Gute Nachricht aus dem Dorf – noch einmal würfeln.",
+      "text_de": "Gute Nachricht aus dem Dorf – nochmal würfeln.",
       "text_tr": "Köyden güzel bir haber – hemen tekrar zar at.",
       "audio": ""
     },
@@ -607,7 +607,7 @@
       "typ": "erneut",
       "wert": null,
       "text_kmr": "Bayê piştê û kêfa te baş – dîsa zarî bavêje.",
-      "text_de": "Rückenwind und gute Laune – noch einmal würfeln.",
+      "text_de": "Rückenwind und gute Laune – nochmal würfeln.",
       "text_tr": "Rüzgâr arkanda, keyfin yerinde – hemen tekrar zar at.",
       "audio": ""
     },
@@ -617,7 +617,7 @@
       "typ": "vor_zu_naechstem",
       "wert": null,
       "text_kmr": "Tu xwe digihînî cîranê ku jixwe pêştir e – here ba yê li pêş.",
-      "text_de": "Du schließt dich dem Nachbarn an, der schon weiter ist – vor zum Nächsten.",
+      "text_de": "Du schließt dich dem Nachbarn an, der schon weiter ist – vor zum nächsten Spieler.",
       "text_tr": "Daha ileride olan komşuna katılırsın – önündekine ilerle.",
       "audio": ""
     },
@@ -627,7 +627,7 @@
       "typ": "tausch_hinterster",
       "wert": null,
       "text_kmr": "Tu vedigerî û yê herî hêdî tînî – cih bi yê dawî re biguhere.",
-      "text_de": "Du kehrst um und holst den Langsamsten ab – Tausch mit dem Letzten.",
+      "text_de": "Du kehrst um und holst den Langsamsten ab – tausch mit dem Letzten.",
       "text_tr": "Geri dönüp en yavaş olanı alırsın – sonuncu ile yer değiştir.",
       "audio": ""
     },
@@ -637,7 +637,7 @@
       "typ": "tausch_fuehrender",
       "wert": null,
       "text_kmr": "Kurterêyek di nav zeviyan re te dibe pêş – cih bi pêşeng re biguhere.",
-      "text_de": "Eine Abkürzung über die Felder bringt dich nach vorn – Tausch mit dem Führenden.",
+      "text_de": "Eine Abkürzung über die Felder bringt dich nach vorn – tausch mit dem Führenden.",
       "text_tr": "Tarlalardan bir kestirme seni en öne taşır – lider ile yer değiştir.",
       "audio": ""
     },
@@ -647,7 +647,7 @@
       "typ": "rueckwaerts",
       "wert": 6,
       "text_kmr": "",
-      "text_de": "Ein Gewitter jagt die Herde auseinander – du läufst weit zurück, um sie zu sammeln.",
+      "text_de": "Ein Gewitter jagt die Herde auseinander – 6 Felder zurück.",
       "text_tr": "",
       "audio": ""
     },
@@ -687,7 +687,7 @@
       "typ": "vorwaerts",
       "wert": 3,
       "text_kmr": "",
-      "text_de": "Trockener, fester Boden – du kommst gut voran, 3 Felder vor.",
+      "text_de": "Trockener, fester Boden – 3 Felder vor.",
       "text_tr": "",
       "audio": ""
     },
@@ -777,7 +777,7 @@
       "typ": "aussetzen",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Mittagsrast im Schatten – einmal aussetzen.",
+      "text_de": "Mittagsrast im Schatten – eine Runde aussetzen.",
       "text_tr": "",
       "audio": ""
     },
@@ -787,7 +787,7 @@
       "typ": "aussetzen",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Du melkst noch die Ziegen – einmal aussetzen.",
+      "text_de": "Du melkst noch die Ziegen – eine Runde aussetzen.",
       "text_tr": "",
       "audio": ""
     },
@@ -797,7 +797,7 @@
       "typ": "erneut",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Der Weg ist frei und eben – würfle gleich noch einmal.",
+      "text_de": "Der Weg ist frei und eben – nochmal würfeln.",
       "text_tr": "",
       "audio": ""
     },
@@ -807,7 +807,7 @@
       "typ": "erneut",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Ein guter Tag auf der Weide – würfle gleich noch einmal.",
+      "text_de": "Ein guter Tag auf der Weide – nochmal würfeln.",
       "text_tr": "",
       "audio": ""
     },
@@ -817,7 +817,7 @@
       "typ": "vor_zu_naechstem",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Du folgst der Spur der Herde und holst zum Nächsten vor dir auf.",
+      "text_de": "Du folgst der Spur der Herde und holst zum Nächsten vor dir auf – vor zum nächsten Spieler.",
       "text_tr": "",
       "audio": ""
     },
@@ -827,7 +827,7 @@
       "typ": "tausch_hinterster",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Du gehst zurück und nimmst den Letzten an die Hand – ihr tauscht die Plätze.",
+      "text_de": "Du gehst zurück und nimmst den Letzten an die Hand – tausch mit dem Letzten.",
       "text_tr": "",
       "audio": ""
     },
@@ -837,7 +837,7 @@
       "typ": "tausch_fuehrender",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Ein Reiter setzt dich vorn ab – tausche mit dem Führenden.",
+      "text_de": "Ein Reiter setzt dich vorn ab – tausch mit dem Führenden.",
       "text_tr": "",
       "audio": ""
     },
@@ -847,7 +847,7 @@
       "typ": "rueckwaerts",
       "wert": 7,
       "text_kmr": "",
-      "text_de": "Du verlierst deine Papiere und musst den ganzen Weg zum Amt zurück.",
+      "text_de": "Du verlierst deine Papiere und musst den ganzen Weg zum Amt zurück – 7 Felder zurück.",
       "text_tr": "",
       "audio": ""
     },
@@ -977,7 +977,7 @@
       "typ": "aussetzen",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Lange Wartenummer beim Amt – einmal aussetzen.",
+      "text_de": "Lange Wartenummer beim Amt – eine Runde aussetzen.",
       "text_tr": "",
       "audio": ""
     },
@@ -987,7 +987,7 @@
       "typ": "aussetzen",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Du trinkst noch einen Kaffee mit Bekannten – einmal aussetzen.",
+      "text_de": "Du trinkst noch einen Kaffee mit Bekannten – eine Runde aussetzen.",
       "text_tr": "",
       "audio": ""
     },
@@ -997,7 +997,7 @@
       "typ": "erneut",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Alles läuft glatt heute – würfle gleich noch einmal.",
+      "text_de": "Alles läuft glatt heute – nochmal würfeln.",
       "text_tr": "",
       "audio": ""
     },
@@ -1007,7 +1007,7 @@
       "typ": "erneut",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Du findest sofort den richtigen Weg – würfle gleich noch einmal.",
+      "text_de": "Du findest sofort den richtigen Weg – nochmal würfeln.",
       "text_tr": "",
       "audio": ""
     },
@@ -1017,7 +1017,7 @@
       "typ": "vor_zu_naechstem",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Du teilst dir ein Taxi mit dem, der vor dir ist – auf zum Nächsten.",
+      "text_de": "Du teilst dir ein Taxi mit dem, der vor dir ist – vor zum nächsten Spieler.",
       "text_tr": "",
       "audio": ""
     },
@@ -1027,7 +1027,7 @@
       "typ": "tausch_hinterster",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Du wartest bewusst auf den Letzten – ihr tauscht die Plätze.",
+      "text_de": "Du wartest bewusst auf den Letzten – tausch mit dem Letzten.",
       "text_tr": "",
       "audio": ""
     },
@@ -1037,7 +1037,7 @@
       "typ": "tausch_fuehrender",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Eine clevere Abkürzung durch die Passage – tausche mit dem Führenden.",
+      "text_de": "Eine clevere Abkürzung durch die Passage – tausch mit dem Führenden.",
       "text_tr": "",
       "audio": ""
     },
@@ -1047,7 +1047,7 @@
       "typ": "rueckwaerts",
       "wert": 9,
       "text_kmr": "",
-      "text_de": "Ein schwerer Sturm zwingt dich weit den Berg hinab in Sicherheit.",
+      "text_de": "Ein schwerer Sturm zwingt dich weit den Berg hinab in Sicherheit – 9 Felder zurück.",
       "text_tr": "",
       "audio": ""
     },
@@ -1177,7 +1177,7 @@
       "typ": "aussetzen",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Du wartest, bis der Nebel sich hebt – einmal aussetzen.",
+      "text_de": "Du wartest, bis der Nebel sich hebt – eine Runde aussetzen.",
       "text_tr": "",
       "audio": ""
     },
@@ -1187,7 +1187,7 @@
       "typ": "aussetzen",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Rast an der Schutzhütte – einmal aussetzen.",
+      "text_de": "Rast an der Schutzhütte – eine Runde aussetzen.",
       "text_tr": "",
       "audio": ""
     },
@@ -1197,7 +1197,7 @@
       "typ": "erneut",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Der Gipfel ruft – würfle gleich noch einmal.",
+      "text_de": "Der Gipfel ruft – nochmal würfeln.",
       "text_tr": "",
       "audio": ""
     },
@@ -1207,7 +1207,7 @@
       "typ": "erneut",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Ein klarer Moment, du nutzt ihn – würfle gleich noch einmal.",
+      "text_de": "Ein klarer Moment, du nutzt ihn – nochmal würfeln.",
       "text_tr": "",
       "audio": ""
     },
@@ -1217,7 +1217,7 @@
       "typ": "vor_zu_naechstem",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Du folgst den Spuren im Schnee und holst zum Nächsten vor dir auf.",
+      "text_de": "Du folgst den Spuren im Schnee und holst zum Nächsten vor dir auf – vor zum nächsten Spieler.",
       "text_tr": "",
       "audio": ""
     },
@@ -1227,7 +1227,7 @@
       "typ": "tausch_hinterster",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Du seilst dich zum Letzten ab – ihr tauscht die Plätze.",
+      "text_de": "Du seilst dich zum Letzten ab – tausch mit dem Letzten.",
       "text_tr": "",
       "audio": ""
     },
@@ -1237,7 +1237,7 @@
       "typ": "tausch_fuehrender",
       "wert": null,
       "text_kmr": "",
-      "text_de": "Eine Adlerschwinge zeigt dir die Linie – tausche mit dem Führenden.",
+      "text_de": "Eine Adlerschwinge zeigt dir die Linie – tausch mit dem Führenden.",
       "text_tr": "",
       "audio": ""
     }
