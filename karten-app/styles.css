@@ -208,6 +208,27 @@ body {
 .detail.ist-hell .schliessen svg { stroke: var(--schiefer-900); }
 .detail.ist-hell .schliessen:active { background: rgba(29, 39, 51, 0.26); }
 
+.wiederhol {
+  position: fixed;
+  bottom: calc(var(--safe-b) + 18px);
+  right: calc(var(--safe-r) + 18px);
+  z-index: 21;
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.24);
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+.wiederhol svg { width: 34px; height: 34px; fill: #fff; }
+.wiederhol:active { transform: scale(0.92); background: rgba(255, 255, 255, 0.38); }
+.detail.ist-hell .wiederhol { background: rgba(29, 39, 51, 0.16); }
+.detail.ist-hell .wiederhol svg { fill: var(--schiefer-900); }
+.detail.ist-hell .wiederhol:active { background: rgba(29, 39, 51, 0.26); }
+
 @keyframes aufklappen {
   from { transform: scale(0.72) rotate(-4deg); opacity: 0; }
   to   { transform: scale(1) rotate(0); opacity: 1; }

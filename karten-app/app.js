@@ -14,6 +14,7 @@
 
   const DATEN_URL = "ararat-board.json";
   const SVG_NS = "http://www.w3.org/2000/svg";
+  const AUDIO_LANG = "kmr"; // Audiosprache (Kurmancî); umschaltbar in Phase 5
 
   /* Bereichssymbole als SVG-Pfade, identisch zur Simulation
      (Koordinatensystem etwa -6 … 6, Mittelpunkt im Ursprung). */
@@ -141,6 +142,60 @@
     }
   }
 
+  /* ---------- Audio (Phase 3) ---------- */
+
+  let audioEl = null;
+
+  function holeAudio() {
+    if (!audioEl) {
+      audioEl = new Audio();
+      audioEl.preload = "auto";
+    }
+    return audioEl;
+  }
+
+  // Pfad nach Konvention; ein gesetztes audio-Feld hat Vorrang.
+  function audioUrl(karte) {
+    if (karte.audio && String(karte.audio).trim()) return String(karte.audio).trim();
+    return `audio/${karte.id}_${AUDIO_LANG}.mp3`;
+  }
+
+  function setzeWiederhol(sichtbar) {
+    const b = document.getElementById("btnWiederhol");
+    if (b) b.hidden = !sichtbar;
+  }
+
+  // Spielt das Karten-Audio ab, falls vorhanden. Existiert keine Datei,
+  // bleibt es still und der Wiederhol-Button erscheint nicht.
+  function spieleKartenAudio(karte) {
+    const a = holeAudio();
+    setzeWiederhol(false);
+    try { a.pause(); } catch (e) { /* egal */ }
+    a.oncanplay = () => setzeWiederhol(true);
+    a.onerror = () => setzeWiederhol(false);
+    a.src = audioUrl(karte);
+    try { a.currentTime = 0; } catch (e) { /* egal */ }
+    const p = a.play();
+    // Autoplay kann blockiert sein; der Button (via oncanplay) erlaubt dann
+    // das manuelle Abspielen.
+    if (p && typeof p.catch === "function") p.catch(() => {});
+  }
+
+  function wiederholeAudio() {
+    const a = holeAudio();
+    try {
+      a.currentTime = 0;
+      const p = a.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    } catch (e) { /* egal */ }
+  }
+
+  function stoppeAudio() {
+    if (!audioEl) return;
+    try { audioEl.pause(); } catch (e) { /* egal */ }
+    setzeWiederhol(false);
+  }
+
   /* ---------- Karte ziehen & öffnen (Phase 2) ---------- */
 
   let detailOffen = false;
@@ -180,6 +235,7 @@
 
     detail.hidden = false;
     detailOffen = true;
+    spieleKartenAudio(karte);
   }
 
   function schliesseDetail() {
@@ -191,6 +247,7 @@
       detailOffen = false;
       detail.removeEventListener("animationend", fertig);
     };
+    stoppeAudio();
     // reduced-motion: keine Animation -> sofort schließen
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) { fertig(); return; }
@@ -215,6 +272,8 @@
     verdrahteEinstellungen();
     const btnZu = document.getElementById("btnSchliessen");
     if (btnZu) btnZu.addEventListener("click", schliesseDetail);
+    const btnWdh = document.getElementById("btnWiederhol");
+    if (btnWdh) btnWdh.addEventListener("click", wiederholeAudio);
     try {
       await ladeBrett();
       zeigeStapel();

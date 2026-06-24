@@ -149,6 +149,14 @@ Freigabe wird abgehakt → nächste Phase. `[ ]` = offen, `[x]` = von dir freige
   Dreisprachige Texte, angezeigte Sprache je Einstellung. Auto-Audio beim Öffnen
   aus `karten-app/audio/<id>_<lang>.mp3` (sonst stiller Fallback) plus Button zum
   erneuten Abspielen.
+  - [ ] Audio umgesetzt (wartet auf Live-Test): Beim Öffnen wird das
+    Kurmancî-Audio (`audio/<id>_kmr.mp3`, ein gesetztes `audio`-Feld hat Vorrang)
+    automatisch abgespielt; ein Wiederhol-Button unten rechts spielt es erneut.
+    Fehlt die Datei, bleibt es still und der Button erscheint nicht. Audio stoppt
+    beim Schließen. Hinweis: aktuell liegen noch keine Audiodateien im Repo, der
+    Button erscheint also erst mit vorhandener Datei.
+  - [ ] Angezeigte Textsprache je Einstellung – offen, kommt mit dem
+    Einstellungsmenü (Phase 5). Vorerst Deutsch als Anzeige.
 
 - [ ] **Phase 4 – Effekt-Anzeige in der Ecke**
   Halbtransparentes Eck-Symbol aus `typ` + `wert`, ein-/ausschaltbar.
