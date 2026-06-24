@@ -165,10 +165,13 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(78vw, 420px);
+  width: min(66vw, 60vh, 360px);
+  height: auto;
+  max-height: min(66vh, 360px);
   transform: translate(-50%, -50%);
   opacity: 0.16;
   pointer-events: none;
+  overflow: visible;
 }
 .detail-symbol path { fill: #fff; }
 .detail.ist-hell .detail-symbol path { fill: var(--schiefer-900); }
