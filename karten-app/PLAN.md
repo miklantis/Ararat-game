@@ -5,7 +5,7 @@ Web-App im Browser auf dem iPhone (GitHub Pages, keine Installation). Am Tisch
 tippt jemand eine Bereichsfarbe an, die App zieht eine Karte aus diesem Bereich,
 zeigt minimalen Text und spielt den Kurmancî-Text als Audio vor.
 
-> **Arbeitsweise.** Sagst du „lass uns Karten-App entwickeln", liest Claude
+> **Arbeitsweise.** Sagst du „lass uns Karten-App weitermachen" (oder „entwickeln"), liest Claude
 > diesen Plan, knüpft am nächsten offenen Punkt an und führt die Umsetzung fort.
 > Was erledigt wurde, wird hier protokolliert; fertige Punkte werden abgehakt
 > (`[x]`), aber erst nach deiner Freigabe über die Live-Seite. Braucht ein
