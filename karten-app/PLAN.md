@@ -16,8 +16,9 @@ zeigt minimalen Text und spielt den Kurmancî-Text als Audio vor.
 
 ## 1. Datenquelle (das Herzstück)
 
-Die App erfindet nichts und legt nichts fest. Sie liest **dieselbe
-Brettdefinition wie die Simulation**: `simulation/ararat-board.json`. Alles –
+Die App erfindet nichts und legt nichts fest. Sie liest die Brettdefinition aus
+ihrem eigenen Ordner: `karten-app/ararat-board.json` – dieselben Daten, die im
+Editor der Simulation gepflegt werden. Alles –
 Bereichsfarben, Namen, Symbole, Karten, Texte, Effekte – kommt aus dieser Datei.
 Nichts ist in der App fest verdrahtet. Editierst du die JSON, ändert sich die
 App beim nächsten Laden entsprechend.
@@ -150,7 +151,7 @@ Freigabe wird abgehakt → nächste Phase. `[ ]` = offen, `[x]` = von dir freige
 ## 5. Festgelegte Entscheidungen
 
 - **Kein Supabase, kein Backend.** Einzige Datenquelle ist die Repo-JSON
-  `simulation/ararat-board.json`.
+  `karten-app/ararat-board.json`.
 - **Nichts fest verdrahtet.** Farben, Namen, Symbole, Texte und Effekte kommen
   alle aus der JSON; ändert sich die JSON, ändert sich die App.
 - **JSON-Aktualisierung:** du gibst mir die jeweils aktuelle JSON, ich committe
