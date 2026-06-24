@@ -5,9 +5,12 @@ Web-App im Browser auf dem iPhone (GitHub Pages, keine Installation). Am Tisch
 tippt jemand eine Bereichsfarbe an, die App zieht eine Karte aus diesem Bereich,
 zeigt minimalen Text und spielt den Kurmancî-Text als Audio vor.
 
-> Dieser Plan ist das Arbeitsdokument. Vor jeder Änderung an der App wird er
-> gelesen. Jede Phase wird einzeln umgesetzt, gepusht, von dir getestet und erst
-> nach deiner Freigabe abgehakt. Danach folgt die nächste Phase.
+> **Arbeitsweise.** Sagst du „lass uns Karten-App entwickeln", liest Claude
+> diesen Plan, knüpft am nächsten offenen Punkt an und führt die Umsetzung fort.
+> Was erledigt wurde, wird hier protokolliert; fertige Punkte werden abgehakt
+> (`[x]`), aber erst nach deiner Freigabe über die Live-Seite. Braucht ein
+> Bereich mehrere Schritte, darf Claude darunter neue Unterpunkte als eigene
+> Checkboxen ergänzen.
 
 ---
 
