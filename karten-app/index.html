@@ -35,6 +35,42 @@
     </button>
   </div>
 
+  <!-- Einstellungs-Panel (Phase 5) -->
+  <div id="einstellungenOverlay" class="ueberzug" hidden></div>
+  <div id="einstellungenPanel" class="panel" hidden role="dialog" aria-modal="true" aria-label="Einstellungen">
+    <div class="panel-griff" aria-hidden="true"></div>
+    <div class="panel-kopf">
+      <h2 class="panel-titel">Einstellungen</h2>
+      <button id="btnEinstellungenZu" class="panel-zu" type="button" aria-label="Einstellungen schließen">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18"/></svg>
+      </button>
+    </div>
+
+    <section class="feld">
+      <span class="feld-titel">Angezeigte Sprache</span>
+      <div id="wahlTextsprache" class="segment" role="group" aria-label="Angezeigte Sprache"></div>
+    </section>
+
+    <section class="feld">
+      <span class="feld-titel">Audiosprache</span>
+      <div id="wahlAudiosprache" class="segment" role="group" aria-label="Audiosprache"></div>
+    </section>
+
+    <section class="feld feld-schalter">
+      <label class="schalter-zeile" for="schalterAudio">
+        <span class="feld-titel">Audio abspielen</span>
+        <button id="schalterAudio" class="schalter" type="button" role="switch" aria-checked="true" aria-label="Audio abspielen"></button>
+      </label>
+    </section>
+
+    <section class="feld feld-schalter">
+      <label class="schalter-zeile" for="schalterEffekt">
+        <span class="feld-titel">Effekt-Anzeige in der Ecke</span>
+        <button id="schalterEffekt" class="schalter" type="button" role="switch" aria-checked="true" aria-label="Effekt-Anzeige in der Ecke"></button>
+      </label>
+    </section>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>

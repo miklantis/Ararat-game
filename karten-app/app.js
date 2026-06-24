@@ -14,7 +14,44 @@
 
   const DATEN_URL = "ararat-board.json";
   const SVG_NS = "http://www.w3.org/2000/svg";
-  const AUDIO_LANG = "kmr"; // Audiosprache (Kurmancî); umschaltbar in Phase 5
+
+  /* Die drei Projektsprachen. Reihenfolge = Anzeigereihenfolge im Menü.
+     code = Suffix für Audiodateien und text_<code>-Felder. */
+  const SPRACHEN = [
+    { code: "kmr", kurz: "Kurmancî" },
+    { code: "de",  kurz: "Deutsch" },
+    { code: "tr",  kurz: "Türkçe" }
+  ];
+
+  /* Einstellungen mit Vorgaben. Angezeigte Sprache = Deutsch (Spielleiter),
+     Audio = Kurmancî (der Herr hört zu). In localStorage gespeichert, damit
+     die Wahl einen Neustart übersteht (rein lokal, kein Backend). */
+  const EINSTELL_KEY = "ararat-karten-einstellungen";
+  const Einstell = {
+    textsprache: "de",
+    audiosprache: "kmr",
+    audioAn: true,
+    effektAn: true
+  };
+
+  function ladeEinstellungen() {
+    try {
+      const roh = window.localStorage.getItem(EINSTELL_KEY);
+      if (!roh) return;
+      const o = JSON.parse(roh);
+      const codes = SPRACHEN.map((s) => s.code);
+      if (codes.includes(o.textsprache)) Einstell.textsprache = o.textsprache;
+      if (codes.includes(o.audiosprache)) Einstell.audiosprache = o.audiosprache;
+      if (typeof o.audioAn === "boolean") Einstell.audioAn = o.audioAn;
+      if (typeof o.effektAn === "boolean") Einstell.effektAn = o.effektAn;
+    } catch (e) { /* localStorage evtl. nicht verfügbar – Vorgaben gelten */ }
+  }
+
+  function speichereEinstellungen() {
+    try {
+      window.localStorage.setItem(EINSTELL_KEY, JSON.stringify(Einstell));
+    } catch (e) { /* egal */ }
+  }
 
   /* Bereichssymbole als SVG-Pfade, identisch zur Simulation
      (Koordinatensystem etwa -6 … 6, Mittelpunkt im Ursprung). */
@@ -193,11 +230,13 @@
     return svg;
   }
 
-  // Effekt-Anzeige aufbauen; ohne erkennbaren Effekt bleibt die Ecke leer.
+  // Effekt-Anzeige aufbauen; ohne erkennbaren Effekt oder bei
+  // ausgeschalteter Anzeige bleibt die Ecke leer.
   function zeigeEffekt(karte) {
     const box = document.getElementById("effekt");
     if (!box) return;
     box.innerHTML = "";
+    if (!Einstell.effektAn) { box.hidden = true; return; }
     const info = effektInfo(karte);
     if (!info) { box.hidden = true; return; }
     box.appendChild(effektSymbolSvg(info.symbol, "effekt-symbol"));
@@ -228,7 +267,7 @@
   // Pfad nach Konvention; ein gesetztes audio-Feld hat Vorrang.
   function audioUrl(karte) {
     if (karte.audio && String(karte.audio).trim()) return String(karte.audio).trim();
-    return `audio/${karte.id}_${AUDIO_LANG}.mp3`;
+    return `audio/${karte.id}_${Einstell.audiosprache}.mp3`;
   }
 
   function setzeWiederhol(sichtbar) {
@@ -236,12 +275,14 @@
     if (b) b.hidden = !sichtbar;
   }
 
-  // Spielt das Karten-Audio ab, falls vorhanden. Existiert keine Datei,
-  // bleibt es still und der Wiederhol-Button erscheint nicht.
+  // Spielt das Karten-Audio ab, falls vorhanden und Audio eingeschaltet ist.
+  // Existiert keine Datei oder ist Audio aus, bleibt es still und der
+  // Wiederhol-Button erscheint nicht.
   function spieleKartenAudio(karte) {
     const a = holeAudio();
     setzeWiederhol(false);
     try { a.pause(); } catch (e) { /* egal */ }
+    if (!Einstell.audioAn) return;
     a.oncanplay = () => setzeWiederhol(true);
     a.onerror = () => setzeWiederhol(false);
     a.src = audioUrl(karte);
@@ -272,8 +313,18 @@
   let detailOffen = false;
 
   function kartenText(karte) {
-    // Phase 2: zunächst Deutsch als Vorgabe, mit Fallback.
-    return (karte.text_de || karte.text_kmr || karte.text_tr || "").trim() || "—";
+    // Gewählte Anzeigesprache, mit Fallback auf die übrigen Sprachen.
+    const bevorzugt = "text_" + Einstell.textsprache;
+    const reihenfolge = [bevorzugt];
+    for (const s of SPRACHEN) {
+      const feld = "text_" + s.code;
+      if (!reihenfolge.includes(feld)) reihenfolge.push(feld);
+    }
+    for (const feld of reihenfolge) {
+      const t = (karte[feld] || "").trim();
+      if (t) return t;
+    }
+    return "—";
   }
 
   function zieheUndOeffne(bereichId) {
@@ -306,6 +357,8 @@
 
     detail.hidden = false;
     detailOffen = true;
+    aktuelleKarte = karte;
+    aktuelleZone = zone;
     zeigeEffekt(karte);
     spieleKartenAudio(karte);
   }
@@ -317,6 +370,8 @@
       detail.hidden = true;
       detail.classList.remove("schliesst");
       detailOffen = false;
+      aktuelleKarte = null;
+      aktuelleZone = null;
       detail.removeEventListener("animationend", fertig);
     };
     stoppeAudio();
@@ -328,13 +383,124 @@
     detail.classList.add("schliesst");
   }
 
-  /* ---------- Einstellungen (Menü kommt in Phase 5) ---------- */
+  /* ---------- Einstellungen (Phase 5) ---------- */
+
+  // Merkt sich die zuletzt geöffnete Karte, damit Änderungen bei offener
+  // Detailansicht sofort sichtbar werden (Sprache/Effekt umschalten).
+  let aktuelleKarte = null;
+  let aktuelleZone = null;
+
+  function baueSegment(containerId, gewaehlt, beimWaehlen) {
+    const box = document.getElementById(containerId);
+    if (!box) return;
+    box.innerHTML = "";
+    for (const s of SPRACHEN) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "segment-knopf" + (s.code === gewaehlt ? " ist-aktiv" : "");
+      b.textContent = s.kurz;
+      b.dataset.code = s.code;
+      b.setAttribute("aria-pressed", s.code === gewaehlt ? "true" : "false");
+      b.addEventListener("click", () => {
+        for (const k of box.querySelectorAll(".segment-knopf")) {
+          const aktiv = k === b;
+          k.classList.toggle("ist-aktiv", aktiv);
+          k.setAttribute("aria-pressed", aktiv ? "true" : "false");
+        }
+        beimWaehlen(s.code);
+      });
+      box.appendChild(b);
+    }
+  }
+
+  function setzeSchalter(el, an) {
+    if (!el) return;
+    el.classList.toggle("ist-an", an);
+    el.setAttribute("aria-checked", an ? "true" : "false");
+  }
+
+  // Wendet die aktuellen Einstellungen auf eine bereits offene Karte an.
+  function aktualisiereOffeneKarte() {
+    const detail = document.getElementById("detail");
+    if (!detail || detail.hidden || !aktuelleKarte) return;
+    const textEl = document.querySelector("#detailInhalt p");
+    if (textEl) textEl.textContent = kartenText(aktuelleKarte);
+    zeigeEffekt(aktuelleKarte);
+  }
+
+  function oeffneEinstellungen() {
+    const overlay = document.getElementById("einstellungenOverlay");
+    const panel = document.getElementById("einstellungenPanel");
+    if (!panel) return;
+    overlay.hidden = false;
+    panel.hidden = false;
+    // im nächsten Frame die Einblend-Klassen setzen (Transition)
+    requestAnimationFrame(() => {
+      overlay.classList.add("ist-offen");
+      panel.classList.add("ist-offen");
+    });
+  }
+
+  function schliesseEinstellungen() {
+    const overlay = document.getElementById("einstellungenOverlay");
+    const panel = document.getElementById("einstellungenPanel");
+    if (!panel || panel.hidden) return;
+    overlay.classList.remove("ist-offen");
+    panel.classList.remove("ist-offen");
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const fertig = () => {
+      panel.hidden = true;
+      overlay.hidden = true;
+      panel.removeEventListener("transitionend", fertig);
+    };
+    if (reduce) { fertig(); return; }
+    let erledigt = false;
+    const einmal = () => { if (!erledigt) { erledigt = true; fertig(); } };
+    panel.addEventListener("transitionend", einmal);
+    // Sicherheitsnetz, falls transitionend ausbleibt
+    window.setTimeout(einmal, 400);
+  }
 
   function verdrahteEinstellungen() {
     const btn = document.getElementById("btnEinstellungen");
-    if (btn) {
-      btn.addEventListener("click", () => {
-        // Platzhalter: das Einstellungsmenü wird in Phase 5 ergänzt.
+    if (btn) btn.addEventListener("click", oeffneEinstellungen);
+    const btnZu = document.getElementById("btnEinstellungenZu");
+    if (btnZu) btnZu.addEventListener("click", schliesseEinstellungen);
+    const overlay = document.getElementById("einstellungenOverlay");
+    if (overlay) overlay.addEventListener("click", schliesseEinstellungen);
+
+    // Sprachwahl
+    baueSegment("wahlTextsprache", Einstell.textsprache, (code) => {
+      Einstell.textsprache = code;
+      speichereEinstellungen();
+      aktualisiereOffeneKarte();
+    });
+    baueSegment("wahlAudiosprache", Einstell.audiosprache, (code) => {
+      Einstell.audiosprache = code;
+      speichereEinstellungen();
+    });
+
+    // Schalter Audio
+    const sAudio = document.getElementById("schalterAudio");
+    setzeSchalter(sAudio, Einstell.audioAn);
+    if (sAudio) {
+      sAudio.addEventListener("click", () => {
+        Einstell.audioAn = !Einstell.audioAn;
+        setzeSchalter(sAudio, Einstell.audioAn);
+        speichereEinstellungen();
+        if (!Einstell.audioAn) stoppeAudio();
+      });
+    }
+
+    // Schalter Effekt
+    const sEffekt = document.getElementById("schalterEffekt");
+    setzeSchalter(sEffekt, Einstell.effektAn);
+    if (sEffekt) {
+      sEffekt.addEventListener("click", () => {
+        Einstell.effektAn = !Einstell.effektAn;
+        setzeSchalter(sEffekt, Einstell.effektAn);
+        speichereEinstellungen();
+        aktualisiereOffeneKarte();
       });
     }
   }
@@ -342,6 +508,7 @@
   /* ---------- Start ---------- */
 
   async function start() {
+    ladeEinstellungen();
     verdrahteEinstellungen();
     const btnZu = document.getElementById("btnSchliessen");
     if (btnZu) btnZu.addEventListener("click", schliesseDetail);

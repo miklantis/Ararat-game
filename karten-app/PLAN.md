@@ -155,12 +155,15 @@ Freigabe wird abgehakt → nächste Phase. `[ ]` = offen, `[x]` = von dir freige
     Fehlt die Datei, bleibt es still und der Button erscheint nicht. Audio stoppt
     beim Schließen. Hinweis: aktuell liegen noch keine Audiodateien im Repo, der
     Button erscheint also erst mit vorhandener Datei.
-  - [ ] Angezeigte Textsprache je Einstellung – offen, kommt mit dem
-    Einstellungsmenü (Phase 5). Vorerst Deutsch als Anzeige.
+  - [ ] Angezeigte Textsprache je Einstellung – umgesetzt mit dem
+    Einstellungsmenü (Phase 5): die im Menü gewählte Anzeigesprache (kmr/de/tr)
+    steuert den Kartentext, mit Fallback auf die übrigen Sprachen, falls ein
+    Feld leer ist. Bei offener Karte greift der Wechsel sofort. Wartet auf
+    Live-Test (gemeinsam mit Phase 5).
 
-- [ ] **Phase 4 – Effekt-Anzeige in der Ecke**
+- [x] **Phase 4 – Effekt-Anzeige in der Ecke**
   Halbtransparentes Eck-Symbol aus `typ` + `wert`, ein-/ausschaltbar.
-  - Umgesetzt (wartet auf Live-Test): Beim Öffnen einer Karte erscheint unten
+  - Freigegeben über Live-Test. Beim Öffnen einer Karte erscheint unten
     links eine dezente, halbtransparente Pille mit Symbol und kurzem Label,
     abgeleitet aus `typ` + `wert` (alle sieben in der JSON vorkommenden Typen
     abgedeckt: vorwaerts „+N vor", rueckwaerts „−N zurück", aussetzen, erneut
@@ -170,10 +173,30 @@ Freigabe wird abgehakt → nächste Phase. `[ ]` = offen, `[x]` = von dir freige
     Variante passend zur Bereichsfarbe. Beim Schließen wird sie ausgeblendet.
     Das Ein-/Ausschalten folgt mit dem Einstellungsmenü (Phase 5); vorerst
     immer sichtbar.
+  - Zwischenfix (freigegeben): Symbol-Wasserzeichen der geöffneten Karte
+    wurde je nach Bildschirm seitlich angeschnitten; behoben durch weiteres
+    viewBox (-7.5 -7.5 15 15) nur fürs Detail-Symbol plus Begrenzung in
+    Breite und Höhe.
 
 - [ ] **Phase 5 – Einstellungsmenü**
   Menü hinter dem Icon: Textsprache, Audiosprache, Audio an/aus, Effekt-Anzeige
   an/aus.
+  - Umgesetzt (wartet auf Live-Test): Tippen auf das Zahnrad öffnet ein
+    Panel, das von unten hereinfährt (gut am Daumen erreichbar), mit
+    abdunkelndem Hintergrund; Schließen über X oder Tippen auf den
+    Hintergrund. Vier Einstellungen:
+    - Angezeigte Sprache (Kurmancî / Deutsch / Türkçe) als Segment-Umschalter,
+      Vorgabe Deutsch (für den Spielleiter).
+    - Audiosprache (Kurmancî / Deutsch / Türkçe), Vorgabe Kurmancî (der Herr
+      hört zu); steuert den Pfad `audio/<id>_<lang>.mp3`.
+    - Audio abspielen an/aus (Vorgabe an); aus stoppt laufendes Audio und
+      verhindert Autoplay.
+    - Effekt-Anzeige in der Ecke an/aus (Vorgabe an).
+    Bei offener Karte wirken Sprach- und Effekt-Umschaltung sofort. Alle vier
+    Werte werden lokal in localStorage gespeichert und überstehen einen
+    Neustart (rein lokal, kein Backend). Die drei Sprachen sind als
+    Projektsprachen fest hinterlegt; Brettinhalte kommen weiterhin aus der
+    JSON. reduced-motion wird respektiert.
 
 - [ ] **Phase 6 – Feinschliff**
   Animationen, Touch-Feedback, große Schrift/Kontrast.
