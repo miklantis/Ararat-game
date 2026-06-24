@@ -483,7 +483,8 @@
       <section class="block">
         <h2>Bereiche aufteilen</h2>
         <div id="edZonen"></div>
-        <p class="hinweis">Anteil je Bereich in Prozent. Die Felder werden in der Reihenfolge der Bereiche auf die Gruppen verteilt; die Summe wird automatisch normiert.</p>
+        <div class="zeile"><button class="btn" id="edZonenGleich">Gleichmäßig aufteilen</button></div>
+        <p class="hinweis">Anteil je Bereich in Prozent. Die Felder werden in der Reihenfolge der Bereiche auf die Gruppen verteilt; die Summe wird automatisch normiert. „Gleichmäßig aufteilen“ setzt alle Bereiche auf den gleichen Anteil (bei vier Bereichen je 25 %).</p>
       </section>
 
       <section class="block">
@@ -528,6 +529,8 @@
         <h2>Export</h2>
         <button class="btn primaer" id="edSvgExport">SVG-Spielfeld exportieren</button>
         <p class="hinweis">Felder und – falls aktiv – die Weglinie als skalierbares SVG im Format des Spielfelds (cm), Hintergrund transparent, ohne Feldnummern. Kartenfeld-Icons werden mit exportiert.</p>
+        <button class="btn" id="edPngExport">PNG-Spielfeld exportieren (2048×2048)</button>
+        <p class="hinweis">Gleicher Inhalt als PNG mit transparentem Hintergrund, quadratisch 2048×2048 px (2K). Das Spielfeld wird unverzerrt eingepasst; der Rand bleibt transparent.</p>
       </section>
 
     </aside>
@@ -3308,6 +3311,8 @@ const AnsichtEditor = (function () {
     $("edPunktAdd").addEventListener("click", punktHinzufuegen);
     $("edPunktDel").addEventListener("click", punktLoeschen);
     $("edSvgExport").addEventListener("click", svgExportieren);
+    $("edPngExport").addEventListener("click", pngExportieren);
+    $("edZonenGleich").addEventListener("click", zonenGleich);
   }
 
   function rangeControl(id, applyFn) {
@@ -3407,6 +3412,13 @@ const AnsichtEditor = (function () {
     const zones = config.zones || [];
     const prozente = zones.map((z) => { const inp = $("edZone_" + z.id); return inp ? Math.max(0, Number(inp.value) || 0) : 0; });
     zonenVerteilen(prozente);
+    Store.touch("Editor");
+  }
+  function zonenGleich() {
+    const zones = config.zones || [];
+    if (!zones.length) return;
+    aktivControl = null;
+    zonenVerteilen(zones.map(() => 1));
     Store.touch("Editor");
   }
 
@@ -3699,6 +3711,46 @@ const AnsichtEditor = (function () {
     document.body.appendChild(a); a.click(); a.remove();
     URL.revokeObjectURL(url);
     if (window.App && App.setStatus) App.setStatus("SVG-Spielfeld exportiert: " + name, "ok");
+  }
+
+  function pngExportieren() {
+    const svg = svgMarkup();
+    if (!svg) return;
+    const mvb = /viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(svg);
+    if (!mvb) { if (window.App && App.setStatus) App.setStatus("PNG-Export fehlgeschlagen (kein viewBox).", "warn"); return; }
+    const VW = parseFloat(mvb[1]), VH = parseFloat(mvb[2]);
+    // cm-Maße durch Pixelmaße ersetzen, damit das Raster scharf und unverzerrt ist.
+    const svgPx = svg.replace(/width="[^"]*cm" height="[^"]*cm"/, `width="${VW}" height="${VH}"`);
+    const SIZE = 2048;
+    const scale = Math.min(SIZE / VW, SIZE / VH);
+    const dw = VW * scale, dh = VH * scale;
+    const ox = (SIZE - dw) / 2, oy = (SIZE - dh) / 2;
+    const blob = new Blob([svgPx], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      const cv = document.createElement("canvas");
+      cv.width = SIZE; cv.height = SIZE;
+      const ctx = cv.getContext("2d");
+      ctx.clearRect(0, 0, SIZE, SIZE);          // transparenter Hintergrund
+      ctx.drawImage(img, ox, oy, dw, dh);
+      URL.revokeObjectURL(url);
+      cv.toBlob((png) => {
+        if (!png) { if (window.App && App.setStatus) App.setStatus("PNG-Export fehlgeschlagen.", "warn"); return; }
+        const name = (((config.meta && config.meta.name) || "ararat").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")) + "-spielfeld-2048.png";
+        const purl = URL.createObjectURL(png);
+        const a = document.createElement("a");
+        a.href = purl; a.download = name;
+        document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(purl);
+        if (window.App && App.setStatus) App.setStatus("PNG-Spielfeld exportiert (2048×2048): " + name, "ok");
+      }, "image/png");
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      if (window.App && App.setStatus) App.setStatus("PNG-Export fehlgeschlagen (SVG konnte nicht geladen werden).", "warn");
+    };
+    img.src = url;
   }
 
   return { init, svgMarkup };
