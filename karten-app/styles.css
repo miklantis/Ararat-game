@@ -1,0 +1,220 @@
+/* =========================================================================
+   Ararat – Karten-App
+   Gestalterische Grundlage. Bereichsfarben kommen zur Laufzeit aus der JSON
+   und werden als CSS-Variablen gesetzt; hier stehen nur die Grundtöne.
+
+   Schriftwahl bewusst: Atkinson Hyperlegible (Braille Institute) ist für
+   Schwachsichtigkeit entwickelt – passend zum Empfänger, der nicht mehr gut
+   liest. Fraunces trägt als Display-Schrift die Wärme des Themas.
+   ========================================================================= */
+
+:root {
+  /* Grundtöne: warmer Stein, kühler Schiefer */
+  --stein-50:  #f7f4ee;
+  --stein-100: #efeae0;
+  --stein-200: #ddd6c8;
+  --schiefer-700: #2c3845;
+  --schiefer-800: #222c37;
+  --schiefer-900: #1d2733;
+  --text:      #20242b;
+  --text-leise: #5d6470;
+  --linie:     rgba(32, 36, 43, 0.12);
+  --warn:      #b3402f;
+
+  /* Bereichsfarben – Vorgaben, werden von der JSON überschrieben */
+  --dorf:   #005cb3;
+  --felder: #4cb82e;
+  --stadt:  #e25050;
+  --ararat: #bcc9d2;
+
+  --radius: 18px;
+  --schatten: 0 10px 30px -12px rgba(29, 39, 51, 0.35);
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(120% 80% at 50% -10%, var(--stein-50) 0%, var(--stein-100) 45%, var(--stein-200) 100%);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* ---------- Bergsilhouette (Signatur) ---------- */
+.bergband {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 30vh;
+  max-height: 240px;
+  z-index: 0;
+  pointer-events: none;
+}
+.bergband path {
+  fill: var(--schiefer-900);
+  opacity: 0.06;
+}
+.bergband .schnee { opacity: 0.05; fill: var(--schiefer-700); }
+
+/* ---------- Hülle / Layout ---------- */
+.huelle {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: clamp(24px, 7vw, 48px) clamp(20px, 6vw, 36px) 22vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(22px, 5vw, 34px);
+}
+
+/* ---------- Kopf ---------- */
+.kopf { text-align: center; }
+.augenbraue {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-leise);
+  font-weight: 700;
+}
+.titel {
+  margin: 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(3.4rem, 16vw, 5rem);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  color: var(--schiefer-900);
+}
+.unterzeile {
+  margin: 8px 0 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.05rem, 4.5vw, 1.35rem);
+  color: var(--text-leise);
+}
+
+/* ---------- Status ---------- */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--linie);
+}
+.status-text { margin: 0; font-size: 1.05rem; }
+
+.status--fehler {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(179, 64, 47, 0.07);
+  border-color: rgba(179, 64, 47, 0.3);
+}
+.status--fehler .status-text { font-weight: 700; color: var(--warn); }
+.status--fehler .status-detail {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-leise);
+  line-height: 1.5;
+}
+.status--fehler code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  background: rgba(29, 39, 51, 0.06);
+  padding: 1px 5px;
+  border-radius: 5px;
+}
+.status--ok { display: none; }
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border: 3px solid var(--linie);
+  border-top-color: var(--schiefer-700);
+  border-radius: 50%;
+  animation: dreh 0.9s linear infinite;
+}
+@keyframes dreh { to { transform: rotate(360deg); } }
+
+/* ---------- Diagnose (Phase 0: Beweis, dass die Daten ankommen) ---------- */
+.diagnose { display: flex; flex-direction: column; gap: 18px; }
+
+.diagnose-kopf { display: flex; flex-direction: column; gap: 2px; }
+.diagnose-kopf h2 {
+  margin: 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--schiefer-900);
+}
+.diagnose-meta {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-leise);
+}
+
+.bereiche { display: flex; flex-direction: column; gap: 12px; }
+
+.bereich-zeile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  background: var(--bf, #ccc);
+  color: #fff;
+  box-shadow: var(--schatten);
+  overflow: hidden;
+}
+.bereich-symbol {
+  position: absolute;
+  right: -8px;
+  bottom: -22px;
+  width: 110px;
+  height: 110px;
+  opacity: 0.16;
+  pointer-events: none;
+}
+.bereich-symbol path { fill: #fff; }
+
+.bereich-text { position: relative; z-index: 1; }
+.bereich-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.bereich-zahl {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Heller Bereich (Ararat) bekommt dunkle Schrift für Kontrast */
+.bereich-zeile.ist-hell { color: var(--schiefer-900); }
+.bereich-zeile.ist-hell .bereich-symbol path { fill: var(--schiefer-900); }
+
+.diagnose-fuss {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-leise);
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+}

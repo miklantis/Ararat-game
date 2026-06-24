@@ -121,6 +121,12 @@ Freigabe wird abgehakt → nächste Phase. `[ ]` = offen, `[x]` = von dir freige
   Statisches Grundgerüst (HTML/CSS/JS, kein Framework). App lädt
   `ararat-board.json` aus dem Repo per fetch und baut intern das Datenmodell.
   Klare Meldung, falls die JSON nicht erreichbar ist.
+  - Umgesetzt (wartet auf Live-Test): `index.html`, `styles.css`, `app.js`.
+    fetch mit `cache: no-store`; Modell mit Bereichen indexiert und Karten je
+    Bereich gruppiert. Erfolgsfall zeigt eine Kurzdiagnose (Bereiche, Karten,
+    Würfel, Version) mit den Bereichsfarben/Symbolen aus der JSON; Fehlerfall
+    zeigt eine verständliche Meldung. Schrift: Atkinson Hyperlegible (für
+    Schwachsichtigkeit) plus Fraunces als Display-Schrift.
 
 - [ ] **Phase 1 – Stapel-Ansicht**
   Vier Bereichskarten in Bereichsfarbe mit Symbol-Wasserzeichen (alles aus der
