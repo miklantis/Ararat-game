@@ -126,19 +126,24 @@ Freigabe wird abgehakt → nächste Phase. `[ ]` = offen, `[x]` = von dir freige
     nicht erreichbarer JSON). Das Test-Diagnosebild wurde durch die echte
     Stapel-Ansicht (Phase 1) ersetzt.
 
-- [ ] **Phase 1 – Stapel-Ansicht**
+- [x] **Phase 1 – Stapel-Ansicht**
   Vier Bereichskarten in Bereichsfarbe mit Symbol-Wasserzeichen (alles aus der
   JSON), iPhone-Layout, Einstellungs-Icon (Menü noch leer).
-  - Umgesetzt (wartet auf Live-Test): Vier Karten von oben als 2×2-Raster, das
-    den Bildschirm füllt, je Bereichsfarbe mit großem Symbol-Wasserzeichen,
-    keine Texte. Heller Bereich (Ararat) bekommt ein dunkles Symbol für
-    Kontrast. Einstellungs-Icon oben rechts (Tap-Feedback, Menü folgt Phase 5).
-    Antippen zum Ziehen ist bewusst noch nicht verdrahtet (Phase 2).
+  - Freigegeben über Live-Test. Vier Karten als 2×2-Raster, Bereichsfarbe +
+    Symbol-Wasserzeichen, keine Texte, Einstellungs-Icon oben rechts.
+    (Zwischenfix: Lade-Ebene blendete nicht aus und fing Klicks ab – behoben
+    mit `[hidden] { display: none !important; }`.)
 
 - [ ] **Phase 2 – Karte öffnen & schließen**
   Tippen zieht zufällig eine Karte aus dem Bereich, Dreh-/Aufklapp-Animation auf
   Vollbild, zunächst nur Text (Deutsch als Vorgabe). X-Button schließt mit
   Weg-Schieben.
+  - Umgesetzt (wartet auf Live-Test): Antippen zieht rein zufällig eine Karte
+    aus dem Bereich und klappt sie auf Vollbild auf (Aufklapp-Animation mit
+    leichter Drehung), Bereichsfarbe als Fläche, Symbol als Wasserzeichen,
+    deutscher Text (Fallback auf kmr/tr, falls leer). X-Button oben rechts
+    schließt mit Weg-Schieben. Lock verhindert Doppelöffnen; reduced-motion
+    wird respektiert.
 
 - [ ] **Phase 3 – Sprache & Audio**
   Dreisprachige Texte, angezeigte Sprache je Einstellung. Auto-Audio beim Öffnen

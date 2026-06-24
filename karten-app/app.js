@@ -136,9 +136,66 @@
       karte.setAttribute("aria-label", z.name || z.id);
       karte.dataset.bereich = z.id;
       karte.appendChild(symbolSvg(z.symbol, "karte-symbol"));
-      // Antippen zum Ziehen folgt in Phase 2.
+      karte.addEventListener("click", () => zieheUndOeffne(z.id));
       stapel.appendChild(karte);
     }
+  }
+
+  /* ---------- Karte ziehen & öffnen (Phase 2) ---------- */
+
+  let detailOffen = false;
+
+  function kartenText(karte) {
+    // Phase 2: zunächst Deutsch als Vorgabe, mit Fallback.
+    return (karte.text_de || karte.text_kmr || karte.text_tr || "").trim() || "—";
+  }
+
+  function zieheUndOeffne(bereichId) {
+    if (detailOffen) return;
+    const liste = Modell.kartenNachBereich[bereichId] || [];
+    if (liste.length === 0) return;
+    const karte = liste[Math.floor(Math.random() * liste.length)];
+    const zone = Modell.bereichNachId[bereichId];
+    oeffneDetail(karte, zone);
+  }
+
+  function oeffneDetail(karte, zone) {
+    const detail = document.getElementById("detail");
+    const inhalt = document.getElementById("detailInhalt");
+    detail.classList.remove("schliesst");
+    detail.classList.toggle("ist-hell", istHell(zone && zone.color));
+    detail.style.setProperty("--bf", (zone && zone.color) || "#345");
+
+    inhalt.innerHTML = "";
+    const sym = symbolSvg(zone ? zone.symbol : "berg", "detail-symbol");
+    detail.insertBefore(sym, inhalt);
+    // altes Symbol (falls vorhanden) entfernen
+    const syms = detail.querySelectorAll(".detail-symbol");
+    for (let i = 0; i < syms.length - 1; i++) syms[i].remove();
+
+    const text = document.createElement("p");
+    text.style.margin = "0";
+    text.textContent = kartenText(karte);
+    inhalt.appendChild(text);
+
+    detail.hidden = false;
+    detailOffen = true;
+  }
+
+  function schliesseDetail() {
+    const detail = document.getElementById("detail");
+    if (detail.hidden) return;
+    const fertig = () => {
+      detail.hidden = true;
+      detail.classList.remove("schliesst");
+      detailOffen = false;
+      detail.removeEventListener("animationend", fertig);
+    };
+    // reduced-motion: keine Animation -> sofort schließen
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { fertig(); return; }
+    detail.addEventListener("animationend", fertig);
+    detail.classList.add("schliesst");
   }
 
   /* ---------- Einstellungen (Menü kommt in Phase 5) ---------- */
@@ -156,6 +213,8 @@
 
   async function start() {
     verdrahteEinstellungen();
+    const btnZu = document.getElementById("btnSchliessen");
+    if (btnZu) btnZu.addEventListener("click", schliesseDetail);
     try {
       await ladeBrett();
       zeigeStapel();

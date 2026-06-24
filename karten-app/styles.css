@@ -142,3 +142,82 @@ body {
   .spinner { animation: none; }
   .karte, .einstellungen { transition: none; }
 }
+
+/* ---------- Geöffnete Karte (Phase 2) ---------- */
+.detail {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: var(--bf, #345);
+  display: grid;
+  place-items: center;
+  padding:
+    calc(var(--safe-t) + 64px)
+    calc(var(--safe-r) + 26px)
+    calc(var(--safe-b) + 36px)
+    calc(var(--safe-l) + 26px);
+  overflow: hidden;
+  animation: aufklappen 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.detail.schliesst { animation: wegschieben 0.3s ease forwards; }
+
+.detail-symbol {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(78vw, 420px);
+  transform: translate(-50%, -50%);
+  opacity: 0.16;
+  pointer-events: none;
+}
+.detail-symbol path { fill: #fff; }
+.detail.ist-hell .detail-symbol path { fill: var(--schiefer-900); }
+
+.detail-inhalt {
+  position: relative;
+  z-index: 1;
+  max-width: 18em;
+  text-align: center;
+  color: #fff;
+  font-size: clamp(1.5rem, 6.4vw, 2.3rem);
+  line-height: 1.34;
+  font-weight: 700;
+  text-wrap: balance;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.18);
+}
+.detail.ist-hell .detail-inhalt { color: var(--schiefer-900); text-shadow: none; }
+
+.schliessen {
+  position: fixed;
+  top: calc(var(--safe-t) + 10px);
+  right: calc(var(--safe-r) + 12px);
+  z-index: 21;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+.schliessen svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; }
+.schliessen:active { transform: scale(0.92); background: rgba(255, 255, 255, 0.34); }
+.detail.ist-hell .schliessen { background: rgba(29, 39, 51, 0.16); }
+.detail.ist-hell .schliessen svg { stroke: var(--schiefer-900); }
+.detail.ist-hell .schliessen:active { background: rgba(29, 39, 51, 0.26); }
+
+@keyframes aufklappen {
+  from { transform: scale(0.72) rotate(-4deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0); opacity: 1; }
+}
+@keyframes wegschieben {
+  from { transform: translateX(0) rotate(0); opacity: 1; }
+  to   { transform: translateX(112%) rotate(6deg); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detail, .detail.schliesst { animation: none; }
+  .schliessen { transition: none; }
+}
