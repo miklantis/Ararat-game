@@ -229,6 +229,46 @@ body {
 .detail.ist-hell .wiederhol svg { fill: var(--schiefer-900); }
 .detail.ist-hell .wiederhol:active { background: rgba(29, 39, 51, 0.26); }
 
+/* ---------- Effekt-Anzeige (Phase 4) ---------- */
+.effekt {
+  position: fixed;
+  bottom: calc(var(--safe-b) + 22px);
+  left: calc(var(--safe-l) + 20px);
+  z-index: 21;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 14px 8px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  opacity: 0.72;
+  pointer-events: none;
+  max-width: calc(100vw - 110px);
+}
+.effekt-symbol {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+}
+.effekt-symbol path {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.effekt-label {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.detail.ist-hell .effekt { background: rgba(29, 39, 51, 0.12); color: var(--schiefer-900); }
+.detail.ist-hell .effekt-symbol path { stroke: var(--schiefer-900); }
+
 @keyframes aufklappen {
   from { transform: scale(0.72) rotate(-4deg); opacity: 0; }
   to   { transform: scale(1) rotate(0); opacity: 1; }

@@ -160,6 +160,16 @@ Freigabe wird abgehakt → nächste Phase. `[ ]` = offen, `[x]` = von dir freige
 
 - [ ] **Phase 4 – Effekt-Anzeige in der Ecke**
   Halbtransparentes Eck-Symbol aus `typ` + `wert`, ein-/ausschaltbar.
+  - Umgesetzt (wartet auf Live-Test): Beim Öffnen einer Karte erscheint unten
+    links eine dezente, halbtransparente Pille mit Symbol und kurzem Label,
+    abgeleitet aus `typ` + `wert` (alle sieben in der JSON vorkommenden Typen
+    abgedeckt: vorwaerts „+N vor", rueckwaerts „−N zurück", aussetzen, erneut
+    „nochmal würfeln", vor_zu_naechstem, tausch_fuehrender, tausch_hinterster).
+    Unbekannte Typen erzeugen keine Anzeige. Liegt unten links, der
+    Wiederhol-Button unten rechts, sie überlagern sich nicht. Hell-/Dunkel-
+    Variante passend zur Bereichsfarbe. Beim Schließen wird sie ausgeblendet.
+    Das Ein-/Ausschalten folgt mit dem Einstellungsmenü (Phase 5); vorerst
+    immer sichtbar.
 
 - [ ] **Phase 5 – Einstellungsmenü**
   Menü hinter dem Icon: Textsprache, Audiosprache, Audio an/aus, Effekt-Anzeige

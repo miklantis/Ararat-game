@@ -142,6 +142,77 @@
     }
   }
 
+  /* ---------- Effekt-Anzeige (Phase 4) ---------- */
+
+  /* Eck-Symbole als SVG-Pfade im selben Koordinatensystem wie die
+     Bereichssymbole (viewBox -6 … 6). Bewusst schlicht und gut lesbar. */
+  const EFFEKT_SYMBOLE = {
+    pfeil_vor:   "M-4.5 0 L2.5 0 M-0.5 -3.5 L3 0 L-0.5 3.5",      // nach rechts
+    pfeil_zur:   "M4.5 0 L-2.5 0 M0.5 -3.5 L-3 0 L0.5 3.5",       // nach links
+    pause:       "M-2.4 -3.6 L-2.4 3.6 M2.4 -3.6 L2.4 3.6",       // zwei Balken
+    erneut:      "M3 -1.6 A4 4 0 1 0 4 1.6 M3 -1.6 L4.3 -2 M3 -1.6 L3.4 -3", // Kreispfeil
+    pfeil_naechst: "M-4 0 L2 0 M-0.8 -3 L2.2 0 L-0.8 3 M3.4 -3.4 L3.4 3.4",  // Pfeil + Wand
+    tausch:      "M-4 -1.6 L3 -1.6 M0 -4.1 L3.4 -1.6 L0 0.9 M4 1.6 L-3 1.6 M0 -0.9 L-3.4 1.6 L0 4.1" // Doppelpfeil
+  };
+
+  /* Ableitung aus typ + wert: liefert Symbolname und kurzes Label.
+     Unbekannte typ-Werte ergeben keine Anzeige (null). */
+  function effektInfo(karte) {
+    const typ = (karte && karte.typ) || "";
+    const wertRoh = karte && karte.wert;
+    const n = (wertRoh === 0 || wertRoh) ? String(wertRoh).trim() : "";
+    switch (typ) {
+      case "vorwaerts":
+        return { symbol: "pfeil_vor", label: n ? `+${n} vor` : "vor" };
+      case "rueckwaerts":
+        return { symbol: "pfeil_zur", label: n ? `−${n} zurück` : "zurück" };
+      case "aussetzen":
+        return { symbol: "pause", label: "aussetzen" };
+      case "erneut":
+        return { symbol: "erneut", label: "nochmal würfeln" };
+      case "vor_zu_naechstem":
+        return { symbol: "pfeil_naechst", label: "vor zum nächsten Feld" };
+      case "tausch_fuehrender":
+        return { symbol: "tausch", label: "Tausch mit Führendem" };
+      case "tausch_hinterster":
+        return { symbol: "tausch", label: "Tausch mit Letztem" };
+      default:
+        return null;
+    }
+  }
+
+  function effektSymbolSvg(name, klasse) {
+    const pfad = EFFEKT_SYMBOLE[name];
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("viewBox", "-6 -6 12 12");
+    svg.setAttribute("class", klasse);
+    svg.setAttribute("aria-hidden", "true");
+    const p = document.createElementNS(SVG_NS, "path");
+    p.setAttribute("d", pfad || "");
+    svg.appendChild(p);
+    return svg;
+  }
+
+  // Effekt-Anzeige aufbauen; ohne erkennbaren Effekt bleibt die Ecke leer.
+  function zeigeEffekt(karte) {
+    const box = document.getElementById("effekt");
+    if (!box) return;
+    box.innerHTML = "";
+    const info = effektInfo(karte);
+    if (!info) { box.hidden = true; return; }
+    box.appendChild(effektSymbolSvg(info.symbol, "effekt-symbol"));
+    const span = document.createElement("span");
+    span.className = "effekt-label";
+    span.textContent = info.label;
+    box.appendChild(span);
+    box.hidden = false;
+  }
+
+  function verbergeEffekt() {
+    const box = document.getElementById("effekt");
+    if (box) { box.hidden = true; box.innerHTML = ""; }
+  }
+
   /* ---------- Audio (Phase 3) ---------- */
 
   let audioEl = null;
@@ -235,6 +306,7 @@
 
     detail.hidden = false;
     detailOffen = true;
+    zeigeEffekt(karte);
     spieleKartenAudio(karte);
   }
 
@@ -248,6 +320,7 @@
       detail.removeEventListener("animationend", fertig);
     };
     stoppeAudio();
+    verbergeEffekt();
     // reduced-motion: keine Animation -> sofort schließen
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) { fertig(); return; }
