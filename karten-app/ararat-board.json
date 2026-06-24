@@ -448,7 +448,7 @@
       "wert": 5,
       "text_kmr": "Şaşfehmiyeke kevn dîsa geş dibe, tu bi aramî çareser dikî – 5 xane paşve here.",
       "text_de": "Ein altes Missverständnis flammt wieder auf, du klärst es in Ruhe – 5 Felder zurück.",
-      "text_tr": "Eski bir yanlış anlaşılma yeniden alevlenir, sakince çözersin – 5 kare geri.",
+      "text_tr": "Eski bir yanlış anlaşılma yeniden alevleniyor, sen sakince çözüyorsun – 5 adım geri.",
       "audio": ""
     },
     {
@@ -458,7 +458,7 @@
       "wert": 1,
       "text_kmr": "Sibehê çaya taze, gava te sivik – 1 xane pêşve here.",
       "text_de": "Frischer Çay am Morgen, leichter Schritt – 1 Feld vor.",
-      "text_tr": "Sabah taze çay, adımların hafif – 1 kare ileri.",
+      "text_tr": "Sabah taze çay, hafif adımlar – 1 adım ileri.",
       "audio": ""
     },
     {
@@ -468,7 +468,7 @@
       "wert": 2,
       "text_kmr": "Cîranê te te li traktorê siwar dike – 2 xane pêşve here.",
       "text_de": "Der Nachbar nimmt dich auf dem Traktor mit – 2 Felder vor.",
-      "text_tr": "Komşun seni traktöre alır – 2 kare ileri.",
+      "text_tr": "Komşu seni traktöre alıyor – 2 adım ileri.",
       "audio": ""
     },
     {
@@ -478,7 +478,7 @@
       "wert": 2,
       "text_kmr": "Dema nan tê pijandin, nanekî germ didine te – 2 xane pêşve here.",
       "text_de": "Beim Brotbacken bekommst du ein warmes Fladenbrot mit – 2 Felder vor.",
-      "text_tr": "Ekmek pişerken sana sıcak bir pide verirler – 2 kare ileri.",
+      "text_tr": "Ekmek pişerken sana sıcak bir bazlama veriyorlar – 2 adım ileri.",
       "audio": ""
     },
     {
@@ -488,7 +488,7 @@
       "wert": 3,
       "text_kmr": "Dawetek di gund re derbas dibe, herkes te dans dike pêş – 3 xane pêşve here.",
       "text_de": "Eine Hochzeit zieht durchs Dorf, alle tanzen dich nach vorn – 3 Felder vor.",
-      "text_tr": "Köyde bir düğün var, herkes seni öne doğru dans ettirir – 3 kare ileri.",
+      "text_tr": "Köyde bir düğün var, herkes seni öne doğru oynatıyor – 3 adım ileri.",
       "audio": ""
     },
     {
@@ -498,7 +498,7 @@
       "wert": 1,
       "text_kmr": "Dapîra te tûyên zuwa dide te – 1 xane pêşve here.",
       "text_de": "Die Großmutter steckt dir getrocknete Maulbeeren zu – 1 Feld vor.",
-      "text_tr": "Nine sana kuru dut verir – 1 kare ileri.",
+      "text_tr": "Nine sana kuru dut veriyor – 1 adım ileri.",
       "audio": ""
     },
     {
@@ -508,7 +508,7 @@
       "wert": 4,
       "text_kmr": "Erebeya postê bi aliyê te ve diçe, tu siwar dibî – 4 xane pêşve here.",
       "text_de": "Der Postwagen fährt deine Richtung, du steigst auf – 4 Felder vor.",
-      "text_tr": "Posta arabası tam senin yönüne gider, atlarsın – 4 kare ileri.",
+      "text_tr": "Posta arabası senin yönüne gidiyor, sen de biniyorsun – 4 adım ileri.",
       "audio": ""
     },
     {
@@ -518,7 +518,7 @@
       "wert": 1,
       "text_kmr": "Tu alîkariya girtina kerekî dikî – 1 xane paşve here.",
       "text_de": "Du hilfst, einen Esel einzufangen – 1 Feld zurück.",
-      "text_tr": "Bir eşeği yakalamaya yardım edersin – 1 kare geri.",
+      "text_tr": "Bir eşeği yakalamaya yardım ediyorsun – 1 adım geri.",
       "audio": ""
     },
     {
@@ -528,7 +528,7 @@
       "wert": 2,
       "text_kmr": "Li ser kaniyê sohbeteke dirêj – 2 xane paşve here.",
       "text_de": "Langes Schwätzchen am Brunnen – 2 Felder zurück.",
-      "text_tr": "Çeşme başında uzun bir sohbet – 2 kare geri.",
+      "text_tr": "Çeşme başında uzun bir muhabbet – 2 adım geri.",
       "audio": ""
     },
     {
@@ -538,7 +538,7 @@
       "wert": 1,
       "text_kmr": "Tu selikê ji bîr dikî û vedigerî – 1 xane paşve here.",
       "text_de": "Du vergisst den Korb und gehst noch einmal zurück – 1 Feld zurück.",
-      "text_tr": "Sepeti unutursun ve geri dönersin – 1 kare geri.",
+      "text_tr": "Sepeti unutuyorsun ve geri dönüyorsun – 1 adım geri.",
       "audio": ""
     },
     {
@@ -548,7 +548,7 @@
       "wert": 3,
       "text_kmr": "Nîqaşek li ser mafê mêrgê te radiwestîne – 3 xane paşve here.",
       "text_de": "Ein Streit ums Weiderecht hält dich auf – 3 Felder zurück.",
-      "text_tr": "Otlak hakkı yüzünden bir tartışma seni oyalar – 3 kare geri.",
+      "text_tr": "Otlak hakkı yüzünden bir tartışma seni oyalıyor – 3 adım geri.",
       "audio": ""
     },
     {
@@ -558,7 +558,7 @@
       "wert": 2,
       "text_kmr": "Seyê hewşê dixwaze bi te re bilîze – 2 xane paşve here.",
       "text_de": "Der Hofhund will unbedingt spielen – 2 Felder zurück.",
-      "text_tr": "Avlu köpeği illa oynamak ister – 2 kare geri.",
+      "text_tr": "Çiftlik köpeği illa oynamak istiyor – 2 adım geri.",
       "audio": ""
     },
     {
@@ -568,7 +568,7 @@
       "wert": 3,
       "text_kmr": "Tu di berhevkirina hinaran de diqede – 3 xane paşve here.",
       "text_de": "Du verzettelst dich beim Granatapfel-Pflücken – 3 Felder zurück.",
-      "text_tr": "Nar toplarken oyalanırsın – 3 kare geri.",
+      "text_tr": "Nar toplarken oyalanıyorsun – 3 adım geri.",
       "audio": ""
     },
     {
@@ -578,7 +578,7 @@
       "wert": null,
       "text_kmr": "Serdaneke dirêj li mala malbatê – carekê bisekine.",
       "text_de": "Langer Besuch bei der Familie – eine Runde aussetzen.",
-      "text_tr": "Ailede uzun bir ziyaret – bir tur bekle.",
+      "text_tr": "Ailede uzun bir ziyaret – bir tur pas.",
       "audio": ""
     },
     {
@@ -588,7 +588,7 @@
       "wert": null,
       "text_kmr": "Çaydank hîn nîvco ye, tu rûdinî – carekê bisekine.",
       "text_de": "Die Teekanne ist noch halb voll, du bleibst sitzen – eine Runde aussetzen.",
-      "text_tr": "Çaydanlık daha yarı dolu, oturup kalırsın – bir tur bekle.",
+      "text_tr": "Çaydanlık daha yarı dolu, oturup kalıyorsun – bir tur pas.",
       "audio": ""
     },
     {
@@ -598,7 +598,7 @@
       "wert": null,
       "text_kmr": "Mizgîniyek ji gund tê – dîsa zarî bavêje.",
       "text_de": "Gute Nachricht aus dem Dorf – nochmal würfeln.",
-      "text_tr": "Köyden güzel bir haber – hemen tekrar zar at.",
+      "text_tr": "Köyden güzel bir haber – tekrar zar at.",
       "audio": ""
     },
     {
@@ -608,7 +608,7 @@
       "wert": null,
       "text_kmr": "Bayê piştê û kêfa te baş – dîsa zarî bavêje.",
       "text_de": "Rückenwind und gute Laune – nochmal würfeln.",
-      "text_tr": "Rüzgâr arkanda, keyfin yerinde – hemen tekrar zar at.",
+      "text_tr": "Rüzgâr arkanda, keyfin yerinde – tekrar zar at.",
       "audio": ""
     },
     {
@@ -618,7 +618,7 @@
       "wert": null,
       "text_kmr": "Tu xwe digihînî cîranê ku jixwe pêştir e – here ba yê li pêş.",
       "text_de": "Du schließt dich dem Nachbarn an, der schon weiter ist – vor zum nächsten Spieler.",
-      "text_tr": "Daha ileride olan komşuna katılırsın – önündekine ilerle.",
+      "text_tr": "Daha önde olan komşuna katılıyorsun – bir sonraki oyuncuya.",
       "audio": ""
     },
     {
@@ -628,7 +628,7 @@
       "wert": null,
       "text_kmr": "Tu vedigerî û yê herî hêdî tînî – cih bi yê dawî re biguhere.",
       "text_de": "Du kehrst um und holst den Langsamsten ab – tausch mit dem Letzten.",
-      "text_tr": "Geri dönüp en yavaş olanı alırsın – sonuncu ile yer değiştir.",
+      "text_tr": "Geri dönüp en yavaş olanı alıyorsun – sonuncuyla yer değiştir.",
       "audio": ""
     },
     {
@@ -638,7 +638,7 @@
       "wert": null,
       "text_kmr": "Kurterêyek di nav zeviyan re te dibe pêş – cih bi pêşeng re biguhere.",
       "text_de": "Eine Abkürzung über die Felder bringt dich nach vorn – tausch mit dem Führenden.",
-      "text_tr": "Tarlalardan bir kestirme seni en öne taşır – lider ile yer değiştir.",
+      "text_tr": "Tarlalardan bir kestirme seni öne taşıyor – öndekiyle yer değiştir.",
       "audio": ""
     },
     {
@@ -648,7 +648,7 @@
       "wert": 6,
       "text_kmr": "",
       "text_de": "Ein Gewitter jagt die Herde auseinander – 6 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Bir fırtına sürüyü dağıtıyor – 6 adım geri.",
       "audio": ""
     },
     {
@@ -658,7 +658,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Die Sonne wärmt den Pfad – 1 Feld vor.",
-      "text_tr": "",
+      "text_tr": "Güneş patikayı ısıtıyor – 1 adım ileri.",
       "audio": ""
     },
     {
@@ -668,7 +668,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Der Hütehund treibt dich flott voran – 2 Felder vor.",
-      "text_tr": "",
+      "text_tr": "Çoban köpeği seni kovalıyor – 2 adım ileri.",
       "audio": ""
     },
     {
@@ -678,7 +678,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Frisches Quellwasser gibt neue Kraft – 2 Felder vor.",
-      "text_tr": "",
+      "text_tr": "Taze kaynak suyu yeniden güç veriyor – 2 adım ileri.",
       "audio": ""
     },
     {
@@ -688,7 +688,7 @@
       "wert": 3,
       "text_kmr": "",
       "text_de": "Trockener, fester Boden – 3 Felder vor.",
-      "text_tr": "",
+      "text_tr": "Kuru, sağlam zemin – 3 adım ileri.",
       "audio": ""
     },
     {
@@ -698,7 +698,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Ein Lamm tapst dir freudig hinterher – 1 Feld vor.",
-      "text_tr": "",
+      "text_tr": "Bir kuzu sevinçle peşinden geliyor – 1 adım ileri.",
       "audio": ""
     },
     {
@@ -708,7 +708,7 @@
       "wert": 4,
       "text_kmr": "",
       "text_de": "Jemand nimmt dich auf dem Heuwagen mit – 4 Felder vor.",
-      "text_tr": "",
+      "text_tr": "Biri seni saman arabasına alıyor – 4 adım ileri.",
       "audio": ""
     },
     {
@@ -718,7 +718,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Ein Schaf hat sich verlaufen – 1 Feld zurück.",
-      "text_tr": "",
+      "text_tr": "Bir koyun yolunu şaşırıyor – 1 adım geri.",
       "audio": ""
     },
     {
@@ -728,7 +728,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Du flickst schnell den Weidezaun – 2 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Çiti çabucak onarıyorsun – 2 adım geri.",
       "audio": ""
     },
     {
@@ -738,7 +738,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Matschige Stelle, du suchst einen Umweg – 1 Feld zurück.",
-      "text_tr": "",
+      "text_tr": "Çamurlu bir yer, başka yol arıyorsun – 1 adım geri.",
       "audio": ""
     },
     {
@@ -748,7 +748,7 @@
       "wert": 3,
       "text_kmr": "",
       "text_de": "Plötzlicher Regen, du suchst Schutz unterm Baum – 3 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Ani yağmur, ağaç altında sığınak arıyorsun – 3 adım geri.",
       "audio": ""
     },
     {
@@ -758,7 +758,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Die Herde will partout nicht weiter – 2 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Sürü bir türlü ilerlemek istemiyor – 2 adım geri.",
       "audio": ""
     },
     {
@@ -768,7 +768,7 @@
       "wert": 3,
       "text_kmr": "",
       "text_de": "Du sammelst Kräuter und vergisst die Zeit – 3 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Ot toplarken zamanı unutuyorsun – 3 adım geri.",
       "audio": ""
     },
     {
@@ -778,7 +778,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Mittagsrast im Schatten – eine Runde aussetzen.",
-      "text_tr": "",
+      "text_tr": "Gölgede öğle molası – bir tur pas.",
       "audio": ""
     },
     {
@@ -788,7 +788,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Du melkst noch die Ziegen – eine Runde aussetzen.",
-      "text_tr": "",
+      "text_tr": "Bir de keçileri sağıyorsun – bir tur pas.",
       "audio": ""
     },
     {
@@ -798,7 +798,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Der Weg ist frei und eben – nochmal würfeln.",
-      "text_tr": "",
+      "text_tr": "Yol açık ve düz – tekrar zar at.",
       "audio": ""
     },
     {
@@ -808,7 +808,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Ein guter Tag auf der Weide – nochmal würfeln.",
-      "text_tr": "",
+      "text_tr": "Otlakta güzel bir gün – tekrar zar at.",
       "audio": ""
     },
     {
@@ -818,7 +818,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Du folgst der Spur der Herde und holst zum Nächsten vor dir auf – vor zum nächsten Spieler.",
-      "text_tr": "",
+      "text_tr": "Sürünün izini sürüp önündekine yetişiyorsun – bir sonraki oyuncuya.",
       "audio": ""
     },
     {
@@ -828,7 +828,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Du gehst zurück und nimmst den Letzten an die Hand – tausch mit dem Letzten.",
-      "text_tr": "",
+      "text_tr": "Geri dönüp sonuncunun elinden tutuyorsun – sonuncuyla yer değiştir.",
       "audio": ""
     },
     {
@@ -838,7 +838,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Ein Reiter setzt dich vorn ab – tausch mit dem Führenden.",
-      "text_tr": "",
+      "text_tr": "Bir atlı seni öne bırakıyor – öndekiyle yer değiştir.",
       "audio": ""
     },
     {
@@ -848,7 +848,7 @@
       "wert": 7,
       "text_kmr": "",
       "text_de": "Du verlierst deine Papiere und musst den ganzen Weg zum Amt zurück – 7 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Kâğıtlarını kaybediyorsun ve ta daireye kadar geri gitmen gerekiyor – 7 adım geri.",
       "audio": ""
     },
     {
@@ -858,7 +858,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Grüne Ampel, freie Bahn – 1 Feld vor.",
-      "text_tr": "",
+      "text_tr": "Yeşil ışık, yol açık – 1 adım ileri.",
       "audio": ""
     },
     {
@@ -868,7 +868,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Auf dem Markt zeigt dir jemand eine Abkürzung – 2 Felder vor.",
-      "text_tr": "",
+      "text_tr": "Pazarda biri sana bir kestirme gösteriyor – 2 adım ileri.",
       "audio": ""
     },
     {
@@ -878,7 +878,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Der Dolmuş hält genau vor dir – 2 Felder vor.",
-      "text_tr": "",
+      "text_tr": "Dolmuş tam önünde duruyor – 2 adım ileri.",
       "audio": ""
     },
     {
@@ -888,7 +888,7 @@
       "wert": 3,
       "text_kmr": "",
       "text_de": "Ein alter Freund nimmt dich im Auto mit – 3 Felder vor.",
-      "text_tr": "",
+      "text_tr": "Eski bir dost seni arabasına alıyor – 3 adım ileri.",
       "audio": ""
     },
     {
@@ -898,7 +898,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Frisch geröstete Maronen geben Schwung – 1 Feld vor.",
-      "text_tr": "",
+      "text_tr": "Taze kavrulmuş kestane sana güç veriyor – 1 adım ileri.",
       "audio": ""
     },
     {
@@ -908,7 +908,7 @@
       "wert": 4,
       "text_kmr": "",
       "text_de": "Du erwischst die letzte Straßenbahn – 4 Felder vor.",
-      "text_tr": "",
+      "text_tr": "Karnın acıktı, dönercide oturup yemek yiyorsun – 4 adım ileri.",
       "audio": ""
     },
     {
@@ -918,7 +918,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Du verläufst dich kurz in den Gassen – 1 Feld zurück.",
-      "text_tr": "",
+      "text_tr": "Sokaklarda biraz kayboluyorsun – 1 adım geri.",
       "audio": ""
     },
     {
@@ -928,7 +928,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Lange Schlange beim Bäcker – 2 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Fırında uzun bir kuyruk – 2 adım geri.",
       "audio": ""
     },
     {
@@ -938,7 +938,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Du bleibst an einem Schaufenster hängen – 1 Feld zurück.",
-      "text_tr": "",
+      "text_tr": "Bir vitrine takılıp kalıyorsun – 1 adım geri.",
       "audio": ""
     },
     {
@@ -948,7 +948,7 @@
       "wert": 3,
       "text_kmr": "",
       "text_de": "Stau in der Innenstadt – 3 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Şehir merkezinde trafik – 3 adım geri.",
       "audio": ""
     },
     {
@@ -958,7 +958,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Der Bus hat Verspätung – 2 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Otobüs gecikiyor – 2 adım geri.",
       "audio": ""
     },
     {
@@ -968,7 +968,7 @@
       "wert": 3,
       "text_kmr": "",
       "text_de": "Du handelst zu lange auf dem Basar – 3 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Çarşıda fazla uzun pazarlık ediyorsun – 3 adım geri.",
       "audio": ""
     },
     {
@@ -978,7 +978,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Lange Wartenummer beim Amt – eine Runde aussetzen.",
-      "text_tr": "",
+      "text_tr": "Dairede uzun bir sıra numarası – bir tur pas.",
       "audio": ""
     },
     {
@@ -988,7 +988,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Du trinkst noch einen Kaffee mit Bekannten – eine Runde aussetzen.",
-      "text_tr": "",
+      "text_tr": "Tanıdıklarla bir kahve daha içiyorsun – bir tur pas.",
       "audio": ""
     },
     {
@@ -998,7 +998,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Alles läuft glatt heute – nochmal würfeln.",
-      "text_tr": "",
+      "text_tr": "Bugün her şey yolunda gidiyor – tekrar zar at.",
       "audio": ""
     },
     {
@@ -1008,7 +1008,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Du findest sofort den richtigen Weg – nochmal würfeln.",
-      "text_tr": "",
+      "text_tr": "Doğru yolu hemen buluyorsun – tekrar zar at.",
       "audio": ""
     },
     {
@@ -1018,7 +1018,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Du teilst dir ein Taxi mit dem, der vor dir ist – vor zum nächsten Spieler.",
-      "text_tr": "",
+      "text_tr": "Önündekiyle taksi paylaşıyorsun – bir sonraki oyuncuya.",
       "audio": ""
     },
     {
@@ -1028,7 +1028,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Du wartest bewusst auf den Letzten – tausch mit dem Letzten.",
-      "text_tr": "",
+      "text_tr": "Bilerek sonuncuyu bekliyorsun – sonuncuyla yer değiştir.",
       "audio": ""
     },
     {
@@ -1038,7 +1038,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Eine clevere Abkürzung durch die Passage – tausch mit dem Führenden.",
-      "text_tr": "",
+      "text_tr": "Pasajdan akıllıca bir kestirme – öndekiyle yer değiştir.",
       "audio": ""
     },
     {
@@ -1048,7 +1048,7 @@
       "wert": 9,
       "text_kmr": "",
       "text_de": "Ein schwerer Sturm zwingt dich weit den Berg hinab in Sicherheit – 9 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Şiddetli bir fırtına seni dağdan epey aşağı, güvenli yere itiyor – 9 adım geri.",
       "audio": ""
     },
     {
@@ -1058,7 +1058,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Klare Luft, fester Tritt – 1 Feld vor.",
-      "text_tr": "",
+      "text_tr": "Berrak hava, sağlam adım – 1 adım ileri.",
       "audio": ""
     },
     {
@@ -1068,7 +1068,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Ein Hirte zeigt dir den sicheren Pfad – 2 Felder vor.",
-      "text_tr": "",
+      "text_tr": "Bir çoban sana güvenli patikayı gösteriyor – 2 adım ileri.",
       "audio": ""
     },
     {
@@ -1078,7 +1078,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Die Morgensonne taut den Weg frei – 2 Felder vor.",
-      "text_tr": "",
+      "text_tr": "Sabah güneşi yolu eritip açıyor – 2 adım ileri.",
       "audio": ""
     },
     {
@@ -1088,7 +1088,7 @@
       "wert": 3,
       "text_kmr": "",
       "text_de": "Rückenwind treibt dich bergauf – 3 Felder vor.",
-      "text_tr": "",
+      "text_tr": "Arkadan gelen rüzgâr seni yokuş yukarı itiyor – 3 adım ileri.",
       "audio": ""
     },
     {
@@ -1098,7 +1098,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Du findest einen festen Felsvorsprung – 1 Feld vor.",
-      "text_tr": "",
+      "text_tr": "Sağlam bir kaya çıkıntısı buluyorsun – 1 adım ileri.",
       "audio": ""
     },
     {
@@ -1108,7 +1108,7 @@
       "wert": 4,
       "text_kmr": "",
       "text_de": "Ein guter Pfad führt dich rasch höher – 4 Felder vor.",
-      "text_tr": "",
+      "text_tr": "İyi bir patika seni hızla yukarı çıkarıyor – 4 adım ileri.",
       "audio": ""
     },
     {
@@ -1118,7 +1118,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Loses Geröll rutscht weg – 1 Feld zurück.",
-      "text_tr": "",
+      "text_tr": "Gevşek taşlar kayıyor – 1 adım geri.",
       "audio": ""
     },
     {
@@ -1128,7 +1128,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Nebel zieht auf, du gehst vorsichtig – 2 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Sis çöküyor, dikkatli yürüyorsun – 2 adım geri.",
       "audio": ""
     },
     {
@@ -1138,7 +1138,7 @@
       "wert": 1,
       "text_kmr": "",
       "text_de": "Du schnürst die Schuhe neu – 1 Feld zurück.",
-      "text_tr": "",
+      "text_tr": "Ayakkabılarını yeniden bağlıyorsun – 1 adım geri.",
       "audio": ""
     },
     {
@@ -1148,7 +1148,7 @@
       "wert": 3,
       "text_kmr": "",
       "text_de": "Steiler Hang, du rutschst ab – 3 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Dik yamaç, kayıyorsun – 3 adım geri.",
       "audio": ""
     },
     {
@@ -1158,7 +1158,7 @@
       "wert": 2,
       "text_kmr": "",
       "text_de": "Ein eisiger Windstoß bremst dich – 2 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Buz gibi bir rüzgâr seni yavaşlatıyor – 2 adım geri.",
       "audio": ""
     },
     {
@@ -1168,7 +1168,7 @@
       "wert": 3,
       "text_kmr": "",
       "text_de": "Du verlierst kurz die Markierung – 3 Felder zurück.",
-      "text_tr": "",
+      "text_tr": "Bir an işareti kaybediyorsun – 3 adım geri.",
       "audio": ""
     },
     {
@@ -1178,7 +1178,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Du wartest, bis der Nebel sich hebt – eine Runde aussetzen.",
-      "text_tr": "",
+      "text_tr": "Sis dağılana kadar bekliyorsun – bir tur pas.",
       "audio": ""
     },
     {
@@ -1188,7 +1188,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Rast an der Schutzhütte – eine Runde aussetzen.",
-      "text_tr": "",
+      "text_tr": "Sığınak evinde mola – bir tur pas.",
       "audio": ""
     },
     {
@@ -1198,7 +1198,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Der Gipfel ruft – nochmal würfeln.",
-      "text_tr": "",
+      "text_tr": "Zirve çağırıyor – tekrar zar at.",
       "audio": ""
     },
     {
@@ -1208,7 +1208,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Ein klarer Moment, du nutzt ihn – nochmal würfeln.",
-      "text_tr": "",
+      "text_tr": "Berrak bir an, onu değerlendiriyorsun – tekrar zar at.",
       "audio": ""
     },
     {
@@ -1218,7 +1218,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Du folgst den Spuren im Schnee und holst zum Nächsten vor dir auf – vor zum nächsten Spieler.",
-      "text_tr": "",
+      "text_tr": "Kardaki izleri takip edip önündekine yetişiyorsun – bir sonraki oyuncuya.",
       "audio": ""
     },
     {
@@ -1228,7 +1228,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Du seilst dich zum Letzten ab – tausch mit dem Letzten.",
-      "text_tr": "",
+      "text_tr": "Halatla sonuncuya iniyorsun – sonuncuyla yer değiştir.",
       "audio": ""
     },
     {
@@ -1238,7 +1238,7 @@
       "wert": null,
       "text_kmr": "",
       "text_de": "Eine Adlerschwinge zeigt dir die Linie – tausch mit dem Führenden.",
-      "text_tr": "",
+      "text_tr": "Bir kartal kanadı sana çizgiyi gösteriyor – öndekiyle yer değiştir.",
       "audio": ""
     }
   ]
