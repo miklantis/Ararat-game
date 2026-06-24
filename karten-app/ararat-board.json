@@ -456,7 +456,7 @@
       "bereich": "dorf",
       "typ": "vorwaerts",
       "wert": 1,
-      "text_kmr": "Sibehê çaya taze, gava te sivik – 1 xane pêşve here.",
+      "text_kmr": "Sibehê çaya taze, gavên te sivik in – 1 xane pêşve here.",
       "text_de": "Frischer Çay am Morgen, leichter Schritt – 1 Feld vor.",
       "text_tr": "Sabah taze çay, hafif adımlar – 1 adım ileri.",
       "audio": ""
@@ -486,7 +486,7 @@
       "bereich": "dorf",
       "typ": "vorwaerts",
       "wert": 3,
-      "text_kmr": "Dawetek di gund re derbas dibe, herkes te dans dike pêş – 3 xane pêşve here.",
+      "text_kmr": "Dawetek di gund re derbas dibe, bi reqsê te dibin pêş – 3 xane pêşve here.",
       "text_de": "Eine Hochzeit zieht durchs Dorf, alle tanzen dich nach vorn – 3 Felder vor.",
       "text_tr": "Köyde bir düğün var, herkes seni öne doğru oynatıyor – 3 adım ileri.",
       "audio": ""
@@ -496,7 +496,7 @@
       "bereich": "dorf",
       "typ": "vorwaerts",
       "wert": 1,
-      "text_kmr": "Dapîra te tûyên zuwa dide te – 1 xane pêşve here.",
+      "text_kmr": "Dapîra te tûyên ziwa dide te – 1 xane pêşve here.",
       "text_de": "Die Großmutter steckt dir getrocknete Maulbeeren zu – 1 Feld vor.",
       "text_tr": "Nine sana kuru dut veriyor – 1 adım ileri.",
       "audio": ""
@@ -566,7 +566,7 @@
       "bereich": "dorf",
       "typ": "rueckwaerts",
       "wert": 3,
-      "text_kmr": "Tu di berhevkirina hinaran de diqede – 3 xane paşve here.",
+      "text_kmr": "Tu di berhevkirina hinaran de dema xwe winda dikî – 3 xane paşve here.",
       "text_de": "Du verzettelst dich beim Granatapfel-Pflücken – 3 Felder zurück.",
       "text_tr": "Nar toplarken oyalanıyorsun – 3 adım geri.",
       "audio": ""
@@ -576,7 +576,7 @@
       "bereich": "dorf",
       "typ": "aussetzen",
       "wert": null,
-      "text_kmr": "Serdaneke dirêj li mala malbatê – carekê bisekine.",
+      "text_kmr": "Serdaneke dirêj li mala malbatê – careke dorê li bendê bimîne.",
       "text_de": "Langer Besuch bei der Familie – eine Runde aussetzen.",
       "text_tr": "Ailede uzun bir ziyaret – bir tur pas.",
       "audio": ""
@@ -586,7 +586,7 @@
       "bereich": "dorf",
       "typ": "aussetzen",
       "wert": null,
-      "text_kmr": "Çaydank hîn nîvco ye, tu rûdinî – carekê bisekine.",
+      "text_kmr": "Çaydank hîn nîvco ye, tu rûdinî – careke dorê li bendê bimîne.",
       "text_de": "Die Teekanne ist noch halb voll, du bleibst sitzen – eine Runde aussetzen.",
       "text_tr": "Çaydanlık daha yarı dolu, oturup kalıyorsun – bir tur pas.",
       "audio": ""
@@ -596,7 +596,7 @@
       "bereich": "dorf",
       "typ": "erneut",
       "wert": null,
-      "text_kmr": "Mizgîniyek ji gund tê – dîsa zarî bavêje.",
+      "text_kmr": "Mizgîniyek ji gund tê – careke din zarê bavêje.",
       "text_de": "Gute Nachricht aus dem Dorf – nochmal würfeln.",
       "text_tr": "Köyden güzel bir haber – tekrar zar at.",
       "audio": ""
@@ -606,7 +606,7 @@
       "bereich": "dorf",
       "typ": "erneut",
       "wert": null,
-      "text_kmr": "Bayê piştê û kêfa te baş – dîsa zarî bavêje.",
+      "text_kmr": "Bayê piştê û kêfa te baş – careke din zarê bavêje.",
       "text_de": "Rückenwind und gute Laune – nochmal würfeln.",
       "text_tr": "Rüzgâr arkanda, keyfin yerinde – tekrar zar at.",
       "audio": ""
@@ -616,7 +616,7 @@
       "bereich": "dorf",
       "typ": "vor_zu_naechstem",
       "wert": null,
-      "text_kmr": "Tu xwe digihînî cîranê ku jixwe pêştir e – here ba yê li pêş.",
+      "text_kmr": "Tu xwe digihînî cîranê ku jixwe pêştir e – here lîstikvanê pêş.",
       "text_de": "Du schließt dich dem Nachbarn an, der schon weiter ist – vor zum nächsten Spieler.",
       "text_tr": "Daha önde olan komşuna katılıyorsun – bir sonraki oyuncuya.",
       "audio": ""
@@ -626,7 +626,7 @@
       "bereich": "dorf",
       "typ": "tausch_hinterster",
       "wert": null,
-      "text_kmr": "Tu vedigerî û yê herî hêdî tînî – cih bi yê dawî re biguhere.",
+      "text_kmr": "Tu vedigerî û yê herî hêdî tînî – bi yê dawî re cih biguhere.",
       "text_de": "Du kehrst um und holst den Langsamsten ab – tausch mit dem Letzten.",
       "text_tr": "Geri dönüp en yavaş olanı alıyorsun – sonuncuyla yer değiştir.",
       "audio": ""
@@ -636,7 +636,7 @@
       "bereich": "dorf",
       "typ": "tausch_fuehrender",
       "wert": null,
-      "text_kmr": "Kurterêyek di nav zeviyan re te dibe pêş – cih bi pêşeng re biguhere.",
+      "text_kmr": "Kurterêyek di nav zeviyan re te dibe pêş – bi yê pêşeng re cih biguhere.",
       "text_de": "Eine Abkürzung über die Felder bringt dich nach vorn – tausch mit dem Führenden.",
       "text_tr": "Tarlalardan bir kestirme seni öne taşıyor – öndekiyle yer değiştir.",
       "audio": ""
