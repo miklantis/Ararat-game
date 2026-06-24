@@ -532,7 +532,7 @@
           <input type="checkbox" id="edBgTransparent">
         </div>
         <div class="zeile"><label class="feldname" for="edBgColor">Hintergrundfarbe</label><input type="color" class="zone-color" id="edBgColor"><span class="ed-wertchen" id="edBgColorW"></span></div>
-        <p class="hinweis">Gilt für SVG- und PNG-Export. Bei „transparent“ bleibt der Hintergrund frei; sonst wird die gewählte Farbe als Hintergrundfläche eingefügt. Die Arbeitsfläche im Editor zeigt weiterhin das Pergament.</p>
+        <p class="hinweis">Gilt für SVG- und PNG-Export. Bei „transparent“ bleibt der Hintergrund frei (in der Vorschau als Karomuster dargestellt); sonst wird die gewählte Farbe als Hintergrundfläche eingefügt. Die Editor-Vorschau zeigt den gewählten Hintergrund.</p>
         <button class="btn primaer" id="edSvgExport">SVG-Spielfeld exportieren</button>
         <p class="hinweis">Felder und – falls aktiv – die Weglinie als skalierbares SVG im Format des Spielfelds (cm), ohne Feldnummern. Kartenfeld-Icons werden mit exportiert. Hintergrund je nach Einstellung oben.</p>
         <button class="btn" id="edPngExport">PNG-Spielfeld exportieren (2048×2048)</button>
@@ -3305,12 +3305,13 @@ const AnsichtEditor = (function () {
       bgT.addEventListener("change", () => {
         setDesign("bgTransparent", bgT.checked);
         const bgC = $("edBgColor"); if (bgC) bgC.disabled = bgT.checked;
+        zeichne();
         Store.touch("Editor");
       });
     }
     const bgC = $("edBgColor");
     if (bgC) {
-      bgC.addEventListener("input", () => { setDesign("bgColor", bgC.value); txt("edBgColorW", bgC.value); });
+      bgC.addEventListener("input", () => { setDesign("bgColor", bgC.value); txt("edBgColorW", bgC.value); zeichne(); });
       bgC.addEventListener("change", () => { setDesign("bgColor", bgC.value); Store.touch("Editor"); });
     }
     rangeControl("edTension",  (v) => setPath("tension", v / 100));
@@ -3596,7 +3597,20 @@ const AnsichtEditor = (function () {
     const design = config.board.design || {};
     const heightEmphasis = (typeof design.heightEmphasis === "number") ? design.heightEmphasis : 0;
 
-    svgEl("rect", { x: 6, y: 6, width: W - 12, height: HH - 12, rx: 18, fill: "var(--pergament)", stroke: "var(--pergament-rand)", "stroke-width": 2 }, svg);
+    // Hintergrund-Vorschau: spiegelt die Export-Einstellung wider.
+    // transparent -> dezentes Schachbrett; sonst gewählte Farbe.
+    const bgTransparent = (design.bgTransparent !== false);
+    const bgColor = /^#[0-9a-f]{6}$/i.test(design.bgColor || "") ? design.bgColor : "#FFFFFF";
+    if (bgTransparent) {
+      const defs = svgEl("defs", {}, svg);
+      const pat = svgEl("pattern", { id: "transparenzKaro", width: 24, height: 24, patternUnits: "userSpaceOnUse" }, defs);
+      svgEl("rect", { x: 0, y: 0, width: 24, height: 24, fill: "#FFFFFF" }, pat);
+      svgEl("rect", { x: 0, y: 0, width: 12, height: 12, fill: "#E6E1D4" }, pat);
+      svgEl("rect", { x: 12, y: 12, width: 12, height: 12, fill: "#E6E1D4" }, pat);
+      svgEl("rect", { x: 6, y: 6, width: W - 12, height: HH - 12, rx: 18, fill: "url(#transparenzKaro)", stroke: "var(--pergament-rand)", "stroke-width": 2 }, svg);
+    } else {
+      svgEl("rect", { x: 6, y: 6, width: W - 12, height: HH - 12, rx: 18, fill: bgColor, stroke: "var(--pergament-rand)", "stroke-width": 2 }, svg);
+    }
 
     const layout = Ararat.layoutFields(config, W, HH);
     const pos = layout.positions;
