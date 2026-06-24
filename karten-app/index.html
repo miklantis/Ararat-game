@@ -5,34 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#1d2733">
   <title>Ararat – Karten</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Ansteigende Bergsilhouette als ruhige Signatur am unteren Rand -->
-  <svg class="bergband" viewBox="0 0 1200 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-    <path d="M0 200 L0 150 L160 95 L300 130 L470 60 L560 92 L720 22 L860 96 L1010 50 L1200 110 L1200 200 Z"/>
-    <path class="schnee" d="M720 22 L760 46 L735 42 L720 22 Z M470 60 L500 80 L478 76 L470 60 Z M1010 50 L1036 70 L1015 66 L1010 50 Z"/>
-  </svg>
+  <!-- Einstellungs-Icon in der Ecke (Menü kommt in Phase 5) -->
+  <button id="btnEinstellungen" class="einstellungen" type="button" aria-label="Einstellungen">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm9 3.5a7.5 7.5 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-2-1.2l-.4-2.6H9.9l-.4 2.6a7.6 7.6 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7.6 7.6 0 0 0 2 1.2l.4 2.6h4.2l.4-2.6a7.6 7.6 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.06-.4.1-.8.1-1.2Z"/>
+    </svg>
+  </button>
 
-  <main class="huelle">
-    <header class="kopf">
-      <p class="augenbraue">Begleit-App</p>
-      <h1 class="titel">Ararat</h1>
-      <p class="unterzeile">Die Reise zum Gipfel</p>
-    </header>
+  <!-- Lade- / Fehlerstatus (bei Erfolg durch den Stapel ersetzt) -->
+  <div id="status" class="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+  </div>
 
-    <section id="status" class="status status--laedt" aria-live="polite">
-      <div class="spinner" aria-hidden="true"></div>
-      <p class="status-text">Brettdaten werden geladen …</p>
-    </section>
-
-    <section id="diagnose" class="diagnose" hidden>
-      <!-- wird per JS gefüllt -->
-    </section>
-  </main>
+  <!-- Stapel-Ansicht: vier Bereichskarten von oben -->
+  <main id="stapel" class="stapel" hidden></main>
 
   <script src="app.js"></script>
 </body>

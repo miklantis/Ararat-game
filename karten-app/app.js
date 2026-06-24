@@ -1,10 +1,11 @@
 /* =========================================================================
    Ararat – Karten-App
-   Phase 0: Grundgerüst & Datenanbindung.
+   Datenanbindung (Phase 0) + Stapel-Ansicht (Phase 1).
 
    Lädt karten-app/ararat-board.json per fetch, baut intern ein Datenmodell
-   (Bereiche indexiert, Karten je Bereich gruppiert) und zeigt eine klare
-   Rückmeldung – Erfolg mit Kurzdiagnose oder verständliche Fehlermeldung.
+   und zeigt vier Bereichskarten von oben (Bereichsfarbe + Symbol-Wasserzeichen,
+   keine Texte). Einstellungs-Icon vorhanden; sein Menü kommt in Phase 5.
+   Das Antippen einer Karte zum Ziehen folgt in Phase 2.
    Kein Framework, alles aus der JSON, nichts fest verdrahtet.
    ========================================================================= */
 
@@ -12,6 +13,7 @@
   "use strict";
 
   const DATEN_URL = "ararat-board.json";
+  const SVG_NS = "http://www.w3.org/2000/svg";
 
   /* Bereichssymbole als SVG-Pfade, identisch zur Simulation
      (Koordinatensystem etwa -6 … 6, Mittelpunkt im Ursprung). */
@@ -22,25 +24,20 @@
     berg:  "M-5.6 5 L-1.4 -2.8 L0.4 0.2 L2.4 -4.8 L5.6 5 Z M2.4 -4.8 L3.4 -1.7 L1.5 -2.1 L0.4 0.2 L2.4 -4.8 Z"
   };
 
-  const SVG_NS = "http://www.w3.org/2000/svg";
-
-  /* Internes Datenmodell – einzige Quelle ist die JSON. */
   const Modell = {
     roh: null,
     meta: null,
     dice: null,
-    bereiche: [],            // Reihenfolge wie in der JSON
-    bereichNachId: {},       // id -> Bereich
-    kartenNachBereich: {}    // bereich-id -> [Karten]
+    bereiche: [],
+    bereichNachId: {},
+    kartenNachBereich: {}
   };
 
   /* ---------- Laden ---------- */
 
   async function ladeBrett() {
     const res = await fetch(DATEN_URL, { cache: "no-store" });
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status} beim Laden von ${DATEN_URL}`);
-    }
+    if (!res.ok) throw new Error(`HTTP ${res.status} beim Laden von ${DATEN_URL}`);
     let daten;
     try {
       daten = await res.json();
@@ -51,8 +48,6 @@
     return Modell;
   }
 
-  /* ---------- Modell aufbauen ---------- */
-
   function baueModell(daten) {
     if (!daten || typeof daten !== "object") {
       throw new Error("Brettdaten haben ein unerwartetes Format.");
@@ -62,28 +57,23 @@
     if (zones.length === 0) {
       throw new Error("In den Brettdaten sind keine Bereiche (zones) angelegt.");
     }
-
     Modell.roh = daten;
     Modell.meta = daten.meta || {};
     Modell.dice = daten.dice || null;
     Modell.bereiche = zones.slice();
     Modell.bereichNachId = {};
     Modell.kartenNachBereich = {};
-
     for (const z of zones) {
       Modell.bereichNachId[z.id] = z;
       Modell.kartenNachBereich[z.id] = [];
     }
     for (const k of cards) {
-      if (Modell.kartenNachBereich[k.bereich]) {
-        Modell.kartenNachBereich[k.bereich].push(k);
-      }
+      if (Modell.kartenNachBereich[k.bereich]) Modell.kartenNachBereich[k.bereich].push(k);
     }
   }
 
   /* ---------- Helfer ---------- */
 
-  // Heuristik: ist eine Farbe hell? (dann dunkle Schrift verwenden)
   function istHell(hex) {
     if (typeof hex !== "string") return false;
     const m = hex.replace("#", "");
@@ -91,16 +81,14 @@
     const r = parseInt(m.slice(0, 2), 16);
     const g = parseInt(m.slice(2, 4), 16);
     const b = parseInt(m.slice(4, 6), 16);
-    // wahrgenommene Helligkeit
-    const l = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return l > 0.7;
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.7;
   }
 
-  function symbolSvg(name) {
+  function symbolSvg(name, klasse) {
     const pfad = SYMBOLE[name] || SYMBOLE.berg;
     const svg = document.createElementNS(SVG_NS, "svg");
     svg.setAttribute("viewBox", "-6 -6 12 12");
-    svg.setAttribute("class", "bereich-symbol");
+    svg.setAttribute("class", klasse);
     svg.setAttribute("aria-hidden", "true");
     const p = document.createElementNS(SVG_NS, "path");
     p.setAttribute("d", pfad);
@@ -110,105 +98,69 @@
 
   /* ---------- Anzeige ---------- */
 
-  function zeigeStatus(klasse, text) {
+  function zeigeFehler(message) {
     const el = document.getElementById("status");
-    el.className = `status ${klasse}`;
+    el.className = "status ist-fehler";
     el.innerHTML = "";
+    const box = document.createElement("div");
+    box.className = "status-box";
+    const h = document.createElement("h2");
+    h.textContent = "Brettdaten nicht ladbar";
     const p = document.createElement("p");
-    p.className = "status-text";
-    p.textContent = text;
-    el.appendChild(p);
-    return el;
+    p.innerHTML =
+      `Erwartet wird die Datei <code>ararat-board.json</code> neben dieser Seite. ` +
+      `Prüfe, ob sie im Repo liegt und GitHub Pages neu gebaut hat.<br>Grund: ${message}`;
+    box.appendChild(h);
+    box.appendChild(p);
+    el.appendChild(box);
   }
 
-  function zeigeFehler(text, detailHtml) {
-    const el = zeigeStatus("status--fehler", text);
-    if (detailHtml) {
-      const d = document.createElement("p");
-      d.className = "status-detail";
-      d.innerHTML = detailHtml;
-      el.appendChild(d);
-    }
-  }
-
-  function zeigeDiagnose() {
+  function zeigeStapel() {
     // Bereichsfarben aus der JSON als CSS-Variablen verfügbar machen
     const wurzel = document.documentElement;
     for (const z of Modell.bereiche) {
       if (z.color) wurzel.style.setProperty(`--${z.id}`, z.color);
     }
 
-    // Statusbox unsichtbar schalten
-    document.getElementById("status").className = "status status--ok";
+    // Status ausblenden, Stapel einblenden
+    document.getElementById("status").hidden = true;
+    const stapel = document.getElementById("stapel");
+    stapel.hidden = false;
+    stapel.innerHTML = "";
 
-    const ziel = document.getElementById("diagnose");
-    ziel.hidden = false;
-    ziel.innerHTML = "";
-
-    // Kopf mit Meta
-    const kopf = document.createElement("div");
-    kopf.className = "diagnose-kopf";
-    const h2 = document.createElement("h2");
-    h2.textContent = "Brett geladen";
-    const meta = document.createElement("p");
-    meta.className = "diagnose-meta";
-    const gesamt = Object.values(Modell.kartenNachBereich)
-      .reduce((s, arr) => s + arr.length, 0);
-    const wuerfel = Modell.dice
-      ? `${Modell.dice.count}× W${Modell.dice.faces}`
-      : "–";
-    const ver = Modell.meta.version ? ` · ${Modell.meta.version}` : "";
-    meta.textContent = `${Modell.bereiche.length} Bereiche · ${gesamt} Karten · Würfel ${wuerfel}${ver}`;
-    kopf.appendChild(h2);
-    kopf.appendChild(meta);
-    ziel.appendChild(kopf);
-
-    // Bereiche als farbige Zeilen mit Symbol und Kartenzahl
-    const liste = document.createElement("div");
-    liste.className = "bereiche";
     for (const z of Modell.bereiche) {
-      const zeile = document.createElement("div");
-      zeile.className = "bereich-zeile" + (istHell(z.color) ? " ist-hell" : "");
-      zeile.style.setProperty("--bf", z.color || "#ccc");
-
-      zeile.appendChild(symbolSvg(z.symbol));
-
-      const txt = document.createElement("div");
-      txt.className = "bereich-text";
-      const name = document.createElement("div");
-      name.className = "bereich-name";
-      name.textContent = z.name || z.id;
-      const zahl = document.createElement("div");
-      zahl.className = "bereich-zahl";
-      const n = (Modell.kartenNachBereich[z.id] || []).length;
-      zahl.textContent = n === 1 ? "1 Karte" : `${n} Karten`;
-      txt.appendChild(name);
-      txt.appendChild(zahl);
-      zeile.appendChild(txt);
-
-      liste.appendChild(zeile);
+      const karte = document.createElement("button");
+      karte.type = "button";
+      karte.className = "karte" + (istHell(z.color) ? " ist-hell" : "");
+      karte.style.setProperty("--bf", z.color || "#ccc");
+      karte.setAttribute("aria-label", z.name || z.id);
+      karte.dataset.bereich = z.id;
+      karte.appendChild(symbolSvg(z.symbol, "karte-symbol"));
+      // Antippen zum Ziehen folgt in Phase 2.
+      stapel.appendChild(karte);
     }
-    ziel.appendChild(liste);
+  }
 
-    const fuss = document.createElement("p");
-    fuss.className = "diagnose-fuss";
-    fuss.textContent = "Datenanbindung steht. Die nächste Phase legt die Stapel-Ansicht zum Antippen darüber.";
-    ziel.appendChild(fuss);
+  /* ---------- Einstellungen (Menü kommt in Phase 5) ---------- */
+
+  function verdrahteEinstellungen() {
+    const btn = document.getElementById("btnEinstellungen");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        // Platzhalter: das Einstellungsmenü wird in Phase 5 ergänzt.
+      });
+    }
   }
 
   /* ---------- Start ---------- */
 
   async function start() {
+    verdrahteEinstellungen();
     try {
       await ladeBrett();
-      zeigeDiagnose();
+      zeigeStapel();
     } catch (e) {
-      zeigeFehler(
-        "Brettdaten konnten nicht geladen werden.",
-        `Erwartet wird die Datei <code>ararat-board.json</code> neben dieser Seite. ` +
-        `Prüfe, ob sie im Repo liegt und GitHub Pages neu gebaut hat.<br>` +
-        `Grund: ${e.message}`
-      );
+      zeigeFehler(e.message);
     }
   }
 

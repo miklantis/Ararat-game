@@ -117,20 +117,23 @@ Weitere Einstellungen besprechen wir später.
 Vorgehen je Phase: umsetzen → pushen → du testest über die Live-Seite → bei
 Freigabe wird abgehakt → nächste Phase. `[ ]` = offen, `[x]` = von dir freigegeben.
 
-- [ ] **Phase 0 – Gerüst & Datenanbindung**
+- [x] **Phase 0 – Gerüst & Datenanbindung**
   Statisches Grundgerüst (HTML/CSS/JS, kein Framework). App lädt
   `ararat-board.json` aus dem Repo per fetch und baut intern das Datenmodell.
   Klare Meldung, falls die JSON nicht erreichbar ist.
-  - Umgesetzt (wartet auf Live-Test): `index.html`, `styles.css`, `app.js`.
-    fetch mit `cache: no-store`; Modell mit Bereichen indexiert und Karten je
-    Bereich gruppiert. Erfolgsfall zeigt eine Kurzdiagnose (Bereiche, Karten,
-    Würfel, Version) mit den Bereichsfarben/Symbolen aus der JSON; Fehlerfall
-    zeigt eine verständliche Meldung. Schrift: Atkinson Hyperlegible (für
-    Schwachsichtigkeit) plus Fraunces als Display-Schrift.
+  - Freigegeben über Live-Test. Datenanbindung steht (fetch `no-store`, Modell
+    mit Bereichen indexiert und Karten je Bereich gruppiert, Fehlermeldung bei
+    nicht erreichbarer JSON). Das Test-Diagnosebild wurde durch die echte
+    Stapel-Ansicht (Phase 1) ersetzt.
 
 - [ ] **Phase 1 – Stapel-Ansicht**
   Vier Bereichskarten in Bereichsfarbe mit Symbol-Wasserzeichen (alles aus der
   JSON), iPhone-Layout, Einstellungs-Icon (Menü noch leer).
+  - Umgesetzt (wartet auf Live-Test): Vier Karten von oben als 2×2-Raster, das
+    den Bildschirm füllt, je Bereichsfarbe mit großem Symbol-Wasserzeichen,
+    keine Texte. Heller Bereich (Ararat) bekommt ein dunkles Symbol für
+    Kontrast. Einstellungs-Icon oben rechts (Tap-Feedback, Menü folgt Phase 5).
+    Antippen zum Ziehen ist bewusst noch nicht verdrahtet (Phase 2).
 
 - [ ] **Phase 2 – Karte öffnen & schließen**
   Tippen zieht zufällig eine Karte aus dem Bereich, Dreh-/Aufklapp-Animation auf
