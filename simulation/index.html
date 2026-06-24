@@ -527,10 +527,16 @@
 
       <section class="block">
         <h2>Export</h2>
+        <div class="zeile">
+          <label class="feldname" for="edBgTransparent">Hintergrund transparent</label>
+          <input type="checkbox" id="edBgTransparent">
+        </div>
+        <div class="zeile"><label class="feldname" for="edBgColor">Hintergrundfarbe</label><input type="color" class="zone-color" id="edBgColor"><span class="ed-wertchen" id="edBgColorW"></span></div>
+        <p class="hinweis">Gilt für SVG- und PNG-Export. Bei „transparent“ bleibt der Hintergrund frei; sonst wird die gewählte Farbe als Hintergrundfläche eingefügt. Die Arbeitsfläche im Editor zeigt weiterhin das Pergament.</p>
         <button class="btn primaer" id="edSvgExport">SVG-Spielfeld exportieren</button>
-        <p class="hinweis">Felder und – falls aktiv – die Weglinie als skalierbares SVG im Format des Spielfelds (cm), Hintergrund transparent, ohne Feldnummern. Kartenfeld-Icons werden mit exportiert.</p>
+        <p class="hinweis">Felder und – falls aktiv – die Weglinie als skalierbares SVG im Format des Spielfelds (cm), ohne Feldnummern. Kartenfeld-Icons werden mit exportiert. Hintergrund je nach Einstellung oben.</p>
         <button class="btn" id="edPngExport">PNG-Spielfeld exportieren (2048×2048)</button>
-        <p class="hinweis">Gleicher Inhalt als PNG mit transparentem Hintergrund, quadratisch 2048×2048 px (2K). Das Spielfeld wird unverzerrt eingepasst; der Rand bleibt transparent.</p>
+        <p class="hinweis">Gleicher Inhalt als PNG, quadratisch 2048×2048 px (2K). Das Spielfeld wird unverzerrt eingepasst. Hintergrund je nach Einstellung oben; bei „transparent“ bleibt auch der Rand frei.</p>
       </section>
 
     </aside>
@@ -767,6 +773,8 @@
       "orientTiles": "tangent",
       "iconScale": 1,
       "zielColor": "#F4C20D",
+      "bgTransparent": true,
+      "bgColor": "#FFFFFF",
       "pathStroke": {
         "show": true,
         "width": 0.012,
@@ -3292,6 +3300,19 @@ const AnsichtEditor = (function () {
       zielC.addEventListener("input", () => { setDesign("zielColor", zielC.value); zeichne(); });
       zielC.addEventListener("change", () => { setDesign("zielColor", zielC.value); Store.touch("Editor"); });
     }
+    const bgT = $("edBgTransparent");
+    if (bgT) {
+      bgT.addEventListener("change", () => {
+        setDesign("bgTransparent", bgT.checked);
+        const bgC = $("edBgColor"); if (bgC) bgC.disabled = bgT.checked;
+        Store.touch("Editor");
+      });
+    }
+    const bgC = $("edBgColor");
+    if (bgC) {
+      bgC.addEventListener("input", () => { setDesign("bgColor", bgC.value); txt("edBgColorW", bgC.value); });
+      bgC.addEventListener("change", () => { setDesign("bgColor", bgC.value); Store.touch("Editor"); });
+    }
     rangeControl("edTension",  (v) => setPath("tension", v / 100));
     rangeControl("edHoehe",    (v) => setHoehe(v / 100));
 
@@ -3526,6 +3547,16 @@ const AnsichtEditor = (function () {
     const zielC = $("edZielColor");
     if (zielC && document.activeElement !== zielC && /^#[0-9a-f]{6}$/i.test(d.zielColor || "#F4C20D")) zielC.value = (d.zielColor || "#F4C20D");
     txt("edZielColorW", (d.zielColor || "#F4C20D"));
+    const bgTransparent = (d.bgTransparent !== false); // Vorgabe: transparent
+    const bgFarbe = /^#[0-9a-f]{6}$/i.test(d.bgColor || "") ? d.bgColor : "#FFFFFF";
+    const bgT = $("edBgTransparent");
+    if (bgT && document.activeElement !== bgT) bgT.checked = bgTransparent;
+    const bgC = $("edBgColor");
+    if (bgC) {
+      if (document.activeElement !== bgC) bgC.value = bgFarbe;
+      bgC.disabled = bgTransparent;
+    }
+    txt("edBgColorW", bgFarbe);
     const wegW = (d.pathStroke && d.pathStroke.width) ?? 0.012;
     const wegFarbe = (d.pathStroke && d.pathStroke.color) || "#b8a98c";
     txt("edWegWidthW", wegW.toFixed(3));
@@ -3642,9 +3673,15 @@ const AnsichtEditor = (function () {
     const layout = Ararat.layoutFields(config, VW, VH);
     const pos = layout.positions;
 
+    const bgTransparent = (design.bgTransparent !== false);
+    const bgColor = /^#[0-9a-f]{6}$/i.test(design.bgColor || "") ? design.bgColor : "#FFFFFF";
+
     const out = [];
     out.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}cm" height="${h}cm" viewBox="0 0 ${VW} ${VH}">`);
-    out.push(`<!-- Ararat-Spielfeld · Format ${w}x${h} cm · Hintergrund transparent · ohne Feldnummern · mit Kartenfeld-Icons -->`);
+    out.push(`<!-- Ararat-Spielfeld · Format ${w}x${h} cm · Hintergrund ${bgTransparent ? "transparent" : bgColor} · ohne Feldnummern · mit Kartenfeld-Icons -->`);
+    if (!bgTransparent) {
+      out.push(`<rect id="hintergrund" x="0" y="0" width="${VW}" height="${VH}" fill="${bgColor}"/>`);
+    }
 
     const ps = design.pathStroke || {};
     if (ps.show !== false) {
@@ -3732,7 +3769,15 @@ const AnsichtEditor = (function () {
       const cv = document.createElement("canvas");
       cv.width = SIZE; cv.height = SIZE;
       const ctx = cv.getContext("2d");
-      ctx.clearRect(0, 0, SIZE, SIZE);          // transparenter Hintergrund
+      const design = (config.board && config.board.design) || {};
+      const bgTransparent = (design.bgTransparent !== false);
+      const bgColor = /^#[0-9a-f]{6}$/i.test(design.bgColor || "") ? design.bgColor : "#FFFFFF";
+      if (bgTransparent) {
+        ctx.clearRect(0, 0, SIZE, SIZE);        // transparenter Hintergrund
+      } else {
+        ctx.fillStyle = bgColor;                // gewählte Hintergrundfarbe, ganzes Quadrat
+        ctx.fillRect(0, 0, SIZE, SIZE);
+      }
       ctx.drawImage(img, ox, oy, dw, dh);
       URL.revokeObjectURL(url);
       cv.toBlob((png) => {
