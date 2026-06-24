@@ -150,7 +150,9 @@
         }
       },
       "iconScale": 0.95,
-      "strokeWidth": 3
+      "strokeWidth": 3,
+      "bgTransparent": false,
+      "bgColor": "#f4ecdf"
     },
     "fields": [
       {
