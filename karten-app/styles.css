@@ -107,6 +107,7 @@ body {
 
 .karte {
   position: relative;
+  container-type: size;
   border: none;
   border-radius: var(--radius);
   background: var(--bf, #ccc);
@@ -130,8 +131,15 @@ body {
 .karte-symbol {
   position: relative;
   z-index: 1;
-  width: 58%;
+  /* Quadratische Box, die in beide Richtungen begrenzt ist: so passt das
+     Symbol in jedem Kartenformat (hoch, quer, klein, groß) vollständig
+     hinein und wird nie beschnitten. min() nimmt die kleinere der beiden
+     Kartenkanten als Maß. */
+  width: min(58%, 58cqh);
+  height: auto;
+  aspect-ratio: 1 / 1;
   max-width: 150px;
+  max-height: 150px;
   opacity: 0.34;
 }
 .karte-symbol path { fill: #fff; }
@@ -165,9 +173,11 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(66vw, 60vh, 360px);
-  height: auto;
-  max-height: min(66vh, 360px);
+  /* Quadratische Box, in Breite und Höhe begrenzt: das Wasserzeichen
+     bleibt in jedem Bildschirmformat vollständig sichtbar. */
+  width: min(66vw, 66vh, 360px);
+  height: min(66vw, 66vh, 360px);
+  aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
   opacity: 0.16;
   pointer-events: none;

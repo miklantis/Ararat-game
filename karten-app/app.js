@@ -129,7 +129,12 @@
   function symbolSvg(name, klasse, viewBox) {
     const pfad = SYMBOLE[name] || SYMBOLE.berg;
     const svg = document.createElementNS(SVG_NS, "svg");
-    svg.setAttribute("viewBox", viewBox || "-6 -6 12 12");
+    // Großzügige, für alle Symbole identische viewBox: jeder Pfad (max. ±5.6
+    // plus Bogen-Wölbung) liegt mit Reserve drin. Zusammen mit der
+    // quadratischen Box im CSS und xMidYMid meet wird das Symbol immer
+    // vollständig und zentriert dargestellt, nie beschnitten.
+    svg.setAttribute("viewBox", viewBox || "-7 -7 14 14");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
     svg.setAttribute("class", klasse);
     svg.setAttribute("aria-hidden", "true");
     const p = document.createElementNS(SVG_NS, "path");
@@ -376,7 +381,7 @@
     detail.style.setProperty("--bf", (zone && zone.color) || "#345");
 
     inhalt.innerHTML = "";
-    const sym = symbolSvg(zone ? zone.symbol : "berg", "detail-symbol", "-7.5 -7.5 15 15");
+    const sym = symbolSvg(zone ? zone.symbol : "berg", "detail-symbol");
     detail.insertBefore(sym, inhalt);
     // altes Symbol (falls vorhanden) entfernen
     const syms = detail.querySelectorAll(".detail-symbol");
