@@ -535,8 +535,8 @@
         <p class="hinweis">Gilt für SVG- und PNG-Export. Bei „transparent“ bleibt der Hintergrund frei (in der Vorschau als Karomuster dargestellt); sonst wird die gewählte Farbe als Hintergrundfläche eingefügt. Die Editor-Vorschau zeigt den gewählten Hintergrund.</p>
         <button class="btn primaer" id="edSvgExport">SVG-Spielfeld exportieren</button>
         <p class="hinweis">Felder und – falls aktiv – die Weglinie als skalierbares SVG im Format des Spielfelds (cm), ohne Feldnummern. Kartenfeld-Icons werden mit exportiert. Hintergrund je nach Einstellung oben.</p>
-        <button class="btn" id="edPngExport">PNG-Spielfeld exportieren (2048×2048)</button>
-        <p class="hinweis">Gleicher Inhalt als PNG, quadratisch 2048×2048 px (2K). Das Spielfeld wird unverzerrt eingepasst. Hintergrund je nach Einstellung oben; bei „transparent“ bleibt auch der Rand frei.</p>
+        <button class="btn" id="edPngExport">PNG-Spielfeld exportieren (3000×3000)</button>
+        <p class="hinweis">Gleicher Inhalt als PNG, quadratisch 3000×3000 px. Das Spielfeld wird unverzerrt eingepasst. Hintergrund je nach Einstellung oben; bei „transparent“ bleibt auch der Rand frei.</p>
       </section>
 
     </aside>
@@ -3772,7 +3772,7 @@ const AnsichtEditor = (function () {
     const VW = parseFloat(mvb[1]), VH = parseFloat(mvb[2]);
     // cm-Maße durch Pixelmaße ersetzen, damit das Raster scharf und unverzerrt ist.
     const svgPx = svg.replace(/width="[^"]*cm" height="[^"]*cm"/, `width="${VW}" height="${VH}"`);
-    const SIZE = 2048;
+    const SIZE = 3000;
     const scale = Math.min(SIZE / VW, SIZE / VH);
     const dw = VW * scale, dh = VH * scale;
     const ox = (SIZE - dw) / 2, oy = (SIZE - dh) / 2;
@@ -3796,13 +3796,13 @@ const AnsichtEditor = (function () {
       URL.revokeObjectURL(url);
       cv.toBlob((png) => {
         if (!png) { if (window.App && App.setStatus) App.setStatus("PNG-Export fehlgeschlagen.", "warn"); return; }
-        const name = (((config.meta && config.meta.name) || "ararat").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")) + "-spielfeld-2048.png";
+        const name = (((config.meta && config.meta.name) || "ararat").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")) + "-spielfeld-3000.png";
         const purl = URL.createObjectURL(png);
         const a = document.createElement("a");
         a.href = purl; a.download = name;
         document.body.appendChild(a); a.click(); a.remove();
         URL.revokeObjectURL(purl);
-        if (window.App && App.setStatus) App.setStatus("PNG-Spielfeld exportiert (2048×2048): " + name, "ok");
+        if (window.App && App.setStatus) App.setStatus("PNG-Spielfeld exportiert (3000×3000): " + name, "ok");
       }, "image/png");
     };
     img.onerror = () => {
