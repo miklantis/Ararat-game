@@ -3011,12 +3011,73 @@ const AnsichtSpiel = (function () {
         `</div>`;
     }
 
+    html += dauerBoxHtml(serien);
     html += tabelleHtml(serien);
     html += `<div class="histo-bereich">` + serien.map(s => histoHtml(s)).join("") + `</div>`;
     if (serien.some(s => s.unfinished)) {
       html += `<p class="hinweis">Abgebrochene Partien (Rundenlimit): ${serien.map(s => s.unfinished).join(" / ")} – sie fließen nicht in die Mittelwerte ein.</p>`;
     }
     a.innerHTML = html;
+    letzteSerien = serien;
+    dauerFelderBinden();
+    dauerNeuberechnen();
+  }
+
+  /* ---------- Spieldauer-Schätzung ---------- */
+  let letzteSerien = null;
+
+  function dauerMin(value) {
+    const m = Math.round(value / 60);
+    if (value < 60) return `${Math.round(value)} s`;
+    if (m < 60) return `${m} min`;
+    const h = Math.floor(m / 60), r = m % 60;
+    return r ? `${h} h ${r} min` : `${h} h`;
+  }
+
+  function dauerBoxHtml(serien) {
+    const kopf = serien.map(s => `<th>${s.diceCount} Würfel</th>`).join("");
+    const zellen = serien.map((s, i) => `<td id="dauerWert${i}">–</td>`).join("");
+    const spanne = serien.map((s, i) => `<td id="dauerSpanne${i}" class="hinweis" style="font-size:13px">–</td>`).join("");
+    return `<div class="dauer-box" style="margin:0 0 16px;padding:14px;border:1px solid var(--rand,#ccc);border-radius:10px">
+      <h3 style="margin:0 0 8px">Geschätzte Spieldauer</h3>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px">
+        <label style="font-size:14px">Sek. pro Zug
+          <input type="number" id="dauerSekZug" value="15" min="1" max="600" step="1" style="width:70px;margin-left:6px">
+        </label>
+        <label style="font-size:14px">Sek. pro Karte (zusätzlich)
+          <input type="number" id="dauerSekKarte" value="30" min="0" max="600" step="1" style="width:70px;margin-left:6px">
+        </label>
+      </div>
+      <table class="vergleich"><thead><tr><th></th>${kopf}</tr></thead><tbody>
+        <tr><td>Ø Spieldauer</td>${zellen}</tr>
+        <tr><td>Spanne (kürzeste / längste)</td>${spanne}</tr>
+      </tbody></table>
+      <p class="hinweis" style="margin:8px 0 0">Aus dieser Simulation: Ø Züge × Sek./Zug + Ø Karten × Sek./Karte. Spanne aus kürzester und längster Partie der Serie.</p>
+    </div>`;
+  }
+
+  function dauerFelderBinden() {
+    const z = $("dauerSekZug"), k = $("dauerSekKarte");
+    if (z) z.addEventListener("input", dauerNeuberechnen);
+    if (k) k.addEventListener("input", dauerNeuberechnen);
+  }
+
+  function dauerNeuberechnen() {
+    if (!letzteSerien) return;
+    const sekZug = Math.max(0, Number(($("dauerSekZug") || {}).value) || 0);
+    const sekKarte = Math.max(0, Number(($("dauerSekKarte") || {}).value) || 0);
+    letzteSerien.forEach((s, i) => {
+      const wert = $("dauerWert" + i), spanne = $("dauerSpanne" + i);
+      if (!wert) return;
+      const sek = s.avgTurns * sekZug + s.kartenProSpiel * sekKarte;
+      wert.textContent = dauerMin(sek);
+      // Spanne über Runden: kürzeste/längste Partie, Karten anteilig zu Runden skaliert
+      const proRundeKarten = s.avgRounds ? s.kartenProSpiel / s.avgRounds : 0;
+      const proRundeZuege = s.avgRounds ? s.avgTurns / s.avgRounds : 0;
+      const minSek = s.roundsMin * proRundeZuege * sekZug + s.roundsMin * proRundeKarten * sekKarte;
+      const maxSek = s.roundsMax * proRundeZuege * sekZug + s.roundsMax * proRundeKarten * sekKarte;
+      if (spanne) spanne.textContent = `${dauerMin(minSek)} / ${dauerMin(maxSek)}`;
+    });
   }
 
   function tabelleHtml(serien) {
