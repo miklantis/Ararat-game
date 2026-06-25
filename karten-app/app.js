@@ -566,6 +566,8 @@
     if (btnZu) btnZu.addEventListener("click", schliesseDetail);
     const btnWdh = document.getElementById("btnWiederhol");
     if (btnWdh) btnWdh.addEventListener("click", wiederholeAudio);
+    const btnMitte = document.getElementById("btnMitteAudio");
+    if (btnMitte) btnMitte.addEventListener("click", wiederholeAudio);
     try {
       await ladeBrett();
       zeigeStapel();
