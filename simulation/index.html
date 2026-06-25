@@ -3744,6 +3744,13 @@ const AnsichtEditor = (function () {
           svgEl("path", { d: dSym, fill: ikFill, transform: `scale(${sc.toFixed(2)})`, stroke: "none" }, g);
         }
       }
+      if (f.type === "start") {
+        const dSym = (window.ARARAT_SYMBOLE || {}).stern;
+        if (dSym) {
+          const sc = side * 0.05;
+          svgEl("path", { d: dSym, fill: "#22313B", transform: `scale(${sc.toFixed(2)})`, stroke: "none" }, g);
+        }
+      }
       if (f.type !== "start" && f.type !== "ziel") {
         g.style.cursor = "pointer";
         g.addEventListener("click", () => feldTypUmschalten(i));
@@ -3828,6 +3835,13 @@ const AnsichtEditor = (function () {
             const ikFill = istHell(st.fill) ? "#22313B" : "#FFFFFF";
             const sc = side * 0.052 * (design.iconScale ?? 1);
             inner += `<path d="${dSym}" fill="${ikFill}" transform="scale(${sc.toFixed(2)})"/>`;
+          }
+        }
+        if (f.type === "start") {
+          const dSym = (window.ARARAT_SYMBOLE || {}).stern;
+          if (dSym) {
+            const sc = side * 0.05;
+            inner += `<path d="${dSym}" fill="#22313B" transform="scale(${sc.toFixed(2)})"/>`;
           }
         }
         out.push(
