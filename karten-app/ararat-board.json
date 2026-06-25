@@ -129,9 +129,9 @@
     },
     "design": {
       "tileShape": "roundedRect",
-      "tileSize": 0.07,
-      "cornerRadius": 0.44,
-      "tileGap": 0.24,
+      "tileSize": 0.057999999999999996,
+      "cornerRadius": 0.42,
+      "tileGap": 0.2,
       "orientTiles": "tangent",
       "pathStroke": {
         "show": true,
@@ -222,12 +222,12 @@
       },
       {
         "index": 13,
-        "zone": "felder",
+        "zone": "dorf",
         "type": "karte"
       },
       {
         "index": 14,
-        "zone": "felder",
+        "zone": "dorf",
         "type": "normal"
       },
       {
@@ -287,22 +287,22 @@
       },
       {
         "index": 26,
-        "zone": "stadt",
-        "type": "karte"
+        "zone": "felder",
+        "type": "normal"
       },
       {
         "index": 27,
-        "zone": "stadt",
+        "zone": "felder",
         "type": "normal"
       },
       {
         "index": 28,
-        "zone": "stadt",
+        "zone": "felder",
         "type": "karte"
       },
       {
         "index": 29,
-        "zone": "stadt",
+        "zone": "felder",
         "type": "normal"
       },
       {
@@ -347,37 +347,37 @@
       },
       {
         "index": 38,
-        "zone": "ararat",
+        "zone": "stadt",
         "type": "normal"
       },
       {
         "index": 39,
-        "zone": "ararat",
+        "zone": "stadt",
         "type": "karte"
       },
       {
         "index": 40,
-        "zone": "ararat",
+        "zone": "stadt",
         "type": "normal"
       },
       {
         "index": 41,
-        "zone": "ararat",
+        "zone": "stadt",
         "type": "normal"
       },
       {
         "index": 42,
-        "zone": "ararat",
+        "zone": "stadt",
         "type": "karte"
       },
       {
         "index": 43,
-        "zone": "ararat",
+        "zone": "stadt",
         "type": "normal"
       },
       {
         "index": 44,
-        "zone": "ararat",
+        "zone": "stadt",
         "type": "normal"
       },
       {
@@ -401,7 +401,57 @@
         "index": 48
       },
       {
-        "index": 49,
+        "zone": "ararat",
+        "type": "karte",
+        "index": 49
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 50
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 51
+      },
+      {
+        "zone": "ararat",
+        "type": "karte",
+        "index": 52
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 53
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 54
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 55
+      },
+      {
+        "zone": "ararat",
+        "type": "karte",
+        "index": 56
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 57
+      },
+      {
+        "zone": "ararat",
+        "type": "normal",
+        "index": 58
+      },
+      {
+        "index": 59,
         "zone": "ararat",
         "type": "ziel"
       }
