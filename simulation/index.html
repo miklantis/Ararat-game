@@ -2990,7 +2990,13 @@ const AnsichtSpiel = (function () {
       kachel(st.turns, "Züge gesamt") +
       kachel(st.stats.kartenGezogen, "Karten gezogen") +
       kachel(fPct(karteQuote), "Kartenfeld-Treffer je Wurf") +
-      `</div><p class="hinweis">Einzelspiel-Auswertung. Für belastbare Zahlen den Turbo-Modus nutzen.</p>`;
+      `</div>` +
+      dauerBoxEinzelHtml() +
+      `<p class="hinweis">Einzelspiel-Auswertung. Für belastbare Zahlen den Turbo-Modus nutzen.</p>`;
+    letzteSerien = null;
+    letzteEinzel = { turns: st.turns, karten: st.stats.kartenGezogen };
+    dauerFelderBinden();
+    dauerNeuberechnen();
   }
   function kachel(wert, label) {
     return `<div class="stat-kachel"><div class="wert">${wert}</div><div class="label">${label}</div></div>`;
@@ -3019,12 +3025,30 @@ const AnsichtSpiel = (function () {
     }
     a.innerHTML = html;
     letzteSerien = serien;
+    letzteEinzel = null;
     dauerFelderBinden();
     dauerNeuberechnen();
   }
 
   /* ---------- Spieldauer-Schätzung ---------- */
   let letzteSerien = null;
+  let letzteEinzel = null;
+
+  function dauerBoxEinzelHtml() {
+    return `<div class="dauer-box" style="margin:0 0 16px;padding:14px;border:1px solid var(--rand,#ccc);border-radius:10px">
+      <h3 style="margin:0 0 8px">Geschätzte Spieldauer dieser Partie</h3>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px">
+        <label style="font-size:14px">Sek. pro Zug
+          <input type="number" id="dauerSekZug" value="15" min="1" max="600" step="1" style="width:70px;margin-left:6px">
+        </label>
+        <label style="font-size:14px">Sek. pro Karte (zusätzlich)
+          <input type="number" id="dauerSekKarte" value="30" min="0" max="600" step="1" style="width:70px;margin-left:6px">
+        </label>
+      </div>
+      <div class="stat-kacheln"><div class="stat-kachel"><div class="wert" id="dauerEinzelWert">–</div><div class="label">Spieldauer</div></div></div>
+      <p class="hinweis" style="margin:8px 0 0">Aus dieser Partie: Züge × Sek./Zug + gezogene Karten × Sek./Karte.</p>
+    </div>`;
+  }
 
   function dauerMin(value) {
     const m = Math.round(value / 60);
@@ -3063,9 +3087,14 @@ const AnsichtSpiel = (function () {
   }
 
   function dauerNeuberechnen() {
-    if (!letzteSerien) return;
     const sekZug = Math.max(0, Number(($("dauerSekZug") || {}).value) || 0);
     const sekKarte = Math.max(0, Number(($("dauerSekKarte") || {}).value) || 0);
+    if (letzteEinzel) {
+      const w = $("dauerEinzelWert");
+      if (w) w.textContent = dauerMin(letzteEinzel.turns * sekZug + letzteEinzel.karten * sekKarte);
+      return;
+    }
+    if (!letzteSerien) return;
     letzteSerien.forEach((s, i) => {
       const wert = $("dauerWert" + i), spanne = $("dauerSpanne" + i);
       if (!wert) return;
