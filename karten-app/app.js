@@ -31,7 +31,9 @@
     textsprache: "de",
     audiosprache: "kmr",
     audioAn: true,
-    effektAn: true
+    effektAn: true,
+    zweitAn: false,
+    zweitsprache: "tr"
   };
 
   function ladeEinstellungen() {
@@ -44,6 +46,8 @@
       if (codes.includes(o.audiosprache)) Einstell.audiosprache = o.audiosprache;
       if (typeof o.audioAn === "boolean") Einstell.audioAn = o.audioAn;
       if (typeof o.effektAn === "boolean") Einstell.effektAn = o.effektAn;
+      if (typeof o.zweitAn === "boolean") Einstell.zweitAn = o.zweitAn;
+      if (codes.includes(o.zweitsprache)) Einstell.zweitsprache = o.zweitsprache;
     } catch (e) { /* localStorage evtl. nicht verfügbar – Vorgaben gelten */ }
   }
 
@@ -327,6 +331,34 @@
     return "—";
   }
 
+  // Text in einer bestimmten Sprache, ohne Fallback (leer => null).
+  function textInSprache(karte, code) {
+    const t = (karte["text_" + code] || "").trim();
+    return t || null;
+  }
+
+  // Kleine, transparente Zweitsprache unten mittig. Zeigt nichts, wenn
+  // ausgeschaltet, keine Karte offen, Zweitsprache = Anzeigesprache oder
+  // der Text in der Zweitsprache leer ist.
+  function zeigeZweitsprache(karte) {
+    const el = document.getElementById("zweitsprache");
+    if (!el) return;
+    if (!Einstell.zweitAn || !karte || Einstell.zweitsprache === Einstell.textsprache) {
+      el.hidden = true;
+      el.textContent = "";
+      return;
+    }
+    const t = textInSprache(karte, Einstell.zweitsprache);
+    if (!t) { el.hidden = true; el.textContent = ""; return; }
+    el.textContent = t;
+    el.hidden = false;
+  }
+
+  function verbergeZweitsprache() {
+    const el = document.getElementById("zweitsprache");
+    if (el) { el.hidden = true; el.textContent = ""; }
+  }
+
   function zieheUndOeffne(bereichId) {
     if (detailOffen) return;
     const liste = Modell.kartenNachBereich[bereichId] || [];
@@ -360,6 +392,7 @@
     aktuelleKarte = karte;
     aktuelleZone = zone;
     zeigeEffekt(karte);
+    zeigeZweitsprache(karte);
     spieleKartenAudio(karte);
   }
 
@@ -376,6 +409,7 @@
     };
     stoppeAudio();
     verbergeEffekt();
+    verbergeZweitsprache();
     // reduced-motion: keine Animation -> sofort schließen
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) { fertig(); return; }
@@ -426,6 +460,7 @@
     const textEl = document.querySelector("#detailInhalt p");
     if (textEl) textEl.textContent = kartenText(aktuelleKarte);
     zeigeEffekt(aktuelleKarte);
+    zeigeZweitsprache(aktuelleKarte);
   }
 
   function oeffneEinstellungen() {
@@ -479,6 +514,11 @@
       Einstell.audiosprache = code;
       speichereEinstellungen();
     });
+    baueSegment("wahlZweitsprache", Einstell.zweitsprache, (code) => {
+      Einstell.zweitsprache = code;
+      speichereEinstellungen();
+      aktualisiereOffeneKarte();
+    });
 
     // Schalter Audio
     const sAudio = document.getElementById("schalterAudio");
@@ -499,6 +539,18 @@
       sEffekt.addEventListener("click", () => {
         Einstell.effektAn = !Einstell.effektAn;
         setzeSchalter(sEffekt, Einstell.effektAn);
+        speichereEinstellungen();
+        aktualisiereOffeneKarte();
+      });
+    }
+
+    // Schalter Zweitsprache
+    const sZweit = document.getElementById("schalterZweit");
+    setzeSchalter(sZweit, Einstell.zweitAn);
+    if (sZweit) {
+      sZweit.addEventListener("click", () => {
+        Einstell.zweitAn = !Einstell.zweitAn;
+        setzeSchalter(sZweit, Einstell.zweitAn);
         speichereEinstellungen();
         aktualisiereOffeneKarte();
       });
